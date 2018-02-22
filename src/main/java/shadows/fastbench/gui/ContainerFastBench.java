@@ -22,6 +22,7 @@ public class ContainerFastBench extends Container {
 	final World world;
 	private final EntityPlayer player;
 	IRecipe lastRecipe;
+	IRecipe lastLastRecipe;
 	final int x;
 	final int y;
 	final int z;
@@ -145,7 +146,8 @@ public class ContainerFastBench extends Container {
 			}
 
 			result.setInventorySlotContents(0, itemstack);
-			entityplayermp.connection.sendPacket(new SPacketSetSlot(this.windowId, 0, itemstack));
+			if (lastLastRecipe != lastRecipe) entityplayermp.connection.sendPacket(new SPacketSetSlot(this.windowId, 0, itemstack));
+			lastLastRecipe = lastRecipe;
 		}
 	}
 }
