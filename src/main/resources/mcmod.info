@@ -1,0 +1,16 @@
+[
+{
+  "modid": "fastbench",
+  "name": "FastWorkbench",
+  "description": "1 fast boi",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["Shadows_of_Fire"],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
