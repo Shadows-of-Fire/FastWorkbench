@@ -6,6 +6,7 @@ import org.apache.logging.log4j.Logger;
 import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.event.RegistryEvent.Register;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -44,6 +45,9 @@ public class FastBench {
 		NBTTagCompound t = new NBTTagCompound();
 		t.setString("ContainerClass", "shadows.fastbench.gui.ContainerFastBench");
 		FMLInterModComms.sendMessage("craftingtweaks", "RegisterProvider", t);
+		Configuration c = new Configuration(e.getSuggestedConfigurationFile());
+		delet = !c.getBoolean("is quat here", "crafting", false, "If the recipe book is not deleted");
+		if (c.hasChanged()) c.save();
 	}
 
 	@SubscribeEvent
@@ -51,9 +55,11 @@ public class FastBench {
 		e.getRegistry().register(new BlockFastBench().setRegistryName("minecraft", "crafting_table"));
 	}
 
+	static boolean delet = true;
+
 	@SubscribeEvent
 	public void loginBois(EntityJoinWorldEvent e) {
-		PROXY.deleteBook(e.getEntity());
+		if (delet) PROXY.deleteBook(e.getEntity());
 	}
 
 	@EventHandler
