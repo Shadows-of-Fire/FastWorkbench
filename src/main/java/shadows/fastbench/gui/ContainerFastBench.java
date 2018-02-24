@@ -147,6 +147,7 @@ public class ContainerFastBench extends Container {
 
 			result.setInventorySlotContents(0, itemstack);
 			if (lastLastRecipe != lastRecipe) entityplayermp.connection.sendPacket(new SPacketSetSlot(this.windowId, 0, itemstack));
+			else if (lastLastRecipe != null && lastLastRecipe == lastRecipe && !ItemStack.areItemStacksEqual(lastLastRecipe.getCraftingResult(inv), lastRecipe.getCraftingResult(inv))) entityplayermp.connection.sendPacket(new SPacketSetSlot(this.windowId, 0, itemstack));
 			lastLastRecipe = lastRecipe;
 		}
 	}
