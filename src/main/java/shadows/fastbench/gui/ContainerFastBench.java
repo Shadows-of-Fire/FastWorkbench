@@ -3,8 +3,7 @@ package shadows.fastbench.gui;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.ContainerWorkbench;
 import net.minecraft.inventory.InventoryCraftResult;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.inventory.Slot;
@@ -15,12 +14,8 @@ import net.minecraft.network.play.server.SPacketSetSlot;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class ContainerFastBench extends Container {
-	/** The crafting matrix inventory (3x3). */
-	public InventoryCrafting craftMatrix = new InventoryCrafting(this, 3, 3);
-	public InventoryCraftResult craftResult = new InventoryCraftResult();
+public class ContainerFastBench extends ContainerWorkbench {
 	final World world;
-	private final EntityPlayer player;
 	IRecipe lastRecipe;
 	IRecipe lastLastRecipe;
 	final int x;
@@ -29,8 +24,12 @@ public class ContainerFastBench extends Container {
 	final BlockPos pos;
 
 	public ContainerFastBench(EntityPlayer player, World world, int x, int y, int z) {
+		super(player.inventory, world, new BlockPos(x, y, z));
+		this.inventorySlots.clear();
+		this.inventoryItemStacks.clear();
+		craftMatrix = new InventoryCrafting(this, 3, 3);
+		craftResult = new InventoryCraftResult();
 		this.world = world;
-		this.player = player;
 		this.x = x;
 		this.y = y;
 		this.z = z;
@@ -56,26 +55,9 @@ public class ContainerFastBench extends Container {
 	}
 
 	/**
-	 * Callback for when the crafting matrix is changed.
-	 */
-	public void onCraftMatrixChanged(IInventory inventoryIn) {
-		this.slotChangedCraftingGrid(this.world, this.player, this.craftMatrix, this.craftResult);
-	}
-
-	/**
-	 * Called when the container is closed.
-	 */
-	public void onContainerClosed(EntityPlayer playerIn) {
-		super.onContainerClosed(playerIn);
-
-		if (!this.world.isRemote) {
-			this.clearContainer(playerIn, this.world, this.craftMatrix);
-		}
-	}
-
-	/**
 	 * Determines whether supplied player can use this container
 	 */
+	@Override
 	public boolean canInteractWith(EntityPlayer playerIn) {
 		if (this.world.getBlockState(this.pos).getBlock() != Blocks.CRAFTING_TABLE) {
 			return false;
@@ -84,71 +66,24 @@ public class ContainerFastBench extends Container {
 		}
 	}
 
-	/**
-	 * Handle when the stack in slot {@code index} is shift-clicked. Normally this moves the stack between the player
-	 * inventory and the other inventory(s).
-	 */
-	public ItemStack transferStackInSlot(EntityPlayer playerIn, int index) {
+	@Override
+	protected void slotChangedCraftingGrid(World world, EntityPlayer player, InventoryCrafting inv, InventoryCraftResult result) {
 		ItemStack itemstack = ItemStack.EMPTY;
-		Slot slot = this.inventorySlots.get(index);
 
-		if (slot != null && slot.getHasStack()) {
-			ItemStack itemstack1 = slot.getStack();
-			itemstack = itemstack1.copy();
+		if (lastRecipe == null || !lastRecipe.matches(inv, world)) lastRecipe = CraftingManager.findMatchingRecipe(inv, world);
 
-			if (index == 0) {
-				itemstack1.getItem().onCreated(itemstack1, this.world, playerIn);
-
-				if (!this.mergeItemStack(itemstack1, 10, 46, true)) { return ItemStack.EMPTY; }
-
-				slot.onSlotChange(itemstack1, itemstack);
-			} else if (index >= 10 && index < 37) {
-				if (!this.mergeItemStack(itemstack1, 37, 46, false)) { return ItemStack.EMPTY; }
-			} else if (index >= 37 && index < 46) {
-				if (!this.mergeItemStack(itemstack1, 10, 37, false)) { return ItemStack.EMPTY; }
-			} else if (!this.mergeItemStack(itemstack1, 10, 46, false)) { return ItemStack.EMPTY; }
-
-			if (itemstack1.isEmpty()) {
-				slot.putStack(ItemStack.EMPTY);
-			} else {
-				slot.onSlotChanged();
-			}
-
-			if (itemstack1.getCount() == itemstack.getCount()) { return ItemStack.EMPTY; }
-
-			ItemStack itemstack2 = slot.onTake(playerIn, itemstack1);
-
-			if (index == 0) {
-				playerIn.dropItem(itemstack2, false);
-			}
+		if (lastRecipe != null) {
+			itemstack = lastRecipe.getCraftingResult(inv);
 		}
 
-		return itemstack;
-	}
-
-	/**
-	 * Called to determine if the current slot is valid for the stack merging (double-click) code. The stack passed in
-	 * is null for the initial slot that was double-clicked.
-	 */
-	public boolean canMergeSlot(ItemStack stack, Slot slotIn) {
-		return slotIn.inventory != this.craftResult && super.canMergeSlot(stack, slotIn);
-	}
-
-	protected void slotChangedCraftingGrid(World world, EntityPlayer player, InventoryCrafting inv, InventoryCraftResult result) {
 		if (!world.isRemote) {
-			EntityPlayerMP entityplayermp = (EntityPlayerMP) player;
-			ItemStack itemstack = ItemStack.EMPTY;
-
-			if (lastRecipe == null || !lastRecipe.matches(inv, world)) lastRecipe = CraftingManager.findMatchingRecipe(inv, world);
-
-			if (lastRecipe != null) {
-				itemstack = lastRecipe.getCraftingResult(inv);
-			}
-
 			result.setInventorySlotContents(0, itemstack);
+			EntityPlayerMP entityplayermp = (EntityPlayerMP) player;
 			if (lastLastRecipe != lastRecipe) entityplayermp.connection.sendPacket(new SPacketSetSlot(this.windowId, 0, itemstack));
 			else if (lastLastRecipe != null && lastLastRecipe == lastRecipe && !ItemStack.areItemStacksEqual(lastLastRecipe.getCraftingResult(inv), lastRecipe.getCraftingResult(inv))) entityplayermp.connection.sendPacket(new SPacketSetSlot(this.windowId, 0, itemstack));
-			lastLastRecipe = lastRecipe;
 		}
+
+		lastLastRecipe = lastRecipe;
 	}
+
 }
