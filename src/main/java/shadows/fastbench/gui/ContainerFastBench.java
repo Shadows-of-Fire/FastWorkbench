@@ -27,8 +27,6 @@ public class ContainerFastBench extends ContainerWorkbench {
 		super(player.inventory, world, new BlockPos(x, y, z));
 		this.inventorySlots.clear();
 		this.inventoryItemStacks.clear();
-		craftMatrix = new InventoryCrafting(this, 3, 3);
-		craftResult = new InventoryCraftResult();
 		this.world = world;
 		this.x = x;
 		this.y = y;
