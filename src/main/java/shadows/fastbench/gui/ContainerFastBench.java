@@ -13,10 +13,12 @@ import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.network.play.server.SPacketSetSlot;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import shadows.fastbench.FastBench;
+import shadows.fastbench.net.LastRecipeMessage;
 
 public class ContainerFastBench extends ContainerWorkbench {
 	final World world;
-	IRecipe lastRecipe;
+	public IRecipe lastRecipe;
 	IRecipe lastLastRecipe;
 	final int x;
 	final int y;
@@ -79,6 +81,7 @@ public class ContainerFastBench extends ContainerWorkbench {
 			EntityPlayerMP entityplayermp = (EntityPlayerMP) player;
 			if (lastLastRecipe != lastRecipe) entityplayermp.connection.sendPacket(new SPacketSetSlot(this.windowId, 0, itemstack));
 			else if (lastLastRecipe != null && lastLastRecipe == lastRecipe && !ItemStack.areItemStacksEqual(lastLastRecipe.getCraftingResult(inv), lastRecipe.getCraftingResult(inv))) entityplayermp.connection.sendPacket(new SPacketSetSlot(this.windowId, 0, itemstack));
+			FastBench.NETWORK.sendTo(new LastRecipeMessage(lastRecipe), entityplayermp);
 		}
 
 		lastLastRecipe = lastRecipe;
