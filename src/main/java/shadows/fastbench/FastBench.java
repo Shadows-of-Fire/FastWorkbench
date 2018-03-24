@@ -31,7 +31,7 @@ public class FastBench {
 
 	public static final String MODID = "fastbench";
 	public static final String MODNAME = "FastWorkbench";
-	public static final String VERSION = "1.2.1";
+	public static final String VERSION = "1.2.2";
 
 	public static final Logger LOG = LogManager.getLogger(MODID);
 
@@ -48,9 +48,12 @@ public class FastBench {
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, new Handler());
 		NETWORK.registerMessage(LastRecipeMessage.Handler.class, LastRecipeMessage.class, 0, Side.CLIENT);
 		MinecraftForge.EVENT_BUS.register(this);
+		
 		NBTTagCompound t = new NBTTagCompound();
 		t.setString("ContainerClass", "shadows.fastbench.gui.ContainerFastBench");
+		t.setString("AlignToGrid", "west");
 		FMLInterModComms.sendMessage("craftingtweaks", "RegisterProvider", t);
+		
 		Configuration c = new Configuration(e.getSuggestedConfigurationFile());
 		delet = !c.getBoolean("is quat here", "crafting", false, "If the recipe book is not deleted");
 		if (c.hasChanged()) c.save();

@@ -3,28 +3,24 @@ package shadows.fastbench.gui;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.InventoryCraftResult;
 import net.minecraft.inventory.InventoryCrafting;
-import net.minecraft.inventory.Slot;
+import net.minecraft.inventory.SlotCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 
-public class SlotCraftingSucks extends Slot {
+public class SlotCraftingSucks extends SlotCrafting {
+
 	private final InventoryCrafting craftMatrix;
 	private final EntityPlayer player;
 	private int amountCrafted;
 	private final ContainerFastBench container;
 
 	public SlotCraftingSucks(ContainerFastBench container, EntityPlayer player, InventoryCrafting inv, InventoryCraftResult holder, int slotIndex, int xPosition, int yPosition) {
-		super(holder, slotIndex, xPosition, yPosition);
+		super(player, inv, holder, slotIndex, xPosition, yPosition);
 		this.player = player;
 		this.craftMatrix = inv;
 		this.container = container;
-	}
-
-	@Override
-	public boolean isItemValid(ItemStack stack) {
-		return false;
 	}
 
 	@Override
@@ -38,17 +34,6 @@ public class SlotCraftingSucks extends Slot {
 	@Override
 	public ItemStack getStack() {
 		return player.world.isRemote ? super.getStack().copy() : super.getStack();
-	}
-
-	@Override
-	protected void onCrafting(ItemStack stack, int amount) {
-		this.amountCrafted += amount;
-		this.onCrafting(stack);
-	}
-
-	@Override
-	protected void onSwapCraft(int p_190900_1_) {
-		this.amountCrafted += p_190900_1_;
 	}
 
 	/**
