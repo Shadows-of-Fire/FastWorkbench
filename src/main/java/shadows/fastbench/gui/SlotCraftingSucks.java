@@ -11,15 +11,10 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 
 public class SlotCraftingSucks extends SlotCrafting {
 
-	private final InventoryCrafting craftMatrix;
-	private final EntityPlayer player;
-	private int amountCrafted;
-	private final ContainerFastBench container;
+	protected final ContainerFastBench container;
 
 	public SlotCraftingSucks(ContainerFastBench container, EntityPlayer player, InventoryCrafting inv, InventoryCraftResult holder, int slotIndex, int xPosition, int yPosition) {
 		super(player, inv, holder, slotIndex, xPosition, yPosition);
-		this.player = player;
-		this.craftMatrix = inv;
 		this.container = container;
 	}
 
@@ -29,11 +24,6 @@ public class SlotCraftingSucks extends SlotCrafting {
 			this.amountCrafted += Math.min(amount, getStack().getCount());
 		}
 		return getStack();
-	}
-
-	@Override
-	public ItemStack getStack() {
-		return player.world.isRemote ? super.getStack().copy() : super.getStack();
 	}
 
 	/**
