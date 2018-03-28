@@ -26,26 +26,26 @@ public class GuiFastBench extends GuiCrafting {
 	@Override
 	public void initGui() {
 		super.initGui();
-		if (FastBench.delet) {
+		if (FastBench.removeRecipeBook) {
 			this.buttonList.clear();
 			this.recipeButton = null;
 			this.recipeBookGui = new GuiDedBook();
 		}
 	}
-	
+
 	public ClientContainerFastBench getContainer() {
 		return (ClientContainerFastBench) this.inventorySlots;
 	}
-	
-	public static class ClientContainerFastBench extends ContainerFastBench{
+
+	public static class ClientContainerFastBench extends ContainerFastBench {
 
 		public ClientContainerFastBench(EntityPlayer player, World world, int x, int y, int z) {
 			super(player, world, x, y, z);
 		}
-		
+
 		@Override
 		protected void slotChangedCraftingGrid(World world, EntityPlayer player, InventoryCrafting inv, InventoryCraftResult result) {
 		}
-		
+
 	}
 }
