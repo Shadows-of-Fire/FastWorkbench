@@ -2,6 +2,7 @@ package shadows.fastbench.gui;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.ContainerWorkbench;
 import net.minecraft.inventory.InventoryCraftResult;
@@ -17,6 +18,7 @@ import shadows.fastbench.FastBench;
 import shadows.fastbench.net.LastRecipeMessage;
 
 public class ContainerFastBench extends ContainerWorkbench {
+
 	final World world;
 	public IRecipe lastRecipe;
 	IRecipe lastLastRecipe;
@@ -26,14 +28,18 @@ public class ContainerFastBench extends ContainerWorkbench {
 	final BlockPos pos;
 
 	public ContainerFastBench(EntityPlayer player, World world, int x, int y, int z) {
-		super(player.inventory, world, new BlockPos(x, y, z));
+		this(player, world, new BlockPos(x, y, z));
+	}
+
+	public ContainerFastBench(EntityPlayer player, World world, BlockPos pos) {
+		super(player.inventory, world, pos);
 		this.inventorySlots.clear();
 		this.inventoryItemStacks.clear();
 		this.world = world;
-		this.x = x;
-		this.y = y;
-		this.z = z;
-		this.pos = new BlockPos(x, y, z);
+		this.x = pos.getX();
+		this.y = pos.getY();
+		this.z = pos.getZ();
+		this.pos = pos;
 
 		this.addSlotToContainer(new SlotCraftingSucks(this, player, this.craftMatrix, this.craftResult, 0, 124, 35));
 
@@ -85,6 +91,19 @@ public class ContainerFastBench extends ContainerWorkbench {
 		}
 
 		lastLastRecipe = lastRecipe;
+	}
+
+	@Override
+	public void onContainerClosed(EntityPlayer player) {
+		if (pos != BlockPos.ORIGIN) super.onContainerClosed(player);
+		else {
+			InventoryPlayer inv = player.inventory;
+			if (!inv.getItemStack().isEmpty()) {
+				player.dropItem(inv.getItemStack(), false);
+				inv.setItemStack(ItemStack.EMPTY);
+			}
+			if (!this.world.isRemote) this.clearContainer(player, this.world, this.craftMatrix);
+		}
 	}
 
 }

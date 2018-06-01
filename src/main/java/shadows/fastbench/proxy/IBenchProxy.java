@@ -9,4 +9,7 @@ public interface IBenchProxy {
 
 	public void replacePlayerList(MinecraftServer server);
 
+	public default void registerButtonRemover() {
+	};
+
 }

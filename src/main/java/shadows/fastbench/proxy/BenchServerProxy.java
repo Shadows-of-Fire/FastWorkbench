@@ -9,6 +9,7 @@ import shadows.fastbench.net.HijackedDedicatedPlayerList;
 
 public class BenchServerProxy implements IBenchProxy {
 
+	@Override
 	public void deleteBook(Entity e) {
 		if (e instanceof EntityPlayerMP) ((EntityPlayerMP) e).recipeBook = FastBench.SERVER_BOOK;
 	}
