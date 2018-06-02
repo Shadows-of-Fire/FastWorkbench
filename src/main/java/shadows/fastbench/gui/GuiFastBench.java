@@ -1,10 +1,7 @@
 package shadows.fastbench.gui;
 
 import net.minecraft.client.gui.inventory.GuiCrafting;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.InventoryCraftResult;
-import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
@@ -35,17 +32,5 @@ public class GuiFastBench extends GuiCrafting {
 
 	public ClientContainerFastBench getContainer() {
 		return (ClientContainerFastBench) this.inventorySlots;
-	}
-
-	public static class ClientContainerFastBench extends ContainerFastBench {
-
-		public ClientContainerFastBench(EntityPlayer player, World world, int x, int y, int z) {
-			super(player, world, x, y, z);
-		}
-
-		@Override
-		protected void slotChangedCraftingGrid(World world, EntityPlayer player, InventoryCrafting inv, InventoryCraftResult result) {
-		}
-
 	}
 }

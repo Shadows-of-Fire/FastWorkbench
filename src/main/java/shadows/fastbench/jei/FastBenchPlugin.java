@@ -4,8 +4,8 @@ import mezz.jei.api.IModPlugin;
 import mezz.jei.api.IModRegistry;
 import mezz.jei.api.JEIPlugin;
 import mezz.jei.api.recipe.VanillaRecipeCategoryUid;
+import shadows.fastbench.gui.ClientContainerFastBench;
 import shadows.fastbench.gui.ContainerFastBench;
-import shadows.fastbench.gui.GuiFastBench.ClientContainerFastBench;
 
 @JEIPlugin
 public class FastBenchPlugin implements IModPlugin {

@@ -1,5 +1,7 @@
 package shadows.fastbench;
 
+import java.util.Collection;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -9,6 +11,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.event.RegistryEvent.Register;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
@@ -22,6 +25,8 @@ import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
 import shadows.fastbench.block.BlockFastBench;
 import shadows.fastbench.book.DedRecipeBook;
+import shadows.fastbench.gui.ClientContainerFastBench;
+import shadows.fastbench.gui.ContainerFastBench;
 import shadows.fastbench.gui.Handler;
 import shadows.fastbench.net.LastRecipeMessage;
 import shadows.fastbench.proxy.IBenchProxy;
@@ -31,7 +36,7 @@ public class FastBench {
 
 	public static final String MODID = "fastbench";
 	public static final String MODNAME = "FastWorkbench";
-	public static final String VERSION = "1.4.0";
+	public static final String VERSION = "1.5.0";
 
 	public static final Logger LOG = LogManager.getLogger(MODID);
 
@@ -62,6 +67,8 @@ public class FastBench {
 		if (c.hasChanged()) c.save();
 
 		if (removeRecipeBook) PROXY.registerButtonRemover();
+
+		if (Loader.isModLoaded("extrautils2")) temaWtf();
 	}
 
 	@SubscribeEvent
@@ -77,6 +84,17 @@ public class FastBench {
 	@SubscribeEvent
 	public void normalRemoval(EntityJoinWorldEvent e) {
 		if (removeRecipeBook) PROXY.deleteBook(e.getEntity());
+	}
+
+	@SuppressWarnings("unchecked")
+	public static void temaWtf() {
+		try {
+			Class<?> c = Class.forName("com.rwtema.extrautils2.items.ItemUnstableIngots");
+			Collection<Class<?>> classes = (Collection<Class<?>>) c.getDeclaredField("ALLOWED_CLASSES").get(null);
+			classes.add(ClientContainerFastBench.class);
+			classes.add(ContainerFastBench.class);
+		} catch (Exception noh) {
+		}
 	}
 
 }
