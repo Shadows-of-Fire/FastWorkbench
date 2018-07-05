@@ -19,6 +19,7 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInterModComms;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerAboutToStartEvent;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
@@ -36,7 +37,7 @@ public class FastBench {
 
 	public static final String MODID = "fastbench";
 	public static final String MODNAME = "FastWorkbench";
-	public static final String VERSION = "1.5.0";
+	public static final String VERSION = "1.5.1";
 
 	public static final Logger LOG = LogManager.getLogger(MODID);
 
@@ -71,7 +72,7 @@ public class FastBench {
 		if (Loader.isModLoaded("extrautils2")) temaWtf();
 	}
 
-	@SubscribeEvent
+	@SubscribeEvent(priority = EventPriority.LOWEST)
 	public void blockBois(Register<Block> e) {
 		e.getRegistry().register(new BlockFastBench().setRegistryName("minecraft", "crafting_table"));
 	}
