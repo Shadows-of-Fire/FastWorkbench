@@ -16,7 +16,7 @@ public class BlockFastBench extends BlockWorkbench {
 	public BlockFastBench() {
 		setHardness(2.5F);
 		setSoundType(SoundType.WOOD);
-		setUnlocalizedName("workbench");
+		setTranslationKey("workbench");
 	}
 
 	@Override
