@@ -16,11 +16,11 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class GuiDedBook extends GuiRecipeBook {
 
 	@Override
-	public void func_194303_a(int p_194303_1_, int p_194303_2_, Minecraft p_194303_3_, boolean p_194303_4_, InventoryCrafting p_194303_5_) {
+	public void func_194303_a(int width, int height, Minecraft minecraft, boolean widthTooNarrow, InventoryCrafting craftingSlots) {
 	}
 
 	@Override
-	public void initVisuals(boolean p_193014_1_, InventoryCrafting p_193014_2_) {
+	public void initVisuals(boolean widthTooNarrow, InventoryCrafting craftingSlots) {
 	}
 
 	@Override
@@ -28,8 +28,8 @@ public class GuiDedBook extends GuiRecipeBook {
 	}
 
 	@Override
-	public int updateScreenPosition(boolean p_193011_1_, int p_193011_2_, int p_193011_3_) {
-		return (p_193011_2_ - p_193011_3_) / 2;
+	public int updateScreenPosition(boolean widthTooNarrow, int width, int xSize) {
+		return (width - xSize) / 2;
 	}
 
 	@Override
@@ -54,11 +54,11 @@ public class GuiDedBook extends GuiRecipeBook {
 	}
 
 	@Override
-	public void renderTooltip(int p_191876_1_, int p_191876_2_, int p_191876_3_, int p_191876_4_) {
+	public void renderTooltip(int guiLeft, int guiTop, int mouseX, int mouseY) {
 	}
 
 	@Override
-	public void renderGhostRecipe(int p_191864_1_, int p_191864_2_, boolean p_191864_3_, float p_191864_4_) {
+	public void renderGhostRecipe(int guiLeft, int guiTop, boolean someOffsetThing, float partialTicks) {
 	}
 
 	@Override
