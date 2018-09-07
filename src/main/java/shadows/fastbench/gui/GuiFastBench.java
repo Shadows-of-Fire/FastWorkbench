@@ -30,7 +30,7 @@ public class GuiFastBench extends GuiCrafting {
 		}
 	}
 
-	public ClientContainerFastBench getContainer() {
-		return (ClientContainerFastBench) this.inventorySlots;
+	public ContainerFastBench getContainer() {
+		return (ContainerFastBench) this.inventorySlots;
 	}
 }
