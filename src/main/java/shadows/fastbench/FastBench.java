@@ -6,6 +6,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import net.minecraft.block.Block;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
@@ -23,6 +24,7 @@ import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.relauncher.Side;
 import shadows.fastbench.block.BlockFastBench;
 import shadows.fastbench.book.DedRecipeBook;
@@ -37,7 +39,7 @@ public class FastBench {
 
 	public static final String MODID = "fastbench";
 	public static final String MODNAME = "FastWorkbench";
-	public static final String VERSION = "1.5.3";
+	public static final String VERSION = "1.6.0";
 
 	public static final Logger LOG = LogManager.getLogger(MODID);
 
@@ -74,7 +76,13 @@ public class FastBench {
 
 	@SubscribeEvent(priority = EventPriority.LOWEST)
 	public void blockBois(Register<Block> e) {
-		e.getRegistry().register(new BlockFastBench().setRegistryName("minecraft", "crafting_table"));
+		Block b = new BlockFastBench().setRegistryName("minecraft", "crafting_table");
+		e.getRegistry().register(b);
+		ForgeRegistries.ITEMS.register(new ItemBlock(b) {
+			public String getCreatorModId(net.minecraft.item.ItemStack itemStack) {
+				return MODID;
+			}
+		}.setRegistryName(b.getRegistryName()));
 	}
 
 	@EventHandler
