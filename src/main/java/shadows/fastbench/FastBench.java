@@ -6,6 +6,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import net.minecraft.block.Block;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.MinecraftForge;
@@ -17,6 +18,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
 import net.minecraftforge.fml.common.SidedProxy;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLInterModComms;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerAboutToStartEvent;
@@ -26,6 +28,7 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.oredict.OreDictionary;
 import shadows.fastbench.block.BlockFastBench;
 import shadows.fastbench.book.DedRecipeBook;
 import shadows.fastbench.gui.ClientContainerFastBench;
@@ -39,7 +42,7 @@ public class FastBench {
 
 	public static final String MODID = "fastbench";
 	public static final String MODNAME = "FastWorkbench";
-	public static final String VERSION = "1.6.0";
+	public static final String VERSION = "1.6.1";
 
 	public static final Logger LOG = LogManager.getLogger(MODID);
 
@@ -72,6 +75,12 @@ public class FastBench {
 		if (removeRecipeBook) PROXY.registerButtonRemover();
 
 		if (Loader.isModLoaded("extrautils2")) temaWtf();
+	}
+
+	@EventHandler
+	public void init(FMLInitializationEvent e) {
+		OreDictionary.registerOre("workbench", Blocks.CRAFTING_TABLE);
+		OreDictionary.registerOre("craftingTableWood", Blocks.CRAFTING_TABLE);
 	}
 
 	@SubscribeEvent(priority = EventPriority.LOWEST)
