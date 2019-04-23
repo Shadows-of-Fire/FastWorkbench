@@ -42,7 +42,7 @@ public class FastBench {
 
 	public static final String MODID = "fastbench";
 	public static final String MODNAME = "FastWorkbench";
-	public static final String VERSION = "1.6.1";
+	public static final String VERSION = "1.7.0";
 
 	public static final Logger LOG = LogManager.getLogger(MODID);
 
@@ -56,6 +56,7 @@ public class FastBench {
 	public static final DedRecipeBook SERVER_BOOK = new DedRecipeBook();
 
 	public static boolean removeRecipeBook = true;
+	public static boolean experimentalShiftCrafting = true;
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent e) {
@@ -69,7 +70,8 @@ public class FastBench {
 		FMLInterModComms.sendMessage("craftingtweaks", "RegisterProvider", t);
 
 		Configuration c = new Configuration(e.getSuggestedConfigurationFile());
-		removeRecipeBook = !c.getBoolean("is quat here", "crafting", false, "If the recipe book is not deleted");
+		removeRecipeBook = c.getBoolean("Disable Recipe Book", "crafting", true, "If the recipe book and all associated functionality are fully removed.");
+		experimentalShiftCrafting = c.getBoolean("Experiemental Shift Crafting", "crafting", true, "If a testing variant of shift-click crafting is enabled.");
 		if (c.hasChanged()) c.save();
 
 		if (removeRecipeBook) PROXY.registerButtonRemover();
@@ -88,6 +90,7 @@ public class FastBench {
 		Block b = new BlockFastBench().setRegistryName("minecraft", "crafting_table");
 		e.getRegistry().register(b);
 		ForgeRegistries.ITEMS.register(new ItemBlock(b) {
+			@Override
 			public String getCreatorModId(net.minecraft.item.ItemStack itemStack) {
 				return MODID;
 			}

@@ -10,7 +10,7 @@ buildscript {
 apply plugin: 'net.minecraftforge.gradle.forge'
 
 
-version = "1.12.2-1.6.1"
+version = "1.12.2-1.7.0"
 group= "shadows.fastbench"
 archivesBaseName = "FastWorkbench"
 
@@ -20,15 +20,15 @@ compileJava {
 }
 
 minecraft {
-    version = "1.12.2-14.23.5.2770"
+    version = "1.12.2-14.23.5.2836"
     runDir = "run"
-    mappings = "snapshot_20180720"
+    mappings = "stable_39"
 	makeObfSourceJar = false
 }
 
 repositories {
     maven {
-        url "http://dvs1.progwml6.com/files/maven"
+        url "https://dvs1.progwml6.com/files/maven"
     }
 	maven {
 		url "http://tehnut.info/maven"
