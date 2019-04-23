@@ -27,6 +27,7 @@ public class ContainerFastBench extends ContainerWorkbench {
 	protected final int z;
 	protected final BlockPos pos;
 	protected boolean checkMatrixChanges = true;
+	protected boolean useNormalTransfer = false;
 
 	public ContainerFastBench(EntityPlayer player, World world, int x, int y, int z) {
 		this(player, world, new BlockPos(x, y, z));
@@ -107,17 +108,9 @@ public class ContainerFastBench extends ContainerWorkbench {
 		}
 	}
 
-	/**
-	 * Method that provides access to the super variant of transferStackInSlot.
-	 * Since FB uses a custom impl that not all callers may want.
-	 */
-	public ItemStack superTransferStack(EntityPlayer player, int index) {
-		return super.transferStackInSlot(player, index);
-	}
-
 	@Override
 	public ItemStack transferStackInSlot(EntityPlayer player, int index) {
-		if (!FastBench.experimentalShiftCrafting || index != 0) return super.transferStackInSlot(player, index);
+		if (useNormalTransfer || !FastBench.experimentalShiftCrafting || index != 0) return super.transferStackInSlot(player, index);
 
 		ItemStack itemstack = ItemStack.EMPTY;
 		Slot slot = this.inventorySlots.get(index);
