@@ -19,13 +19,14 @@ import shadows.fastbench.net.LastRecipeMessage;
 
 public class ContainerFastBench extends ContainerWorkbench {
 
-	final World world;
+	protected final World world;
 	public IRecipe lastRecipe;
-	IRecipe lastLastRecipe;
-	final int x;
-	final int y;
-	final int z;
-	final BlockPos pos;
+	protected IRecipe lastLastRecipe;
+	protected final int x;
+	protected final int y;
+	protected final int z;
+	protected final BlockPos pos;
+	protected boolean checkMatrixChanges = true;
 
 	public ContainerFastBench(EntityPlayer player, World world, int x, int y, int z) {
 		this(player, world, new BlockPos(x, y, z));
@@ -108,12 +109,13 @@ public class ContainerFastBench extends ContainerWorkbench {
 
 	@Override
 	public ItemStack transferStackInSlot(EntityPlayer player, int index) {
-		if (index != 0) return super.transferStackInSlot(player, index);
+		if (!FastBench.experimentalShiftCrafting || index != 0) return super.transferStackInSlot(player, index);
 
 		ItemStack itemstack = ItemStack.EMPTY;
 		Slot slot = this.inventorySlots.get(index);
 
 		if (slot != null && slot.getHasStack()) {
+			checkMatrixChanges = false;
 			while (lastRecipe != null && lastRecipe.matches(this.craftMatrix, this.world)) {
 				ItemStack itemstack1 = slot.getStack();
 				itemstack = itemstack1.copy();
@@ -129,6 +131,8 @@ public class ContainerFastBench extends ContainerWorkbench {
 				ItemStack itemstack2 = slot.onTake(player, itemstack1);
 				player.dropItem(itemstack2, false);
 			}
+			checkMatrixChanges = true;
+			this.slotChangedCraftingGrid(world, player, craftMatrix, craftResult);
 		}
 		return itemstack;
 	}
