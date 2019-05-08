@@ -78,7 +78,7 @@ public class ContainerFastBench extends ContainerWorkbench {
 	protected void slotChangedCraftingGrid(World world, EntityPlayer player, InventoryCrafting inv, InventoryCraftResult result) {
 		ItemStack itemstack = ItemStack.EMPTY;
 
-		if (lastRecipe == null || !lastRecipe.matches(inv, world)) lastRecipe = CraftingManager.findMatchingRecipe(inv, world);
+		if (checkMatrixChanges && (lastRecipe == null || !lastRecipe.matches(inv, world))) lastRecipe = CraftingManager.findMatchingRecipe(inv, world);
 
 		if (lastRecipe != null) {
 			itemstack = lastRecipe.getCraftingResult(inv);
@@ -135,7 +135,7 @@ public class ContainerFastBench extends ContainerWorkbench {
 			checkMatrixChanges = true;
 			this.slotChangedCraftingGrid(world, player, craftMatrix, craftResult);
 		}
-		return itemstack;
+		return lastRecipe == null ? ItemStack.EMPTY : itemstack;
 	}
 
 }
