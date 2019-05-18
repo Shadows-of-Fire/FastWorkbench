@@ -1,13 +1,21 @@
 package shadows.fastbench.book;
 
+import java.util.Collections;
+import java.util.List;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.recipebook.RecipeList;
+import net.minecraft.client.util.RecipeBookCategories;
 import net.minecraft.client.util.RecipeBookClient;
+import net.minecraft.inventory.ContainerRecipeBook;
 import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.stats.RecipeBook;
+import net.minecraft.item.crafting.RecipeBook;
+import net.minecraft.util.ResourceLocation;
 
 public class DedClientBook extends RecipeBookClient {
 
-	@Override
-	public void copyFrom(RecipeBook that) {
+	public DedClientBook() {
+		super(Minecraft.getInstance().world.getRecipeManager());
 	}
 
 	@Override
@@ -53,4 +61,58 @@ public class DedClientBook extends RecipeBookClient {
 	@Override
 	public void unlock(IRecipe recipe) {
 	}
+
+	@Override
+	public void copyFrom(RecipeBook that) {
+	}
+
+	@Override
+	public List<RecipeList> getRecipes() {
+		return Collections.emptyList();
+	}
+
+	@Override
+	public List<RecipeList> getRecipes(RecipeBookCategories p_202891_1_) {
+		return Collections.emptyList();
+	}
+
+	@Override
+	public boolean isFilteringCraftable(ContainerRecipeBook p_203432_1_) {
+		return false;
+	}
+
+	@Override
+	public boolean isFurnaceFilteringCraftable() {
+		return false;
+	}
+
+	@Override
+	public boolean isFurnaceGuiOpen() {
+		return false;
+	}
+
+	@Override
+	protected void lock(ResourceLocation p_209119_1_) {
+	}
+
+	@Override
+	protected void markNew(ResourceLocation p_209120_1_) {
+	}
+
+	@Override
+	public void rebuildTable() {
+	}
+
+	@Override
+	public void setFurnaceFilteringCraftable(boolean p_202882_1_) {
+	}
+
+	@Override
+	public void setFurnaceGuiOpen(boolean p_202881_1_) {
+	}
+
+	@Override
+	protected void unlock(ResourceLocation p_209118_1_) {
+	}
+
 }

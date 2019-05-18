@@ -44,7 +44,7 @@ repositories {
 
 dependencies {
     minecraft 'net.minecraftforge:forge:1.13.2-25.0.209'
-	compile fg.deobf("mezz.jei:jei_1.13.2:+")
+	compile fg.deobf("mezz.jei:jei-1.13.2:+")
 }
 
 jar {

@@ -1,15 +1,15 @@
 package shadows.fastbench.net;
 
-import io.netty.buffer.ByteBuf;
+import java.util.function.Supplier;
+
 import net.minecraft.client.Minecraft;
-import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import net.minecraft.item.crafting.RecipeSerializers;
+import net.minecraft.network.PacketBuffer;
+import net.minecraftforge.fml.network.NetworkEvent;
 import shadows.fastbench.gui.GuiFastBench;
 
-public class LastRecipeMessage implements IMessage {
+public class LastRecipeMessage {
 
 	public LastRecipeMessage() {
 	}
@@ -20,23 +20,16 @@ public class LastRecipeMessage implements IMessage {
 		rec = toSend;
 	}
 
-	@Override
-	public void fromBytes(ByteBuf buf) {
-		rec = CraftingManager.REGISTRY.getObjectById(buf.readInt());
+	public static LastRecipeMessage read(PacketBuffer buf) {
+		return new LastRecipeMessage(RecipeSerializers.read(buf));
 	}
 
-	@Override
-	public void toBytes(ByteBuf buf) {
-		buf.writeInt(CraftingManager.REGISTRY.getIDForObject(rec));
+	public static void write(LastRecipeMessage msg, PacketBuffer buf) {
+		RecipeSerializers.write(msg.rec, buf);
 	}
 
-	public static class Handler implements IMessageHandler<LastRecipeMessage, IMessage> {
-
-		@Override
-		public IMessage onMessage(LastRecipeMessage message, MessageContext ctx) {
-			if (Minecraft.getMinecraft().currentScreen instanceof GuiFastBench) ((GuiFastBench) Minecraft.getMinecraft().currentScreen).getContainer().lastRecipe = message.rec;
-			return null;
-		}
+	public static void handle(LastRecipeMessage message, Supplier<NetworkEvent.Context> context) {
+		if (Minecraft.getInstance().currentScreen instanceof GuiFastBench) ((GuiFastBench) Minecraft.getInstance().currentScreen).getContainer().lastRecipe = message.rec;
 
 	}
 

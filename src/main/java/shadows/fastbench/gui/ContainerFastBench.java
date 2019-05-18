@@ -5,15 +5,17 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.ContainerWorkbench;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryCraftResult;
-import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.item.crafting.RecipeManager;
 import net.minecraft.network.play.server.SPacketSetSlot;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.common.crafting.VanillaRecipeTypes;
+import net.minecraftforge.fml.network.NetworkDirection;
 import shadows.fastbench.FastBench;
 import shadows.fastbench.net.LastRecipeMessage;
 
@@ -22,10 +24,10 @@ public class ContainerFastBench extends ContainerWorkbench {
 	protected final World world;
 	public IRecipe lastRecipe;
 	protected IRecipe lastLastRecipe;
-	protected final int x;
-	protected final int y;
-	protected final int z;
-	protected final BlockPos pos;
+	protected int x;
+	protected int y;
+	protected int z;
+	protected BlockPos pos;
 	protected boolean checkMatrixChanges = true;
 	protected boolean useNormalTransfer = false;
 
@@ -43,22 +45,22 @@ public class ContainerFastBench extends ContainerWorkbench {
 		this.z = pos.getZ();
 		this.pos = pos;
 
-		this.addSlotToContainer(new SlotCraftingSucks(this, player, this.craftMatrix, this.craftResult, 0, 124, 35));
+		this.addSlot(new SlotCraftingSucks(this, player, this.craftMatrix, this.craftResult, 0, 124, 35));
 
 		for (int i = 0; i < 3; ++i) {
 			for (int j = 0; j < 3; ++j) {
-				this.addSlotToContainer(new Slot(this.craftMatrix, j + i * 3, 30 + j * 18, 17 + i * 18));
+				this.addSlot(new Slot(this.craftMatrix, j + i * 3, 30 + j * 18, 17 + i * 18));
 			}
 		}
 
 		for (int k = 0; k < 3; ++k) {
 			for (int i1 = 0; i1 < 9; ++i1) {
-				this.addSlotToContainer(new Slot(player.inventory, i1 + k * 9 + 9, 8 + i1 * 18, 84 + k * 18));
+				this.addSlot(new Slot(player.inventory, i1 + k * 9 + 9, 8 + i1 * 18, 84 + k * 18));
 			}
 		}
 
 		for (int l = 0; l < 9; ++l) {
-			this.addSlotToContainer(new Slot(player.inventory, l, 8 + l * 18, 142));
+			this.addSlot(new Slot(player.inventory, l, 8 + l * 18, 142));
 		}
 	}
 
@@ -75,10 +77,14 @@ public class ContainerFastBench extends ContainerWorkbench {
 	}
 
 	@Override
-	protected void slotChangedCraftingGrid(World world, EntityPlayer player, InventoryCrafting inv, InventoryCraftResult result) {
+	protected void slotChangedCraftingGrid(World world, EntityPlayer player, IInventory inv, InventoryCraftResult result) {
+		if (world.isRemote) return;
+
 		ItemStack itemstack = ItemStack.EMPTY;
 
-		if (checkMatrixChanges && (lastRecipe == null || !lastRecipe.matches(inv, world))) lastRecipe = CraftingManager.findMatchingRecipe(inv, world);
+		RecipeManager mgr = world.getRecipeManager();
+
+		if (checkMatrixChanges && (lastRecipe == null || !lastRecipe.matches(inv, world))) lastRecipe = mgr.getRecipe(inv, world, VanillaRecipeTypes.CRAFTING);
 
 		if (lastRecipe != null) {
 			itemstack = lastRecipe.getCraftingResult(inv);
@@ -89,7 +95,7 @@ public class ContainerFastBench extends ContainerWorkbench {
 			EntityPlayerMP entityplayermp = (EntityPlayerMP) player;
 			if (lastLastRecipe != lastRecipe) entityplayermp.connection.sendPacket(new SPacketSetSlot(this.windowId, 0, itemstack));
 			else if (lastLastRecipe != null && lastLastRecipe == lastRecipe && !ItemStack.areItemStacksEqual(lastLastRecipe.getCraftingResult(inv), lastRecipe.getCraftingResult(inv))) entityplayermp.connection.sendPacket(new SPacketSetSlot(this.windowId, 0, itemstack));
-			FastBench.NETWORK.sendTo(new LastRecipeMessage(lastRecipe), entityplayermp);
+			FastBench.CHANNEL.sendTo(new LastRecipeMessage(lastRecipe), entityplayermp.connection.netManager, NetworkDirection.PLAY_TO_CLIENT);
 		}
 
 		lastLastRecipe = lastRecipe;
@@ -136,6 +142,13 @@ public class ContainerFastBench extends ContainerWorkbench {
 			this.slotChangedCraftingGrid(world, player, craftMatrix, craftResult);
 		}
 		return lastRecipe == null ? ItemStack.EMPTY : itemstack;
+	}
+
+	public void setPos(BlockPos pos) {
+		this.pos = pos;
+		this.x = pos.getX();
+		this.y = pos.getY();
+		this.z = pos.getZ();
 	}
 
 }

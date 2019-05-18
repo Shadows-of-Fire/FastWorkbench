@@ -7,7 +7,7 @@ import net.minecraft.inventory.SlotCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.common.ForgeHooks;
-import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.hooks.BasicEventHooks;
 
 public class SlotCraftingSucks extends SlotCrafting {
 
@@ -33,7 +33,7 @@ public class SlotCraftingSucks extends SlotCrafting {
 	protected void onCrafting(ItemStack stack) {
 		if (this.amountCrafted > 0) {
 			stack.onCrafting(this.player.world, this.player, this.amountCrafted);
-			FMLCommonHandler.instance().firePlayerCraftingEvent(this.player, stack, craftMatrix);
+			BasicEventHooks.firePlayerCraftingEvent(this.player, stack, craftMatrix);
 		}
 
 		this.amountCrafted = 0;
