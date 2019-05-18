@@ -1,0 +1,35 @@
+modLoader="javafml" #mandatory
+
+loaderVersion="[25,)" #mandatory (24 is current forge version)
+
+issueTrackerURL="https://github.com/Shadows-of-Fire/FastWorkbench/issues" #optional
+
+displayURL="https://minecraft.curseforge.com/projects/fastworkbench" #optional
+
+authors="Shadows_of_Fire" #optional
+
+[[mods]] #mandatory
+
+modId="fastbench" #mandatory
+
+version="${file.jarVersion}" #mandatory
+
+displayName="Fast Workbench" #mandatory
+
+description='''
+General improvements for the crafting table.
+'''
+
+[[dependencies.fastbench]] #optional
+    modId="forge" #mandatory
+    mandatory=true #mandatory
+    versionRange="[25,)" #mandatory
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.fastbench]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="[1.13.2]"
+    ordering="NONE"
+    side="BOTH"
