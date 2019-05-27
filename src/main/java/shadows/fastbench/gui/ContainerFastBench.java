@@ -123,12 +123,19 @@ public class ContainerFastBench extends ContainerWorkbench {
 
 				itemstack1.getItem().onCreated(itemstack1, this.world, player);
 
-				if (!world.isRemote && !this.mergeItemStack(itemstack1, 10, 46, true)) return ItemStack.EMPTY;
+				if (!world.isRemote && !this.mergeItemStack(itemstack1, 10, 46, true)) {
+					checkMatrixChanges = true;
+					return ItemStack.EMPTY;
+				}
 
 				slot.onSlotChange(itemstack1, itemstack);
 				slot.onSlotChanged();
 
-				if (!world.isRemote && itemstack1.getCount() == itemstack.getCount()) return ItemStack.EMPTY;
+				if (!world.isRemote && itemstack1.getCount() == itemstack.getCount()) {
+					checkMatrixChanges = true;
+					return ItemStack.EMPTY;
+				}
+
 				ItemStack itemstack2 = slot.onTake(player, itemstack1);
 				player.dropItem(itemstack2, false);
 			}
