@@ -5,16 +5,19 @@ import java.util.Collection;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.inventory.GuiCrafting;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.common.MinecraftForge;
+import net.minecraft.stats.StatList;
+import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.event.RegistryEvent.Register;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
 import net.minecraftforge.fml.common.SidedProxy;
@@ -26,18 +29,18 @@ import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
-import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
-import shadows.fastbench.block.BlockFastBench;
 import shadows.fastbench.book.DedRecipeBook;
 import shadows.fastbench.gui.ClientContainerFastBench;
 import shadows.fastbench.gui.ContainerFastBench;
-import shadows.fastbench.gui.Handler;
+import shadows.fastbench.gui.GuiFastBench;
 import shadows.fastbench.net.LastRecipeMessage;
 import shadows.fastbench.proxy.IBenchProxy;
 
 @Mod(modid = FastBench.MODID, name = FastBench.MODNAME, version = FastBench.VERSION)
+@EventBusSubscriber
 public class FastBench {
 
 	public static final String MODID = "fastbench";
@@ -60,9 +63,7 @@ public class FastBench {
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent e) {
-		NetworkRegistry.INSTANCE.registerGuiHandler(this, new Handler());
 		NETWORK.registerMessage(LastRecipeMessage.Handler.class, LastRecipeMessage.class, 0, Side.CLIENT);
-		MinecraftForge.EVENT_BUS.register(this);
 
 		NBTTagCompound t = new NBTTagCompound();
 		t.setString("ContainerClass", "shadows.fastbench.gui.ContainerFastBench");
@@ -83,18 +84,6 @@ public class FastBench {
 	public void init(FMLInitializationEvent e) {
 		OreDictionary.registerOre("workbench", Blocks.CRAFTING_TABLE);
 		OreDictionary.registerOre("craftingTableWood", Blocks.CRAFTING_TABLE);
-	}
-
-	@SubscribeEvent(priority = EventPriority.LOWEST)
-	public void blockBois(Register<Block> e) {
-		Block b = new BlockFastBench().setRegistryName("minecraft", "crafting_table");
-		e.getRegistry().register(b);
-		ForgeRegistries.ITEMS.register(new ItemBlock(b) {
-			@Override
-			public String getCreatorModId(net.minecraft.item.ItemStack itemStack) {
-				return MODID;
-			}
-		}.setRegistryName(b.getRegistryName()));
 	}
 
 	@EventHandler
@@ -118,4 +107,14 @@ public class FastBench {
 		}
 	}
 
+	@SubscribeEvent(priority = EventPriority.HIGH)
+	@SideOnly(Side.CLIENT)
+	public static void fastbench$openGui(GuiOpenEvent event) {
+		EntityPlayer player = Minecraft.getMinecraft().player;
+
+		if (event.getGui() instanceof GuiCrafting) {
+			player.addStat(StatList.CRAFTING_TABLE_INTERACTION);
+			event.setGui(new GuiFastBench(player.inventory, player.world, BlockPos.ORIGIN));
+		}
+	}
 }

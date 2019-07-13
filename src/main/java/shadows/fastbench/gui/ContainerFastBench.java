@@ -67,7 +67,7 @@ public class ContainerFastBench extends ContainerWorkbench {
 	 */
 	@Override
 	public boolean canInteractWith(EntityPlayer playerIn) {
-		if (this.world.getBlockState(this.pos).getBlock() != Blocks.CRAFTING_TABLE) {
+		if (this.world.getBlockState(this.pos).getBlock() == Blocks.AIR) {
 			return false;
 		} else {
 			return playerIn.getDistanceSq(x + 0.5D, y + 0.5D, z + 0.5D) <= 64.0D;
