@@ -32,6 +32,7 @@ import net.minecraftforge.fml.common.network.IGuiHandler;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
 import shadows.fastbench.book.DedRecipeBook;
 import shadows.fastbench.gui.ClientContainerFastBench;
@@ -131,6 +132,7 @@ public class FastBench implements IGuiHandler {
 		return new ContainerFastBench(player, world, x, y, z);
 	}
 
+	@SideOnly(Side.CLIENT)
 	@Override
 	public GuiFastBench getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
 		return new GuiFastBench(player.inventory, world, new BlockPos(x, y, z));
