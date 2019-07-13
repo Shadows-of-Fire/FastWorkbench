@@ -5,16 +5,18 @@ import java.util.Collection;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.inventory.GuiCrafting;
+import net.minecraft.block.BlockWorkbench;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.stats.StatList;
+import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.client.event.GuiOpenEvent;
+import net.minecraft.world.World;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
@@ -25,12 +27,11 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLInterModComms;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerAboutToStartEvent;
-import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.network.IGuiHandler;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
 import shadows.fastbench.book.DedRecipeBook;
 import shadows.fastbench.gui.ClientContainerFastBench;
@@ -41,7 +42,7 @@ import shadows.fastbench.proxy.IBenchProxy;
 
 @Mod(modid = FastBench.MODID, name = FastBench.MODNAME, version = FastBench.VERSION)
 @EventBusSubscriber
-public class FastBench {
+public class FastBench implements IGuiHandler {
 
 	public static final String MODID = "fastbench";
 	public static final String MODNAME = "FastWorkbench";
@@ -50,7 +51,7 @@ public class FastBench {
 	public static final Logger LOG = LogManager.getLogger(MODID);
 
 	@Instance
-	public static FastBench INSTANCE;
+	public static FastBench instance;
 
 	@SidedProxy(serverSide = "shadows.fastbench.proxy.BenchServerProxy", clientSide = "shadows.fastbench.proxy.BenchClientProxy")
 	public static IBenchProxy PROXY;
@@ -63,6 +64,7 @@ public class FastBench {
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent e) {
+		NetworkRegistry.INSTANCE.registerGuiHandler(instance, this);
 		NETWORK.registerMessage(LastRecipeMessage.Handler.class, LastRecipeMessage.class, 0, Side.CLIENT);
 
 		NBTTagCompound t = new NBTTagCompound();
@@ -92,7 +94,7 @@ public class FastBench {
 	}
 
 	@SubscribeEvent
-	public void normalRemoval(EntityJoinWorldEvent e) {
+	public static void fastbench$normalRemoval(EntityJoinWorldEvent e) {
 		if (removeRecipeBook) PROXY.deleteBook(e.getEntity());
 	}
 
@@ -104,17 +106,33 @@ public class FastBench {
 			classes.add(ClientContainerFastBench.class);
 			classes.add(ContainerFastBench.class);
 		} catch (Exception noh) {
+			LOG.catching(noh);
 		}
 	}
 
-	@SubscribeEvent(priority = EventPriority.HIGH)
-	@SideOnly(Side.CLIENT)
-	public static void fastbench$openGui(GuiOpenEvent event) {
-		EntityPlayer player = Minecraft.getMinecraft().player;
+	@SubscribeEvent
+	public static void fastbench$activateCraftingTable(PlayerInteractEvent.RightClickBlock event) {
+		World world = event.getWorld();
+		BlockPos pos = event.getPos();
+		IBlockState state = world.getBlockState(pos);
 
-		if (event.getGui() instanceof GuiCrafting) {
+		if (state.getBlock() instanceof BlockWorkbench) {
+			EntityPlayer player = event.getEntityPlayer();
+
 			player.addStat(StatList.CRAFTING_TABLE_INTERACTION);
-			event.setGui(new GuiFastBench(player.inventory, player.world, BlockPos.ORIGIN));
+			player.openGui(instance, 0, world, pos.getX(), pos.getY(), pos.getZ());
+			event.setCancellationResult(EnumActionResult.SUCCESS);
+			event.setCanceled(true);
 		}
+	}
+
+	@Override
+	public ContainerFastBench getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
+		return new ContainerFastBench(player, world, x, y, z);
+	}
+
+	@Override
+	public GuiFastBench getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
+		return new GuiFastBench(player.inventory, world, new BlockPos(x, y, z));
 	}
 }
