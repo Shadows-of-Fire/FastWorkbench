@@ -8,6 +8,7 @@ import org.apache.logging.log4j.Logger;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
@@ -91,7 +92,7 @@ public class FastBench {
 		e.getRegistry().register(b);
 		ForgeRegistries.ITEMS.register(new ItemBlock(b) {
 			@Override
-			public String getCreatorModId(net.minecraft.item.ItemStack itemStack) {
+			public String getCreatorModId(ItemStack itemStack) {
 				return MODID;
 			}
 		}.setRegistryName(b.getRegistryName()));
