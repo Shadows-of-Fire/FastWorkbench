@@ -1,17 +1,15 @@
 package shadows.fastbench.proxy;
 
-import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiButtonImage;
-import net.minecraft.client.gui.inventory.GuiCrafting;
-import net.minecraft.client.gui.inventory.GuiInventory;
+import net.minecraft.client.entity.player.ClientPlayerEntity;
+import net.minecraft.client.gui.widget.Widget;
+import net.minecraft.client.gui.widget.button.ImageButton;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.integrated.IntegratedServer;
 import net.minecraftforge.client.event.GuiScreenEvent.InitGuiEvent;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import shadows.fastbench.FastBench;
 import shadows.fastbench.book.DedClientBook;
 import shadows.fastbench.net.HijackedPlayerList;
@@ -22,8 +20,8 @@ public class BenchClientProxy implements IBenchProxy {
 
 	@Override
 	public void deleteBook(Entity e) {
-		if (e instanceof EntityPlayerMP) ((EntityPlayerMP) e).recipeBook = FastBench.SERVER_BOOK;
-		if (e instanceof EntityPlayerSP) ((EntityPlayerSP) e).recipeBook = CLIENT_BOOK;
+		if (e instanceof ServerPlayerEntity) ((ServerPlayerEntity) e).recipeBook = FastBench.SERVER_BOOK;
+		if (e instanceof ClientPlayerEntity) ((ClientPlayerEntity) e).recipeBook = CLIENT_BOOK;
 	}
 
 	@Override
@@ -38,16 +36,12 @@ public class BenchClientProxy implements IBenchProxy {
 
 	@SubscribeEvent
 	public void removeButton(InitGuiEvent e) {
-		for (GuiButton b : e.getButtonList())
-			if (b instanceof GuiButtonImage && isBookButton((GuiButtonImage) b)) b.visible = false;
+		for (Widget b : e.getGui().buttons)
+			if (b instanceof ImageButton && isBookButton((ImageButton) b)) b.visible = false;
 	}
 
-	private static boolean isBookButton(GuiButtonImage b) {
-		//Vanilla Player Inventory
-		if (b.id == 10 && b.resourceLocation == GuiInventory.INVENTORY_BACKGROUND) return true;
-		//Vanilla Crafting Inventory
-		if (b.id == 10 && b.resourceLocation == GuiCrafting.CRAFTING_TABLE_GUI_TEXTURES) return true;
-		return false;
+	private static boolean isBookButton(ImageButton b) {
+		return b.resourceLocation.getPath().equals("textures/gui/recipe_button.png");
 	}
 
 }

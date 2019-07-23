@@ -1,29 +1,30 @@
 package shadows.fastbench.block;
 
-import net.minecraft.block.BlockWorkbench;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.CraftingTableBlock;
 import net.minecraft.block.SoundType;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.stats.StatList;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
+import net.minecraft.block.material.Material;
+import net.minecraft.inventory.container.INamedContainerProvider;
+import net.minecraft.inventory.container.SimpleNamedContainerProvider;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
-import shadows.fastbench.FastBench;
+import shadows.fastbench.gui.ContainerFastBench;
 
-public class BlockFastBench extends BlockWorkbench {
+public class BlockFastBench extends CraftingTableBlock {
+
+	private static final ITextComponent NAME = new TranslationTextComponent("container.crafting");
 
 	public BlockFastBench() {
-		setHardness(2.5F);
-		setSoundType(SoundType.WOOD);
-		setTranslationKey("workbench");
+		super(Block.Properties.create(Material.WOOD).hardnessAndResistance(2.5F).sound(SoundType.WOOD));
 	}
 
 	@Override
-	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-		if (world.isRemote) return true;
-		player.addStat(StatList.CRAFTING_TABLE_INTERACTION);
-		player.openGui(FastBench.INSTANCE, 0, world, pos.getX(), pos.getY(), pos.getZ());
-		return true;
+	public INamedContainerProvider getContainer(BlockState state, World world, BlockPos pos) {
+		return new SimpleNamedContainerProvider((id, pInv, player) -> {
+			return new ContainerFastBench(id, player, world, pos);
+		}, NAME);
 	}
 }

@@ -1,7 +1,6 @@
 package shadows.fastbench.net;
 
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.network.NetHandlerPlayServer;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.server.integrated.IntegratedPlayerList;
 import net.minecraft.server.integrated.IntegratedServer;
@@ -14,8 +13,8 @@ public class HijackedPlayerList extends IntegratedPlayerList {
 	}
 
 	@Override
-	public void initializeConnectionToPlayer(NetworkManager netManager, EntityPlayerMP playerIn, NetHandlerPlayServer nethandlerplayserver) {
+	public void initializeConnectionToPlayer(NetworkManager netManager, ServerPlayerEntity playerIn) {
 		playerIn.recipeBook = FastBench.SERVER_BOOK;
-		super.initializeConnectionToPlayer(netManager, playerIn, nethandlerplayserver);
+		super.initializeConnectionToPlayer(netManager, playerIn);
 	}
 }

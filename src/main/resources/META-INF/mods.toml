@@ -1,0 +1,38 @@
+modLoader="javafml" #mandatory
+
+loaderVersion="[28,)" #mandatory
+
+authors="Shadows_of_Fire" #optional
+
+[[mods]] #mandatory
+
+modId="fastbench" #mandatory
+
+version="${file.jarVersion}" #mandatory
+
+displayName="FastWorkbench" #mandatory
+
+description='''
+Smol table go vroom.
+'''
+
+[[dependencies.fastbench]] #optional
+    modId="forge" #mandatory
+    mandatory=true #mandatory
+    versionRange="[28,)" #mandatory
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.fastbench]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="[1.14.4]"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.fastbench]]
+    modId="placebo"
+    mandatory=true
+    versionRange="[2.1.1,)"
+    ordering="NONE"
+    side="BOTH"

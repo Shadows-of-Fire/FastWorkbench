@@ -1,96 +1,85 @@
 package shadows.fastbench;
 
-import java.util.Collection;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import net.minecraft.block.Block;
-import net.minecraft.init.Blocks;
-import net.minecraft.item.ItemBlock;
+import net.minecraft.inventory.container.ContainerType;
+import net.minecraft.item.BlockItem;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.event.RegistryEvent.Register;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
-import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.Mod.EventHandler;
-import net.minecraftforge.fml.common.Mod.Instance;
-import net.minecraftforge.fml.common.SidedProxy;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLInterModComms;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLServerAboutToStartEvent;
-import net.minecraftforge.fml.common.eventhandler.EventPriority;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
-import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
-import net.minecraftforge.fml.common.registry.ForgeRegistries;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.oredict.OreDictionary;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.fml.event.server.FMLServerAboutToStartEvent;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fml.network.NetworkRegistry;
+import net.minecraftforge.fml.network.simple.SimpleChannel;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.ObjectHolder;
 import shadows.fastbench.block.BlockFastBench;
 import shadows.fastbench.book.DedRecipeBook;
-import shadows.fastbench.gui.ClientContainerFastBench;
 import shadows.fastbench.gui.ContainerFastBench;
-import shadows.fastbench.gui.Handler;
 import shadows.fastbench.net.LastRecipeMessage;
+import shadows.fastbench.proxy.BenchClientProxy;
+import shadows.fastbench.proxy.BenchServerProxy;
 import shadows.fastbench.proxy.IBenchProxy;
+import shadows.placebo.util.NetworkUtils;
 
-@Mod(modid = FastBench.MODID, name = FastBench.MODNAME, version = FastBench.VERSION)
+@Mod(FastBench.MODID)
 public class FastBench {
 
 	public static final String MODID = "fastbench";
-	public static final String MODNAME = "FastWorkbench";
-	public static final String VERSION = "1.7.2";
-
 	public static final Logger LOG = LogManager.getLogger(MODID);
 
-	@Instance
-	public static FastBench INSTANCE;
+	public static final IBenchProxy PROXY;
+	static {
+		PROXY = DistExecutor.runForDist(() -> () -> new BenchClientProxy(), () -> () -> new BenchServerProxy());
+	}
 
-	@SidedProxy(serverSide = "shadows.fastbench.proxy.BenchServerProxy", clientSide = "shadows.fastbench.proxy.BenchClientProxy")
-	public static IBenchProxy PROXY;
-
-	public static final SimpleNetworkWrapper NETWORK = NetworkRegistry.INSTANCE.newSimpleChannel(MODID);
+	//Formatter::off
+    public static final SimpleChannel CHANNEL = NetworkRegistry.ChannelBuilder
+            .named(new ResourceLocation(MODID, "channel"))
+            .clientAcceptedVersions(s->true)
+            .serverAcceptedVersions(s->true)
+            .networkProtocolVersion(() -> "1.0.0")
+            .simpleChannel();
+    //Formatter::on
 	public static final DedRecipeBook SERVER_BOOK = new DedRecipeBook();
 
 	public static boolean removeRecipeBook = true;
 	public static boolean experimentalShiftCrafting = true;
 
-	@EventHandler
-	public void preInit(FMLPreInitializationEvent e) {
-		NetworkRegistry.INSTANCE.registerGuiHandler(this, new Handler());
-		NETWORK.registerMessage(LastRecipeMessage.Handler.class, LastRecipeMessage.class, 0, Side.CLIENT);
+	@ObjectHolder("fastbench:fastbench")
+	public static final ContainerType<ContainerFastBench> FAST_CRAFTING = null;
+
+	public FastBench() {
 		MinecraftForge.EVENT_BUS.register(this);
+		FMLJavaModLoadingContext.get().getModEventBus().register(this);
+	}
 
-		NBTTagCompound t = new NBTTagCompound();
-		t.setString("ContainerClass", "shadows.fastbench.gui.ContainerFastBench");
-		t.setString("AlignToGrid", "west");
-		FMLInterModComms.sendMessage("craftingtweaks", "RegisterProvider", t);
-
-		Configuration c = new Configuration(e.getSuggestedConfigurationFile());
-		removeRecipeBook = c.getBoolean("Disable Recipe Book", "crafting", true, "If the recipe book and all associated functionality are fully removed.");
-		experimentalShiftCrafting = c.getBoolean("Experiemental Shift Crafting", "crafting", true, "If a testing variant of shift-click crafting is enabled.");
-		if (c.hasChanged()) c.save();
-
+	@SubscribeEvent
+	public void preInit(FMLCommonSetupEvent e) {
+		NetworkUtils.registerMessage(CHANNEL, 0, new LastRecipeMessage());
 		if (removeRecipeBook) PROXY.registerButtonRemover();
-
-		if (Loader.isModLoaded("extrautils2")) temaWtf();
 	}
 
-	@EventHandler
-	public void init(FMLInitializationEvent e) {
-		OreDictionary.registerOre("workbench", Blocks.CRAFTING_TABLE);
-		OreDictionary.registerOre("craftingTableWood", Blocks.CRAFTING_TABLE);
+	@SubscribeEvent
+	public void containers(Register<ContainerType<?>> e) {
+		e.getRegistry().register(new ContainerType<>(ContainerFastBench::new).setRegistryName("fastbench"));
 	}
 
-	@SubscribeEvent(priority = EventPriority.LOWEST)
+	@SubscribeEvent
 	public void blockBois(Register<Block> e) {
 		Block b = new BlockFastBench().setRegistryName("minecraft", "crafting_table");
 		e.getRegistry().register(b);
-		ForgeRegistries.ITEMS.register(new ItemBlock(b) {
+		ForgeRegistries.ITEMS.register(new BlockItem(b, new Item.Properties().group(ItemGroup.DECORATIONS)) {
 			@Override
 			public String getCreatorModId(ItemStack itemStack) {
 				return MODID;
@@ -98,7 +87,7 @@ public class FastBench {
 		}.setRegistryName(b.getRegistryName()));
 	}
 
-	@EventHandler
+	@SubscribeEvent
 	public void serverStartRemoval(FMLServerAboutToStartEvent e) {
 		if (removeRecipeBook) PROXY.replacePlayerList(e.getServer());
 	}
@@ -106,17 +95,6 @@ public class FastBench {
 	@SubscribeEvent
 	public void normalRemoval(EntityJoinWorldEvent e) {
 		if (removeRecipeBook) PROXY.deleteBook(e.getEntity());
-	}
-
-	@SuppressWarnings("unchecked")
-	public static void temaWtf() {
-		try {
-			Class<?> c = Class.forName("com.rwtema.extrautils2.items.ItemUnstableIngots");
-			Collection<Class<?>> classes = (Collection<Class<?>>) c.getDeclaredField("ALLOWED_CLASSES").get(null);
-			classes.add(ClientContainerFastBench.class);
-			classes.add(ContainerFastBench.class);
-		} catch (Exception noh) {
-		}
 	}
 
 }

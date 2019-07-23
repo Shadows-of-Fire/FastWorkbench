@@ -1,27 +1,18 @@
 package shadows.fastbench.gui;
 
+import java.util.Iterator;
 import java.util.List;
 
 import javax.annotation.Nullable;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.recipebook.GuiRecipeBook;
-import net.minecraft.inventory.InventoryCrafting;
-import net.minecraft.inventory.Slot;
+import net.minecraft.client.gui.recipebook.RecipeBookGui;
+import net.minecraft.inventory.container.RecipeBookContainer;
+import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.crafting.IRecipe;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.item.crafting.Ingredient;
 
-@SideOnly(Side.CLIENT)
-public class GuiDedBook extends GuiRecipeBook {
-
-	@Override
-	public void func_194303_a(int width, int height, Minecraft minecraft, boolean widthTooNarrow, InventoryCrafting craftingSlots) {
-	}
-
-	@Override
-	public void initVisuals(boolean widthTooNarrow, InventoryCrafting craftingSlots) {
-	}
+public class GuiDedBook extends RecipeBookGui {
 
 	@Override
 	public void removed() {
@@ -62,30 +53,47 @@ public class GuiDedBook extends GuiRecipeBook {
 	}
 
 	@Override
-	public boolean mouseClicked(int p_191862_1_, int p_191862_2_, int p_191862_3_) {
-		return false;
-	}
-
-	@Override
-	public boolean hasClickedOutside(int p_193955_1_, int p_193955_2_, int p_193955_3_, int p_193955_4_, int p_193955_5_, int p_193955_6_) {
-		return true;
-	}
-
-	@Override
-	public boolean keyPressed(char typedChar, int keycode) {
-		return false;
-	}
-
-	@Override
 	public void recipesUpdated() {
 	}
 
 	@Override
-	public void recipesShown(List<IRecipe> recipes) {
+	public void func_201518_a(boolean p_201518_1_) {
 	}
 
 	@Override
-	public void setupGhostRecipe(IRecipe p_193951_1_, List<Slot> p_193951_2_) {
+	public void func_201520_a(int p_201520_1_, int p_201520_2_, Minecraft p_201520_3_, boolean p_201520_4_, RecipeBookContainer<?> p_201520_5_) {
 	}
 
+	@Override
+	protected void func_205702_a() {
+	}
+
+	@Override
+	public void placeRecipe(int width, int height, int outputSlot, IRecipe<?> recipe, Iterator<Ingredient> ingredients, int maxAmount) {
+	}
+
+	@Override
+	protected boolean toggleCraftableFilter() {
+		return false;
+	}
+
+	@Override
+	protected void setVisible(boolean p_193006_1_) {
+	}
+
+	@Override
+	public void setSlotContents(Iterator<Ingredient> ingredients, int slotIn, int maxAmount, int y, int x) {
+	}
+
+	@Override
+	public void setupGhostRecipe(IRecipe<?> p_193951_1_, List<Slot> p_193951_2_) {
+	}
+
+	@Override
+	protected void sendUpdateSettings() {
+	}
+
+	@Override
+	public void recipesShown(List<IRecipe<?>> recipes) {
+	}
 }

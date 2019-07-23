@@ -1,17 +1,19 @@
 package shadows.fastbench.book;
 
-import java.util.List;
+import java.util.Collection;
 
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.inventory.container.RecipeBookContainer;
 import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.stats.RecipeBook;
-import net.minecraft.stats.RecipeBookServer;
+import net.minecraft.item.crafting.RecipeBook;
+import net.minecraft.item.crafting.ServerRecipeBook;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.ResourceLocation;
 
-public class DedRecipeBook extends RecipeBookServer {
+public class DedRecipeBook extends ServerRecipeBook {
 
-	@Override
-	public void add(List<IRecipe> recipesIn, EntityPlayerMP player) {
+	public DedRecipeBook() {
+		super(null);
 	}
 
 	@Override
@@ -19,7 +21,7 @@ public class DedRecipeBook extends RecipeBookServer {
 	}
 
 	@Override
-	public void init(EntityPlayerMP player) {
+	public void init(ServerPlayerEntity player) {
 	}
 
 	@Override
@@ -33,38 +35,34 @@ public class DedRecipeBook extends RecipeBookServer {
 	}
 
 	@Override
-	public void lock(IRecipe recipe) {
+	public void lock(IRecipe<?> recipe) {
 	}
 
 	@Override
-	public void markNew(IRecipe recipe) {
+	public void markNew(IRecipe<?> recipe) {
 	}
 
 	@Override
-	public void markSeen(IRecipe recipe) {
+	public void markSeen(IRecipe<?> recipe) {
 	}
 
 	@Override
-	public boolean isNew(IRecipe recipe) {
+	public boolean isNew(IRecipe<?> recipe) {
 		return false;
 	}
 
 	@Override
-	public NBTTagCompound write() {
-		return new NBTTagCompound();
+	public CompoundNBT write() {
+		return new CompoundNBT();
 	}
 
 	@Override
-	public void read(NBTTagCompound tag) {
+	public void read(CompoundNBT tag) {
 	}
 
 	@Override
-	public boolean isUnlocked(IRecipe recipe) {
+	public boolean isUnlocked(IRecipe<?> recipe) {
 		return true;
-	}
-
-	@Override
-	public void remove(List<IRecipe> recipes, EntityPlayerMP player) {
 	}
 
 	@Override
@@ -76,6 +74,92 @@ public class DedRecipeBook extends RecipeBookServer {
 	}
 
 	@Override
-	public void unlock(IRecipe recipe) {
+	public void unlock(IRecipe<?> recipe) {
+	}
+
+	@Override
+	public int add(Collection<IRecipe<?>> p_197926_1_, ServerPlayerEntity p_197926_2_) {
+		return 0;
+	}
+
+	@Override
+	public void func_216755_e(boolean p_216755_1_) {
+	}
+
+	@Override
+	public void func_216756_f(boolean p_216756_1_) {
+	}
+
+	@Override
+	public void func_216757_g(boolean p_216757_1_) {
+	}
+
+	@Override
+	public boolean func_216758_e() {
+		return false;
+	}
+
+	@Override
+	public boolean func_216759_g() {
+		return false;
+	}
+
+	@Override
+	public void func_216760_h(boolean p_216760_1_) {
+	}
+
+	@Override
+	public boolean func_216761_f() {
+		return false;
+	}
+
+	@Override
+	public boolean func_216762_h() {
+		return false;
+	}
+
+	@Override
+	public boolean isFilteringCraftable(RecipeBookContainer<?> p_203432_1_) {
+		return false;
+	}
+
+	@Override
+	public boolean isFurnaceFilteringCraftable() {
+		return false;
+	}
+
+	@Override
+	public boolean isFurnaceGuiOpen() {
+		return false;
+	}
+
+	@Override
+	protected void lock(ResourceLocation p_209119_1_) {
+
+	}
+
+	@Override
+	protected void markNew(ResourceLocation p_209120_1_) {
+
+	}
+
+	@Override
+	public int remove(Collection<IRecipe<?>> p_197925_1_, ServerPlayerEntity p_197925_2_) {
+		return 0;
+	}
+
+	@Override
+	public void setFurnaceFilteringCraftable(boolean p_202882_1_) {
+
+	}
+
+	@Override
+	public void setFurnaceGuiOpen(boolean p_202881_1_) {
+
+	}
+
+	@Override
+	protected void unlock(ResourceLocation p_209118_1_) {
+
 	}
 }

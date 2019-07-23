@@ -1,5 +1,5 @@
 package shadows.fastbench.jei;
-
+/*
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.IModRegistry;
 import mezz.jei.api.JEIPlugin;
@@ -17,3 +17,4 @@ public class FastBenchPlugin implements IModPlugin {
 	}
 
 }
+*/

@@ -1,36 +1,27 @@
 package shadows.fastbench.gui;
 
-import net.minecraft.client.gui.inventory.GuiCrafting;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.client.gui.screen.inventory.CraftingScreen;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.util.text.ITextComponent;
 import shadows.fastbench.FastBench;
 
-@SideOnly(Side.CLIENT)
-public class GuiFastBench extends GuiCrafting {
+public class GuiFastBench extends CraftingScreen {
 
-	public GuiFastBench(InventoryPlayer inv, World world) {
-		this(inv, world, BlockPos.ORIGIN);
-	}
-
-	public GuiFastBench(InventoryPlayer inv, World world, BlockPos pos) {
-		super(inv, world, pos);
-		this.inventorySlots = new ClientContainerFastBench(inv.player, world, pos.getX(), pos.getY(), pos.getZ());
+	public GuiFastBench(ContainerFastBench container, PlayerInventory inv, ITextComponent name) {
+		super(container, inv, name);
 	}
 
 	@Override
-	public void initGui() {
-		super.initGui();
+	public void init() {
+		super.init();
 		if (FastBench.removeRecipeBook) {
-			this.buttonList.clear();
-			this.recipeButton = null;
+			this.buttons.clear();
 			this.recipeBookGui = new GuiDedBook();
 		}
 	}
 
+	@Override
 	public ContainerFastBench getContainer() {
-		return (ContainerFastBench) this.inventorySlots;
+		return (ContainerFastBench) this.container;
 	}
 }
