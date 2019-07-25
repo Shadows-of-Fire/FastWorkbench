@@ -36,9 +36,16 @@ minecraft {
     }
 }
 
+repositories {
+    maven {
+        url "http://dvs1.progwml6.com/files/maven"
+    }
+}
+
 dependencies {
     minecraft 'net.minecraftforge:forge:1.14.4-28.0.13'
 	compile fileTree(dir: 'libs', include: '*.jar')
+	compile fg.deobf('mezz.jei:jei-1.14.3:+')
 }
 
 jar {
