@@ -40,12 +40,16 @@ repositories {
     maven {
         url "http://dvs1.progwml6.com/files/maven"
     }
+	maven {
+		url "http://tehnut.info/maven"
+	}
 }
 
 dependencies {
     minecraft 'net.minecraftforge:forge:1.14.4-28.0.45'
-	compile fileTree(dir: 'libs', include: '*.jar')
 	compile fg.deobf('mezz.jei:jei-1.14.4:+')
+	compile fg.deobf('mcp.mobius.waila:Hwyla:1.10+')
+	compile fileTree(dir: 'libs', include: '*.jar')
 }
 
 jar {
