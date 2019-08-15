@@ -7,8 +7,6 @@ import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.network.NetworkEvent.Context;
 import shadows.fastbench.gui.GuiFastBench;
 import shadows.placebo.util.NetworkUtils;
@@ -49,15 +47,12 @@ public class LastRecipeMessage extends MessageProvider<LastRecipeMessage> {
 	@SuppressWarnings("unchecked")
 	@Override
 	public void handle(LastRecipeMessage msg, Supplier<Context> ctx) {
-		DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
-			NetworkUtils.enqueueClient(() -> {
-				if (Minecraft.getInstance().currentScreen instanceof GuiFastBench) {
-					IRecipe<?> r = Minecraft.getInstance().world.getRecipeManager().getRecipe(msg.rec).orElse(null);
-					((GuiFastBench) Minecraft.getInstance().currentScreen).getContainer().updateLastRecipe((IRecipe<CraftingInventory>) r);
-				}
-			});
-		});
-		ctx.get().setPacketHandled(true);
+		NetworkUtils.handlePacket(() -> () -> {
+			if (Minecraft.getInstance().currentScreen instanceof GuiFastBench) {
+				IRecipe<?> r = Minecraft.getInstance().world.getRecipeManager().getRecipe(msg.rec).orElse(null);
+				((GuiFastBench) Minecraft.getInstance().currentScreen).getContainer().updateLastRecipe((IRecipe<CraftingInventory>) r);
+			}
+		}, ctx.get());
 	}
 
 }

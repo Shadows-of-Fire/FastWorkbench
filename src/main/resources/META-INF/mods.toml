@@ -33,6 +33,6 @@ Smol table go vroom.
 [[dependencies.fastbench]]
     modId="placebo"
     mandatory=true
-    versionRange="[2.1.4,)"
+    versionRange="[2.1.10,)"
     ordering="NONE"
     side="BOTH"
