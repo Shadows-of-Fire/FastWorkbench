@@ -10,7 +10,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.network.NetworkEvent.Context;
-import net.minecraftforge.fml.server.ServerLifecycleHooks;
 import shadows.fastbench.gui.GuiFastBench;
 import shadows.placebo.util.NetworkUtils;
 import shadows.placebo.util.NetworkUtils.MessageProvider;
@@ -53,7 +52,7 @@ public class LastRecipeMessage extends MessageProvider<LastRecipeMessage> {
 		DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
 			NetworkUtils.enqueueClient(() -> {
 				if (Minecraft.getInstance().currentScreen instanceof GuiFastBench) {
-					IRecipe<?> r = ServerLifecycleHooks.getCurrentServer().getRecipeManager().getRecipe(msg.rec).orElse(null);
+					IRecipe<?> r = Minecraft.getInstance().world.getRecipeManager().getRecipe(msg.rec).orElse(null);
 					((GuiFastBench) Minecraft.getInstance().currentScreen).getContainer().updateLastRecipe((IRecipe<CraftingInventory>) r);
 				}
 			});
