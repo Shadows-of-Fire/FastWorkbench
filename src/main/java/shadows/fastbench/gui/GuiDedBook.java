@@ -57,11 +57,11 @@ public class GuiDedBook extends RecipeBookGui {
 	}
 
 	@Override
-	public void func_201518_a(boolean p_201518_1_) {
+	public void initSearchBar(boolean p_201518_1_) {
 	}
 
 	@Override
-	public void func_201520_a(int p_201520_1_, int p_201520_2_, Minecraft p_201520_3_, boolean p_201520_4_, RecipeBookContainer<?> p_201520_5_) {
+	public void init(int p_201520_1_, int p_201520_2_, Minecraft p_201520_3_, boolean p_201520_4_, RecipeBookContainer<?> p_201520_5_) {
 	}
 
 	@Override
