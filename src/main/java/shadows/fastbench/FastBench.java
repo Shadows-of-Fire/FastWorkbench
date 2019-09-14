@@ -30,6 +30,7 @@ import shadows.fastbench.net.LastRecipeMessage;
 import shadows.fastbench.proxy.BenchClientProxy;
 import shadows.fastbench.proxy.BenchServerProxy;
 import shadows.fastbench.proxy.IBenchProxy;
+import shadows.placebo.config.Configuration;
 import shadows.placebo.util.NetworkUtils;
 
 @Mod(FastBench.MODID)
@@ -54,7 +55,6 @@ public class FastBench {
 	public static final DedRecipeBook SERVER_BOOK = new DedRecipeBook();
 
 	public static boolean removeRecipeBook = true;
-	public static boolean experimentalShiftCrafting = true;
 
 	@ObjectHolder("fastbench:fastbench")
 	public static final ContainerType<ContainerFastBench> FAST_CRAFTING = null;
@@ -62,6 +62,9 @@ public class FastBench {
 	public FastBench() {
 		MinecraftForge.EVENT_BUS.register(this);
 		FMLJavaModLoadingContext.get().getModEventBus().register(this);
+		Configuration c = new Configuration(MODID);
+		removeRecipeBook = c.getBoolean("Remove Recipe Book", "general", true, "If the recipe book is removed from the game.  Server-enforced.");
+		if (c.hasChanged()) c.save();
 	}
 
 	@SubscribeEvent

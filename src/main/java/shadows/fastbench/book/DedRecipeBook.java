@@ -7,7 +7,6 @@ import net.minecraft.inventory.container.RecipeBookContainer;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.RecipeBook;
 import net.minecraft.item.crafting.ServerRecipeBook;
-import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 
 public class DedRecipeBook extends ServerRecipeBook {
@@ -52,15 +51,6 @@ public class DedRecipeBook extends ServerRecipeBook {
 	}
 
 	@Override
-	public CompoundNBT write() {
-		return new CompoundNBT();
-	}
-
-	@Override
-	public void read(CompoundNBT tag) {
-	}
-
-	@Override
 	public boolean isUnlocked(IRecipe<?> recipe) {
 		return true;
 	}
@@ -71,10 +61,6 @@ public class DedRecipeBook extends ServerRecipeBook {
 
 	@Override
 	public void setGuiOpen(boolean open) {
-	}
-
-	@Override
-	public void unlock(IRecipe<?> recipe) {
 	}
 
 	@Override
@@ -135,11 +121,6 @@ public class DedRecipeBook extends ServerRecipeBook {
 
 	@Override
 	protected void lock(ResourceLocation p_209119_1_) {
-
-	}
-
-	@Override
-	protected void markNew(ResourceLocation p_209120_1_) {
 
 	}
 

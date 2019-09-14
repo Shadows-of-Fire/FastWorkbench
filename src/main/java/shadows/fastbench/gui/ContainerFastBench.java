@@ -125,7 +125,7 @@ public class ContainerFastBench extends WorkbenchContainer {
 
 	@Override
 	public ItemStack transferStackInSlot(PlayerEntity player, int index) {
-		if (useNormalTransfer || !FastBench.experimentalShiftCrafting || index != 0) return super.transferStackInSlot(player, index);
+		if (useNormalTransfer || index != 0) return super.transferStackInSlot(player, index);
 
 		ItemStack itemstack = ItemStack.EMPTY;
 		Slot slot = this.inventorySlots.get(index);
