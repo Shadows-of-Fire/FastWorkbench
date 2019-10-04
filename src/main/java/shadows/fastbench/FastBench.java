@@ -24,7 +24,6 @@ import net.minecraftforge.fml.network.simple.SimpleChannel;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.ObjectHolder;
 import shadows.fastbench.block.BlockFastBench;
-import shadows.fastbench.book.DedRecipeBook;
 import shadows.fastbench.gui.ContainerFastBench;
 import shadows.fastbench.net.LastRecipeMessage;
 import shadows.fastbench.proxy.BenchClientProxy;
@@ -52,7 +51,6 @@ public class FastBench {
             .networkProtocolVersion(() -> "1.0.0")
             .simpleChannel();
     //Formatter::on
-	public static final DedRecipeBook SERVER_BOOK = new DedRecipeBook();
 
 	public static boolean removeRecipeBook = true;
 

@@ -10,8 +10,8 @@ import net.minecraft.server.integrated.IntegratedServer;
 import net.minecraftforge.client.event.GuiScreenEvent.InitGuiEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import shadows.fastbench.FastBench;
 import shadows.fastbench.book.DedClientBook;
+import shadows.fastbench.book.DedRecipeBook;
 import shadows.fastbench.net.HijackedPlayerList;
 
 public class BenchClientProxy implements IBenchProxy {
@@ -20,7 +20,7 @@ public class BenchClientProxy implements IBenchProxy {
 
 	@Override
 	public void deleteBook(Entity e) {
-		if (e instanceof ServerPlayerEntity) ((ServerPlayerEntity) e).recipeBook = FastBench.SERVER_BOOK;
+		if (e instanceof ServerPlayerEntity) ((ServerPlayerEntity) e).recipeBook = new DedRecipeBook();
 		if (e instanceof ClientPlayerEntity) ((ClientPlayerEntity) e).recipeBook = CLIENT_BOOK;
 	}
 

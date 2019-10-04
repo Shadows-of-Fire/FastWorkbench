@@ -4,7 +4,7 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.server.dedicated.DedicatedPlayerList;
 import net.minecraft.server.dedicated.DedicatedServer;
-import shadows.fastbench.FastBench;
+import shadows.fastbench.book.DedRecipeBook;
 
 public class HijackedDedicatedPlayerList extends DedicatedPlayerList {
 
@@ -14,7 +14,7 @@ public class HijackedDedicatedPlayerList extends DedicatedPlayerList {
 
 	@Override
 	public void initializeConnectionToPlayer(NetworkManager netManager, ServerPlayerEntity playerIn) {
-		playerIn.recipeBook = FastBench.SERVER_BOOK;
+		playerIn.recipeBook = new DedRecipeBook();
 		super.initializeConnectionToPlayer(netManager, playerIn);
 	}
 }
