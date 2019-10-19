@@ -9,14 +9,17 @@ import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent.Register;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
+import net.minecraftforge.fml.InterModComms;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.fml.event.server.FMLServerAboutToStartEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.network.NetworkRegistry;
@@ -74,6 +77,14 @@ public class FastBench {
 	@SubscribeEvent
 	public void containers(Register<ContainerType<?>> e) {
 		e.getRegistry().register(new ContainerType<>(ContainerFastBench::new).setRegistryName("fastbench"));
+	}
+
+	@SubscribeEvent
+	public void imc(InterModEnqueueEvent e) {
+		CompoundNBT t = new CompoundNBT();
+		t.putString("ContainerClass", "shadows.fastbench.gui.ContainerFastBench");
+		t.putString("AlignToGrid", "west");
+		InterModComms.sendTo("craftingtweaks", "RegisterProvider", () -> t);
 	}
 
 	@SubscribeEvent
