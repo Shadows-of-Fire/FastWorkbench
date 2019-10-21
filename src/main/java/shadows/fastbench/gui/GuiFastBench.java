@@ -16,7 +16,9 @@ public class GuiFastBench extends CraftingScreen {
 		super.init();
 		if (FastBench.removeRecipeBook) {
 			this.buttons.clear();
+			this.children.clear();
 			this.recipeBookGui = new GuiDedBook();
+			this.setFocusedDefault(null);
 		}
 	}
 
