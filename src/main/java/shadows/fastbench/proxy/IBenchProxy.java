@@ -7,8 +7,6 @@ public interface IBenchProxy {
 
 	public void deleteBook(Entity e);
 
-	public void replacePlayerList(MinecraftServer server);
-
 	public default void registerButtonRemover() {
 	};
 

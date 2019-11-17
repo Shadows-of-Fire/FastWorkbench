@@ -98,11 +98,6 @@ public class FastBench {
 		}.setRegistryName(b.getRegistryName()));
 	}
 
-	@EventHandler
-	public void serverStartRemoval(FMLServerAboutToStartEvent e) {
-		if (removeRecipeBook) PROXY.replacePlayerList(e.getServer());
-	}
-
 	@SubscribeEvent
 	public void normalRemoval(EntityJoinWorldEvent e) {
 		if (removeRecipeBook) PROXY.deleteBook(e.getEntity());
