@@ -5,6 +5,7 @@ import java.util.Collection;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import crafttweaker.CraftTweakerAPI;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemBlock;
@@ -43,7 +44,7 @@ public class FastBench {
 
 	public static final String MODID = "fastbench";
 	public static final String MODNAME = "FastWorkbench";
-	public static final String VERSION = "1.7.2";
+	public static final String VERSION = "1.7.3";
 
 	public static final Logger LOG = LogManager.getLogger(MODID);
 
@@ -78,6 +79,7 @@ public class FastBench {
 		if (removeRecipeBook) PROXY.registerButtonRemover();
 
 		if (Loader.isModLoaded("extrautils2")) temaWtf();
+		if (Loader.isModLoaded("crafttweaker2")) disableCrtSearchTree();
 	}
 
 	@EventHandler
@@ -116,6 +118,14 @@ public class FastBench {
 			classes.add(ClientContainerFastBench.class);
 			classes.add(ContainerFastBench.class);
 		} catch (Exception noh) {
+		}
+	}
+
+	public static void disableCrtSearchTree() {
+		try {
+			if (removeRecipeBook) CraftTweakerAPI.ENABLE_SEARCH_TREE_RECALCULATION = false;
+		} catch (Exception noh) {
+			noh.printStackTrace();
 		}
 	}
 
