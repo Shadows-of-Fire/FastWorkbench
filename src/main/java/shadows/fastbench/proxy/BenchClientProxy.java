@@ -36,10 +36,8 @@ public class BenchClientProxy implements IBenchProxy {
 
 	@SubscribeEvent
 	public void removeButton(InitGuiEvent e) {
-		// TODO MCP-name field_230710_m_ -> buttons
-		for (Widget b : e.getGui().field_230710_m_)
-			// TODO MCP-name: field_230694_p_ -> visible
-			if (b instanceof ImageButton && isBookButton((ImageButton) b)) b.field_230694_p_ = false;
+		for (Widget b : e.getGui().buttons)
+			if (b instanceof ImageButton && isBookButton((ImageButton) b)) b.visible = false;
 	}
 
 	private static boolean isBookButton(ImageButton b) {

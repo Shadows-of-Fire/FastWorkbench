@@ -43,7 +43,7 @@ public class FastBench {
 
 	public static final IBenchProxy PROXY;
 	static {
-		PROXY = DistExecutor.runForDist(() -> () -> new BenchClientProxy(), () -> () -> new BenchServerProxy());
+		PROXY = DistExecutor.unsafeRunForDist(() -> () -> new BenchClientProxy(), () -> () -> new BenchServerProxy());
 	}
 
 	//Formatter::off

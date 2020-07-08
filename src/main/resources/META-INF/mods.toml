@@ -26,13 +26,13 @@ Smol table go vroom.
 [[dependencies.fastbench]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.16,)"
+    versionRange="[1.16.1,)"
     ordering="NONE"
     side="BOTH"
 
 [[dependencies.fastbench]]
     modId="placebo"
     mandatory=true
-    versionRange="[3,)"
+    versionRange="[4,)"
     ordering="NONE"
     side="BOTH"

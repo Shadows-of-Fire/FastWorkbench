@@ -8,9 +8,9 @@ import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.RecipeBook;
 import net.minecraft.item.crafting.ServerRecipeBook;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.server.ServerLifecycleHooks;
 
 public class DedRecipeBook extends ServerRecipeBook {
+
 	@Override
 	public void copyFrom(RecipeBook that) {
 	}
