@@ -53,11 +53,11 @@ public class ContainerFastBench extends WorkbenchContainer {
 		this.pos = pos;
 		this.player = player;
 
-		this.addSlot(new SlotCraftingSucks(this, player, this.field_75162_e, this.field_75160_f, 0, 124, 35));
+		this.addSlot(new SlotCraftingSucks(this, player, this.craftMatrix, this.craftResult, 0, 124, 35));
 
 		for (int i = 0; i < 3; ++i) {
 			for (int j = 0; j < 3; ++j) {
-				this.addSlot(new Slot(this.field_75162_e, j + i * 3, 30 + j * 18, 17 + i * 18));
+				this.addSlot(new Slot(this.craftMatrix, j + i * 3, 30 + j * 18, 17 + i * 18));
 			}
 		}
 
@@ -86,7 +86,7 @@ public class ContainerFastBench extends WorkbenchContainer {
 
 	@Override
 	public void onCraftMatrixChanged(IInventory inventoryIn) {
-		this.slotChangedCraftingGrid(world, player, field_75162_e, field_75160_f);
+		this.slotChangedCraftingGrid(world, player, craftMatrix, craftResult);
 	}
 
 	protected void slotChangedCraftingGrid(World world, PlayerEntity player, CraftingInventory inv, CraftResultInventory result) {
@@ -119,7 +119,7 @@ public class ContainerFastBench extends WorkbenchContainer {
 				player.dropItem(inv.getItemStack(), false);
 				inv.setItemStack(ItemStack.EMPTY);
 			}
-			if (!this.world.isRemote) this.clearContainer(player, this.world, this.field_75162_e);
+			if (!this.world.isRemote) this.clearContainer(player, this.world, this.craftMatrix);
 		}
 	}
 
@@ -132,7 +132,7 @@ public class ContainerFastBench extends WorkbenchContainer {
 
 		if (slot != null && slot.getHasStack()) {
 			checkMatrixChanges = false;
-			while (lastRecipe != null && lastRecipe.matches(this.field_75162_e, this.world)) {
+			while (lastRecipe != null && lastRecipe.matches(this.craftMatrix, this.world)) {
 				ItemStack itemstack1 = slot.getStack();
 				itemstack = itemstack1.copy();
 
@@ -155,7 +155,7 @@ public class ContainerFastBench extends WorkbenchContainer {
 				player.dropItem(itemstack2, false);
 			}
 			checkMatrixChanges = true;
-			this.slotChangedCraftingGrid(world, player, field_75162_e, field_75160_f);
+			this.slotChangedCraftingGrid(world, player, craftMatrix, craftResult);
 		}
 		return lastRecipe == null ? ItemStack.EMPTY : itemstack;
 	}
@@ -163,8 +163,8 @@ public class ContainerFastBench extends WorkbenchContainer {
 	public void updateLastRecipe(IRecipe<CraftingInventory> rec) {
 		this.lastLastRecipe = lastRecipe;
 		this.lastRecipe = rec;
-		if (rec != null) this.field_75160_f.setInventorySlotContents(0, rec.getCraftingResult(field_75162_e));
-		else this.field_75160_f.setInventorySlotContents(0, ItemStack.EMPTY);
+		if (rec != null) this.craftResult.setInventorySlotContents(0, rec.getCraftingResult(craftMatrix));
+		else this.craftResult.setInventorySlotContents(0, ItemStack.EMPTY);
 	}
 
 	public static IRecipe<CraftingInventory> findRecipe(CraftingInventory inv, World world) {

@@ -12,11 +12,14 @@ public class GuiFastBench extends CraftingScreen {
 	}
 
 	@Override
-	public void init() {
-		super.init();
+	// TODO MCP-name: func_231160_c_ -> init
+	public void func_231160_c_() {
+		super.func_231160_c_();
 		if (FastBench.removeRecipeBook) {
-			this.buttons.clear();
-			this.children.clear();
+			// TODO MCP-name: field_230710_m_ -> buttons
+			this.field_230710_m_.clear();
+			// TODO MCP-name: field_230705_e_ -> children
+			this.field_230705_e_.clear();
 			this.recipeBookGui = new GuiDedBook();
 			this.setFocusedDefault(null);
 		}

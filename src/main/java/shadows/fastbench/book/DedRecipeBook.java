@@ -11,11 +11,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
 
 public class DedRecipeBook extends ServerRecipeBook {
-
-	public DedRecipeBook() {
-		super(ServerLifecycleHooks.getCurrentServer().getRecipeManager());
-	}
-
 	@Override
 	public void copyFrom(RecipeBook that) {
 	}
