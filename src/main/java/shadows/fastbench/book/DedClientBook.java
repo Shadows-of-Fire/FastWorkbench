@@ -150,4 +150,9 @@ public class DedClientBook extends ClientRecipeBook {
 	protected void unlock(ResourceLocation p_209118_1_) {
 	}
 
+	@Override
+	public boolean func_226144_b_(ResourceLocation p_226144_1_) {
+		return false;
+	}
+
 }

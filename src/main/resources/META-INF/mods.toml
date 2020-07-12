@@ -1,6 +1,6 @@
 modLoader="javafml" #mandatory
 
-loaderVersion="[28,)" #mandatory
+loaderVersion="[32,)" #mandatory
 
 authors="Shadows_of_Fire" #optional
 
@@ -19,20 +19,20 @@ Smol table go vroom.
 [[dependencies.fastbench]] #optional
     modId="forge" #mandatory
     mandatory=true #mandatory
-    versionRange="[30,)" #mandatory
+    versionRange="[32,)" #mandatory
     ordering="NONE"
     side="BOTH"
 
 [[dependencies.fastbench]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.15,)"
+    versionRange="[1.16.1,)"
     ordering="NONE"
     side="BOTH"
 
 [[dependencies.fastbench]]
     modId="placebo"
     mandatory=true
-    versionRange="[3,)"
+    versionRange="[4,)"
     ordering="NONE"
     side="BOTH"

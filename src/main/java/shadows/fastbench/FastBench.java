@@ -4,11 +4,11 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import net.minecraft.block.Block;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
+import net.minecraft.inventory.container.PlayerContainer;
+import net.minecraft.inventory.container.Slot;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
@@ -18,22 +18,25 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.InterModComms;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.fml.event.server.FMLServerAboutToStartEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.network.NetworkRegistry;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
-import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.ObjectHolder;
 import shadows.fastbench.block.BlockFastBench;
 import shadows.fastbench.gui.ContainerFastBench;
-import shadows.fastbench.net.LastRecipeMessage;
+import shadows.fastbench.gui.CraftingInventoryExt;
+import shadows.fastbench.gui.SlotCraftingSucks;
+import shadows.fastbench.net.RecipeMessage;
 import shadows.fastbench.proxy.BenchClientProxy;
 import shadows.fastbench.proxy.BenchServerProxy;
 import shadows.fastbench.proxy.IBenchProxy;
 import shadows.placebo.config.Configuration;
 import shadows.placebo.util.NetworkUtils;
+import shadows.placebo.util.PlaceboUtil;
 
 @Mod(FastBench.MODID)
 public class FastBench {
@@ -43,7 +46,7 @@ public class FastBench {
 
 	public static final IBenchProxy PROXY;
 	static {
-		PROXY = DistExecutor.runForDist(() -> () -> new BenchClientProxy(), () -> () -> new BenchServerProxy());
+		PROXY = DistExecutor.unsafeRunForDist(() -> () -> new BenchClientProxy(), () -> () -> new BenchServerProxy());
 	}
 
 	//Formatter::off
@@ -70,7 +73,7 @@ public class FastBench {
 
 	@SubscribeEvent
 	public void preInit(FMLCommonSetupEvent e) {
-		NetworkUtils.registerMessage(CHANNEL, 0, new LastRecipeMessage());
+		NetworkUtils.registerMessage(CHANNEL, 0, new RecipeMessage());
 		if (removeRecipeBook) PROXY.registerButtonRemover();
 	}
 
@@ -89,14 +92,7 @@ public class FastBench {
 
 	@SubscribeEvent
 	public void blockBois(Register<Block> e) {
-		Block b = new BlockFastBench().setRegistryName("minecraft", "crafting_table");
-		e.getRegistry().register(b);
-		ForgeRegistries.ITEMS.register(new BlockItem(b, new Item.Properties().group(ItemGroup.DECORATIONS)) {
-			@Override
-			public String getCreatorModId(ItemStack itemStack) {
-				return MODID;
-			}
-		}.setRegistryName(b.getRegistryName()));
+		PlaceboUtil.registerOverrideBlock(new BlockFastBench().setRegistryName("minecraft", "crafting_table"), MODID);
 	}
 
 	@SubscribeEvent
@@ -107,6 +103,27 @@ public class FastBench {
 	@SubscribeEvent
 	public void normalRemoval(EntityJoinWorldEvent e) {
 		if (removeRecipeBook) PROXY.deleteBook(e.getEntity());
+	}
+
+	@SubscribeEvent
+	public void playerContainerStuff(EntityJoinWorldEvent e) {
+		Entity ent = e.getEntity();
+		if (ent instanceof PlayerEntity) {
+			PlayerContainer ctr = ((PlayerEntity) ent).container;
+			if (ctr.inventorySlots.get(0) instanceof SlotCraftingSucks) return; //Already replaced this one, do nothing.
+			CraftingInventoryExt inv = new CraftingInventoryExt(ctr, 2, 2);
+			ctr.craftMatrix = inv;
+			for (int i = 0; i < 5; i++) {
+				Slot s = ctr.inventorySlots.get(i);
+				if (i == 0) {
+					SlotCraftingSucks craftSlot = new SlotCraftingSucks(ctr.player, ctr.craftMatrix, ctr.craftResult, 0, 154, 28);
+					craftSlot.slotNumber = 0;
+					ctr.inventorySlots.set(0, craftSlot);
+				} else {
+					ObfuscationReflectionHelper.setPrivateValue(Slot.class, s, inv, "field_75224_c");
+				}
+			}
+		}
 	}
 
 }

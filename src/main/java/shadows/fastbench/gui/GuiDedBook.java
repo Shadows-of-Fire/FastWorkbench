@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.recipebook.RecipeBookGui;
 import net.minecraft.inventory.container.RecipeBookContainer;
@@ -41,15 +43,17 @@ public class GuiDedBook extends RecipeBookGui {
 	}
 
 	@Override
-	public void render(int mouseX, int mouseY, float partialTicks) {
+	public void render(MatrixStack p_230430_1_, int mouseX, int mouseY, float partialTicks) {
 	}
 
 	@Override
-	public void renderTooltip(int guiLeft, int guiTop, int mouseX, int mouseY) {
+	// TODO MCP-name: func_238924_c_ -> renderTooltip
+	public void func_238924_c_(MatrixStack p_230430_1_, int guiLeft, int guiTop, int mouseX, int mouseY) {
 	}
 
 	@Override
-	public void renderGhostRecipe(int guiLeft, int guiTop, boolean someOffsetThing, float partialTicks) {
+	// TODO MCP-name: func_230477_a_ -> renderGhostRecipe
+	public void func_230477_a_(MatrixStack p_230430_1_, int guiLeft, int guiTop, boolean someOffsetThing, float partialTicks) {
 	}
 
 	@Override
@@ -96,4 +100,5 @@ public class GuiDedBook extends RecipeBookGui {
 	@Override
 	public void recipesShown(List<IRecipe<?>> recipes) {
 	}
+
 }
