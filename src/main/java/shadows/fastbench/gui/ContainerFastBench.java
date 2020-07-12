@@ -98,7 +98,6 @@ public class ContainerFastBench extends WorkbenchContainer {
 			craftMatrix.checkChanges = false;
 			IRecipe<CraftingInventory> recipe = (IRecipe<CraftingInventory>) craftResult.getRecipeUsed();
 			while (recipe != null && recipe.matches(craftMatrix, player.world)) {
-				System.out.println("called");
 				ItemStack recipeOutput = resultSlot.getStack().copy();
 				outputCopy = recipeOutput.copy();
 
