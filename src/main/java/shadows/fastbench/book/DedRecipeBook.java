@@ -136,7 +136,7 @@ public class DedRecipeBook extends ServerRecipeBook {
 	}
 
 	@Override
-	protected void unlock(ResourceLocation p_209118_1_) {
-
+	public boolean func_226144_b_(ResourceLocation id) {
+		return false;
 	}
 }

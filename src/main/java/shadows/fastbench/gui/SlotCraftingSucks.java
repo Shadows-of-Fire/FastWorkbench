@@ -1,21 +1,22 @@
 package shadows.fastbench.gui;
 
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.CraftResultInventory;
 import net.minecraft.inventory.CraftingInventory;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.container.CraftingResultSlot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.fml.hooks.BasicEventHooks;
 
 public class SlotCraftingSucks extends CraftingResultSlot {
 
-	protected final ContainerFastBench container;
+	protected final CraftResultInventory inv;
 
-	public SlotCraftingSucks(ContainerFastBench container, PlayerEntity player, CraftingInventory inv, IInventory holder, int slotIndex, int xPosition, int yPosition) {
-		super(player, inv, holder, slotIndex, xPosition, yPosition);
-		this.container = container;
+	public SlotCraftingSucks(PlayerEntity player, CraftingInventory matrix, CraftResultInventory inv, int slotIndex, int xPosition, int yPosition) {
+		super(player, matrix, inv, slotIndex, xPosition, yPosition);
+		this.inv = inv;
 	}
 
 	@Override
@@ -23,28 +24,30 @@ public class SlotCraftingSucks extends CraftingResultSlot {
 		if (this.getHasStack()) {
 			this.amountCrafted += Math.min(amount, getStack().getCount());
 		}
-		return getStack();
+		return getStack().copy();
 	}
 
-	/**
-	 * the itemStack passed in is the output - ie, iron ingots, and pickaxes, not ore and wood.
-	 */
+	@Override
+	public void putStack(ItemStack stack) {
+	}
+
 	@Override
 	protected void onCrafting(ItemStack stack) {
 		if (this.amountCrafted > 0) {
 			stack.onCrafting(this.player.world, this.player, this.amountCrafted);
 			BasicEventHooks.firePlayerCraftingEvent(this.player, stack, craftMatrix);
 		}
-
 		this.amountCrafted = 0;
 	}
 
+	@SuppressWarnings({ "unchecked" })
 	@Override
 	public ItemStack onTake(PlayerEntity player, ItemStack stack) {
 		this.onCrafting(stack);
 		ForgeHooks.setCraftingPlayer(player);
 		NonNullList<ItemStack> list;
-		if (container.lastRecipe != null && container.lastRecipe.matches(craftMatrix, container.world)) list = container.lastRecipe.getRemainingItems(craftMatrix);
+		IRecipe<CraftingInventory> recipe = (IRecipe<CraftingInventory>) inv.getRecipeUsed();
+		if (recipe != null && recipe.matches(craftMatrix, player.world)) list = recipe.getRemainingItems(craftMatrix);
 		else list = craftMatrix.stackList;
 		ForgeHooks.setCraftingPlayer(null);
 
@@ -68,7 +71,6 @@ public class SlotCraftingSucks extends CraftingResultSlot {
 				}
 			}
 		}
-
 		return stack;
 	}
 }
