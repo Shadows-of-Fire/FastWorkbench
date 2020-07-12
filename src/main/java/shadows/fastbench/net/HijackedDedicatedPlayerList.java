@@ -9,7 +9,7 @@ import shadows.fastbench.book.DedRecipeBook;
 public class HijackedDedicatedPlayerList extends DedicatedPlayerList {
 
 	public HijackedDedicatedPlayerList(DedicatedServer server) {
-		super(server, server.field_240767_f_, server.field_240766_e_);
+		super(server);
 	}
 
 	@Override

@@ -8,8 +8,13 @@ import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.RecipeBook;
 import net.minecraft.item.crafting.ServerRecipeBook;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.server.ServerLifecycleHooks;
 
 public class DedRecipeBook extends ServerRecipeBook {
+
+	public DedRecipeBook() {
+		super(ServerLifecycleHooks.getCurrentServer().getRecipeManager());
+	}
 
 	@Override
 	public void copyFrom(RecipeBook that) {
@@ -65,42 +70,6 @@ public class DedRecipeBook extends ServerRecipeBook {
 	}
 
 	@Override
-	public void func_216755_e(boolean p_216755_1_) {
-	}
-
-	@Override
-	public void func_216756_f(boolean p_216756_1_) {
-	}
-
-	@Override
-	public void func_216757_g(boolean p_216757_1_) {
-	}
-
-	@Override
-	public boolean func_216758_e() {
-		return false;
-	}
-
-	@Override
-	public boolean func_216759_g() {
-		return false;
-	}
-
-	@Override
-	public void func_216760_h(boolean p_216760_1_) {
-	}
-
-	@Override
-	public boolean func_216761_f() {
-		return false;
-	}
-
-	@Override
-	public boolean func_216762_h() {
-		return false;
-	}
-
-	@Override
 	public boolean isFilteringCraftable(RecipeBookContainer<?> p_203432_1_) {
 		return false;
 	}
@@ -139,4 +108,9 @@ public class DedRecipeBook extends ServerRecipeBook {
 	public boolean func_226144_b_(ResourceLocation id) {
 		return false;
 	}
+
+	@Override
+	protected void markNew(ResourceLocation resourceLocationIn) {
+	}
+
 }

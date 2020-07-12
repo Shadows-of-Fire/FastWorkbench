@@ -66,38 +66,38 @@ public class DedClientBook extends ClientRecipeBook {
 	}
 
 	@Override
-	public void func_216755_e(boolean p_216755_1_) {
+	public void setBlastFurnaceGuiOpen(boolean p_216755_1_) {
 	}
 
 	@Override
-	public void func_216756_f(boolean p_216756_1_) {
+	public void setBlastFurnaceFilteringCraftable(boolean p_216756_1_) {
 	}
 
 	@Override
-	public void func_216757_g(boolean p_216757_1_) {
+	public void setSmokerGuiOpen(boolean p_216757_1_) {
 	}
 
 	@Override
-	public boolean func_216758_e() {
+	public boolean isBlastFurnaceGuiOpen() {
 		return false;
 	}
 
 	@Override
-	public boolean func_216759_g() {
+	public boolean isSmokerGuiOpen() {
 		return false;
 	}
 
 	@Override
-	public void func_216760_h(boolean p_216760_1_) {
+	public void setSmokerFilteringCraftable(boolean p_216760_1_) {
 	}
 
 	@Override
-	public boolean func_216761_f() {
+	public boolean isBlastFurnaceFilteringCraftable() {
 		return false;
 	}
 
 	@Override
-	public boolean func_216762_h() {
+	public boolean isSmokerFilteringCraftable() {
 		return false;
 	}
 
