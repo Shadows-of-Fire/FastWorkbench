@@ -64,7 +64,7 @@ public class FastBench {
 	public static final ContainerType<ContainerFastBench> FAST_CRAFTING = null;
 
 	public FastBench() {
-		MinecraftForge.EVENT_BUS.register(this);
+		MinecraftForge.EVENT_BUS.register(new Events());
 		FMLJavaModLoadingContext.get().getModEventBus().register(this);
 		Configuration c = new Configuration(MODID);
 		removeRecipeBook = c.getBoolean("Remove Recipe Book", "general", true, "If the recipe book is removed from the game.  Server-enforced.");
@@ -95,35 +95,36 @@ public class FastBench {
 		PlaceboUtil.registerOverrideBlock(new BlockFastBench().setRegistryName("minecraft", "crafting_table"), MODID);
 	}
 
-	@SubscribeEvent
-	public void serverStartRemoval(FMLServerAboutToStartEvent e) {
-		if (removeRecipeBook) PROXY.replacePlayerList(e.getServer());
-	}
+	protected final class Events {
+		@SubscribeEvent
+		public void serverStartRemoval(FMLServerAboutToStartEvent e) {
+			if (removeRecipeBook) PROXY.replacePlayerList(e.getServer());
+		}
 
-	@SubscribeEvent
-	public void normalRemoval(EntityJoinWorldEvent e) {
-		if (removeRecipeBook) PROXY.deleteBook(e.getEntity());
-	}
+		@SubscribeEvent
+		public void normalRemoval(EntityJoinWorldEvent e) {
+			if (removeRecipeBook) PROXY.deleteBook(e.getEntity());
+		}
 
-	@SubscribeEvent
-	public void playerContainerStuff(EntityJoinWorldEvent e) {
-		Entity ent = e.getEntity();
-		if (ent instanceof PlayerEntity) {
-			PlayerContainer ctr = ((PlayerEntity) ent).container;
-			if (ctr.inventorySlots.get(0) instanceof SlotCraftingSucks) return; //Already replaced this one, do nothing.
-			CraftingInventoryExt inv = new CraftingInventoryExt(ctr, 2, 2);
-			ctr.craftMatrix = inv;
-			for (int i = 0; i < 5; i++) {
-				Slot s = ctr.inventorySlots.get(i);
-				if (i == 0) {
-					SlotCraftingSucks craftSlot = new SlotCraftingSucks(ctr.player, ctr.craftMatrix, ctr.craftResult, 0, 154, 28);
-					craftSlot.slotNumber = 0;
-					ctr.inventorySlots.set(0, craftSlot);
-				} else {
-					ObfuscationReflectionHelper.setPrivateValue(Slot.class, s, inv, "field_75224_c");
+		@SubscribeEvent
+		public void playerContainerStuff(EntityJoinWorldEvent e) {
+			Entity ent = e.getEntity();
+			if (ent instanceof PlayerEntity) {
+				PlayerContainer ctr = ((PlayerEntity) ent).container;
+				if (ctr.inventorySlots.get(0) instanceof SlotCraftingSucks) return; //Already replaced this one, do nothing.
+				CraftingInventoryExt inv = new CraftingInventoryExt(ctr, 2, 2);
+				ctr.craftMatrix = inv;
+				for (int i = 0; i < 5; i++) {
+					Slot s = ctr.inventorySlots.get(i);
+					if (i == 0) {
+						SlotCraftingSucks craftSlot = new SlotCraftingSucks(ctr.player, ctr.craftMatrix, ctr.craftResult, 0, 154, 28);
+						craftSlot.slotNumber = 0;
+						ctr.inventorySlots.set(0, craftSlot);
+					} else {
+						ObfuscationReflectionHelper.setPrivateValue(Slot.class, s, inv, "field_75224_c");
+					}
 				}
 			}
 		}
 	}
-
 }
