@@ -116,8 +116,7 @@ public class ContainerFastBench extends WorkbenchContainer {
 					return ItemStack.EMPTY;
 				}
 
-				ItemStack itemstack2 = resultSlot.onTake(player, recipeOutput);
-				player.dropItem(itemstack2, false);
+				resultSlot.onTake(player, recipeOutput);
 			}
 			field_75162_e.checkChanges = true;
 			slotChangedCraftingGrid(player.world, player, field_75162_e, field_75160_f);

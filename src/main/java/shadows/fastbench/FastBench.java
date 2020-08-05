@@ -64,7 +64,9 @@ public class FastBench {
 	public static final ContainerType<ContainerFastBench> FAST_CRAFTING = null;
 
 	public FastBench() {
-		MinecraftForge.EVENT_BUS.register(this);
+		MinecraftForge.EVENT_BUS.addListener(this::serverStartRemoval);
+		MinecraftForge.EVENT_BUS.addListener(this::normalRemoval);
+		MinecraftForge.EVENT_BUS.addListener(this::playerContainerStuff);
 		FMLJavaModLoadingContext.get().getModEventBus().register(this);
 		Configuration c = new Configuration(MODID);
 		removeRecipeBook = c.getBoolean("Remove Recipe Book", "general", true, "If the recipe book is removed from the game.  Server-enforced.");
@@ -95,17 +97,14 @@ public class FastBench {
 		PlaceboUtil.registerOverrideBlock(new BlockFastBench().setRegistryName("minecraft", "crafting_table"), MODID);
 	}
 
-	@SubscribeEvent
 	public void serverStartRemoval(FMLServerAboutToStartEvent e) {
 		if (removeRecipeBook) PROXY.replacePlayerList(e.getServer());
 	}
 
-	@SubscribeEvent
 	public void normalRemoval(EntityJoinWorldEvent e) {
 		if (removeRecipeBook) PROXY.deleteBook(e.getEntity());
 	}
 
-	@SubscribeEvent
 	public void playerContainerStuff(EntityJoinWorldEvent e) {
 		Entity ent = e.getEntity();
 		if (ent instanceof PlayerEntity) {
