@@ -12,6 +12,8 @@ version="${file.jarVersion}" #mandatory
 
 displayName="FastWorkbench" #mandatory
 
+license="MIT License" #mandatory
+
 description='''
 Smol table go vroom.
 '''

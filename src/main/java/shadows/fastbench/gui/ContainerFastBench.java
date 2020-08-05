@@ -34,18 +34,18 @@ public class ContainerFastBench extends WorkbenchContainer {
 
 	public ContainerFastBench(int id, PlayerEntity player, World world, BlockPos pos) {
 		super(id, player.inventory, IWorldPosCallable.of(world, pos));
-		this.craftMatrix = new CraftingInventoryExt(this, 3, 3);
+		this.field_75162_e = new CraftingInventoryExt(this, 3, 3);
 		this.inventorySlots.clear();
 		this.inventoryItemStacks.clear();
 		this.world = world;
 		this.pos = pos;
 		this.player = player;
 
-		this.addSlot(new SlotCraftingSucks(player, this.craftMatrix, this.craftResult, 0, 124, 35));
+		this.addSlot(new SlotCraftingSucks(player, this.field_75162_e, this.field_75160_f, 0, 124, 35));
 
 		for (int i = 0; i < 3; ++i) {
 			for (int j = 0; j < 3; ++j) {
-				this.addSlot(new Slot(this.craftMatrix, j + i * 3, 30 + j * 18, 17 + i * 18));
+				this.addSlot(new Slot(this.field_75162_e, j + i * 3, 30 + j * 18, 17 + i * 18));
 			}
 		}
 
@@ -62,7 +62,7 @@ public class ContainerFastBench extends WorkbenchContainer {
 
 	@Override
 	public void onCraftMatrixChanged(IInventory inventoryIn) {
-		slotChangedCraftingGrid(world, player, (CraftingInventoryExt) craftMatrix, craftResult);
+		slotChangedCraftingGrid(world, player, (CraftingInventoryExt) field_75162_e, field_75160_f);
 	}
 
 	public static void slotChangedCraftingGrid(World world, PlayerEntity player, CraftingInventoryExt inv, CraftResultInventory result) {
@@ -88,23 +88,23 @@ public class ContainerFastBench extends WorkbenchContainer {
 	@Override
 	public ItemStack transferStackInSlot(PlayerEntity player, int index) {
 		if (index != 0) return super.transferStackInSlot(player, index);
-		return handleShiftCraft(player, this, this.inventorySlots.get(index), (CraftingInventoryExt) craftMatrix, craftResult, 10, 46);
+		return handleShiftCraft(player, this, this.inventorySlots.get(index), (CraftingInventoryExt) field_75162_e, field_75160_f, 10, 46);
 	}
 
-	public static ItemStack handleShiftCraft(PlayerEntity player, Container container, Slot resultSlot, CraftingInventoryExt craftMatrix, CraftResultInventory craftResult, int outStart, int outEnd) {
+	public static ItemStack handleShiftCraft(PlayerEntity player, Container container, Slot resultSlot, CraftingInventoryExt field_75162_e, CraftResultInventory field_75160_f, int outStart, int outEnd) {
 		ItemStack outputCopy = ItemStack.EMPTY;
 
 		if (resultSlot != null && resultSlot.getHasStack()) {
-			craftMatrix.checkChanges = false;
-			IRecipe<CraftingInventory> recipe = (IRecipe<CraftingInventory>) craftResult.getRecipeUsed();
-			while (recipe != null && recipe.matches(craftMatrix, player.world)) {
+			field_75162_e.checkChanges = false;
+			IRecipe<CraftingInventory> recipe = (IRecipe<CraftingInventory>) field_75160_f.getRecipeUsed();
+			while (recipe != null && recipe.matches(field_75162_e, player.world)) {
 				ItemStack recipeOutput = resultSlot.getStack().copy();
 				outputCopy = recipeOutput.copy();
 
 				recipeOutput.getItem().onCreated(recipeOutput, player.world, player);
 
 				if (!player.world.isRemote && !DumbShitTM.mergeItemStack(container, recipeOutput, outStart, outEnd)) {
-					craftMatrix.checkChanges = true;
+					field_75162_e.checkChanges = true;
 					return ItemStack.EMPTY;
 				}
 
@@ -112,18 +112,18 @@ public class ContainerFastBench extends WorkbenchContainer {
 				resultSlot.onSlotChanged();
 
 				if (!player.world.isRemote && recipeOutput.getCount() == outputCopy.getCount()) {
-					craftMatrix.checkChanges = true;
+					field_75162_e.checkChanges = true;
 					return ItemStack.EMPTY;
 				}
 
 				ItemStack itemstack2 = resultSlot.onTake(player, recipeOutput);
 				player.dropItem(itemstack2, false);
 			}
-			craftMatrix.checkChanges = true;
-			slotChangedCraftingGrid(player.world, player, craftMatrix, craftResult);
+			field_75162_e.checkChanges = true;
+			slotChangedCraftingGrid(player.world, player, field_75162_e, field_75160_f);
 		}
-		craftMatrix.checkChanges = true;
-		return craftResult.getRecipeUsed() == null ? ItemStack.EMPTY : outputCopy;
+		field_75162_e.checkChanges = true;
+		return field_75160_f.getRecipeUsed() == null ? ItemStack.EMPTY : outputCopy;
 	}
 
 	public static IRecipe<CraftingInventory> findRecipe(CraftingInventory inv, World world) {

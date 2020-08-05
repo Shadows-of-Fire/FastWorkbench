@@ -112,11 +112,11 @@ public class FastBench {
 			PlayerContainer ctr = ((PlayerEntity) ent).container;
 			if (ctr.inventorySlots.get(0) instanceof SlotCraftingSucks) return; //Already replaced this one, do nothing.
 			CraftingInventoryExt inv = new CraftingInventoryExt(ctr, 2, 2);
-			ctr.craftMatrix = inv;
+			ctr.field_75181_e = inv;
 			for (int i = 0; i < 5; i++) {
 				Slot s = ctr.inventorySlots.get(i);
 				if (i == 0) {
-					SlotCraftingSucks craftSlot = new SlotCraftingSucks(ctr.player, ctr.craftMatrix, ctr.craftResult, 0, 154, 28);
+					SlotCraftingSucks craftSlot = new SlotCraftingSucks(ctr.player, ctr.field_75181_e, ctr.field_75179_f, 0, 154, 28);
 					craftSlot.slotNumber = 0;
 					ctr.inventorySlots.set(0, craftSlot);
 				} else {

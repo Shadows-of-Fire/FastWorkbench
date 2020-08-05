@@ -151,7 +151,7 @@ public class DedClientBook extends ClientRecipeBook {
 	}
 
 	@Override
-	public boolean func_226144_b_(ResourceLocation p_226144_1_) {
+	public boolean contains(ResourceLocation p_226144_1_) {
 		return false;
 	}
 

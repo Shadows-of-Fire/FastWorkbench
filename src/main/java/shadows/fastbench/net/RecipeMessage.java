@@ -56,10 +56,10 @@ public class RecipeMessage extends MessageProvider<RecipeMessage> {
 			IRecipe<CraftingInventory> r = (IRecipe<CraftingInventory>) Minecraft.getInstance().world.getRecipeManager().getRecipe(msg.rec).orElse(null);
 			if (Minecraft.getInstance().currentScreen instanceof GuiFastBench) {
 				ContainerFastBench c = ((GuiFastBench) Minecraft.getInstance().currentScreen).getContainer();
-				updateLastRecipe(c.craftMatrix, c.craftResult, r);
+				updateLastRecipe(c.field_75162_e, c.field_75160_f, r);
 			} else if (Minecraft.getInstance().currentScreen instanceof InventoryScreen) {
 				PlayerContainer c = ((InventoryScreen) Minecraft.getInstance().currentScreen).getContainer();
-				updateLastRecipe(c.craftMatrix, c.craftResult, r);
+				updateLastRecipe(c.field_75181_e, c.field_75179_f, r);
 			}
 		}, ctx.get());
 	}

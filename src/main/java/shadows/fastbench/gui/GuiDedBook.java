@@ -47,13 +47,11 @@ public class GuiDedBook extends RecipeBookGui {
 	}
 
 	@Override
-	// TODO MCP-name: func_238924_c_ -> renderTooltip
-	public void func_238924_c_(MatrixStack p_230430_1_, int guiLeft, int guiTop, int mouseX, int mouseY) {
+	public void drawTooltip(MatrixStack p_230430_1_, int guiLeft, int guiTop, int mouseX, int mouseY) {
 	}
 
 	@Override
-	// TODO MCP-name: func_230477_a_ -> renderGhostRecipe
-	public void func_230477_a_(MatrixStack p_230430_1_, int guiLeft, int guiTop, boolean someOffsetThing, float partialTicks) {
+	public void drawGhostSlots(MatrixStack p_230430_1_, int guiLeft, int guiTop, boolean someOffsetThing, float partialTicks) {
 	}
 
 	@Override
