@@ -9,12 +9,14 @@ import net.minecraft.client.util.RecipeBookCategories;
 import net.minecraft.inventory.container.RecipeBookContainer;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.RecipeBook;
+import net.minecraft.item.crafting.RecipeBookCategory;
+import net.minecraft.item.crafting.RecipeBookStatus;
 import net.minecraft.util.ResourceLocation;
 
 public class DedClientBook extends ClientRecipeBook {
 
 	public DedClientBook() {
-		super(null);
+		super();
 	}
 
 	@Override
@@ -22,13 +24,12 @@ public class DedClientBook extends ClientRecipeBook {
 	}
 
 	@Override
-	public boolean isFilteringCraftable() {
+	public boolean func_226144_b_(ResourceLocation p_226144_1_) {
 		return false;
 	}
 
 	@Override
-	public boolean isGuiOpen() {
-		return false;
+	public void func_243196_a(Iterable<IRecipe<?>> p_243196_1_) {
 	}
 
 	@Override
@@ -54,51 +55,7 @@ public class DedClientBook extends ClientRecipeBook {
 	}
 
 	@Override
-	public void setFilteringCraftable(boolean shouldFilter) {
-	}
-
-	@Override
-	public void setGuiOpen(boolean open) {
-	}
-
-	@Override
 	public void unlock(IRecipe<?> recipe) {
-	}
-
-	@Override
-	public void func_216755_e(boolean p_216755_1_) {
-	}
-
-	@Override
-	public void func_216756_f(boolean p_216756_1_) {
-	}
-
-	@Override
-	public void func_216757_g(boolean p_216757_1_) {
-	}
-
-	@Override
-	public boolean func_216758_e() {
-		return false;
-	}
-
-	@Override
-	public boolean func_216759_g() {
-		return false;
-	}
-
-	@Override
-	public void func_216760_h(boolean p_216760_1_) {
-	}
-
-	@Override
-	public boolean func_216761_f() {
-		return false;
-	}
-
-	@Override
-	public boolean func_216762_h() {
-		return false;
 	}
 
 	@Override
@@ -112,21 +69,6 @@ public class DedClientBook extends ClientRecipeBook {
 	}
 
 	@Override
-	public boolean isFilteringCraftable(RecipeBookContainer<?> p_203432_1_) {
-		return false;
-	}
-
-	@Override
-	public boolean isFurnaceFilteringCraftable() {
-		return false;
-	}
-
-	@Override
-	public boolean isFurnaceGuiOpen() {
-		return false;
-	}
-
-	@Override
 	protected void lock(ResourceLocation p_209119_1_) {
 	}
 
@@ -135,24 +77,41 @@ public class DedClientBook extends ClientRecipeBook {
 	}
 
 	@Override
-	public void rebuildTable() {
-	}
-
-	@Override
-	public void setFurnaceFilteringCraftable(boolean p_202882_1_) {
-	}
-
-	@Override
-	public void setFurnaceGuiOpen(boolean p_202881_1_) {
-	}
-
-	@Override
 	protected void unlock(ResourceLocation p_209118_1_) {
 	}
 
 	@Override
-	public boolean contains(ResourceLocation p_226144_1_) {
+	public void func_242140_a(RecipeBookStatus p_242140_1_) {
+	}
+
+	@Override
+	public boolean func_242141_a(RecipeBookContainer<?> p_242141_1_) {
 		return false;
+	}
+
+	@Override
+	public boolean func_242142_a(RecipeBookCategory p_242142_1_) {
+		return false;
+	}
+
+	@Override
+	public void func_242143_a(RecipeBookCategory p_242143_1_, boolean p_242143_2_) {
+
+	}
+
+	@Override
+	public void func_242144_a(RecipeBookCategory p_242144_1_, boolean p_242144_2_, boolean p_242144_3_) {
+
+	}
+
+	@Override
+	public boolean func_242145_b(RecipeBookCategory p_242145_1_) {
+		return false;
+	}
+
+	@Override
+	public void func_242146_b(RecipeBookCategory p_242146_1_, boolean p_242146_2_) {
+
 	}
 
 }

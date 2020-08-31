@@ -5,14 +5,11 @@ import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.gui.widget.button.ImageButton;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.integrated.IntegratedServer;
 import net.minecraftforge.client.event.GuiScreenEvent.InitGuiEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import shadows.fastbench.book.DedClientBook;
 import shadows.fastbench.book.DedRecipeBook;
-import shadows.fastbench.net.HijackedPlayerList;
 
 public class BenchClientProxy implements IBenchProxy {
 
@@ -22,11 +19,6 @@ public class BenchClientProxy implements IBenchProxy {
 	public void deleteBook(Entity e) {
 		if (e instanceof ServerPlayerEntity) ((ServerPlayerEntity) e).recipeBook = new DedRecipeBook();
 		if (e instanceof ClientPlayerEntity) ((ClientPlayerEntity) e).recipeBook = CLIENT_BOOK;
-	}
-
-	@Override
-	public void replacePlayerList(MinecraftServer server) {
-		if (!(server.getPlayerList() instanceof HijackedPlayerList)) server.setPlayerList(new HijackedPlayerList((IntegratedServer) server));
 	}
 
 	@Override

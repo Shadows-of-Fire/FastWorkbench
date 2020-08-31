@@ -47,14 +47,6 @@ public class GuiDedBook extends RecipeBookGui {
 	}
 
 	@Override
-	public void drawTooltip(MatrixStack p_230430_1_, int guiLeft, int guiTop, int mouseX, int mouseY) {
-	}
-
-	@Override
-	public void drawGhostSlots(MatrixStack p_230430_1_, int guiLeft, int guiTop, boolean someOffsetThing, float partialTicks) {
-	}
-
-	@Override
 	public void recipesUpdated() {
 	}
 
@@ -75,11 +67,6 @@ public class GuiDedBook extends RecipeBookGui {
 	}
 
 	@Override
-	protected boolean toggleCraftableFilter() {
-		return false;
-	}
-
-	@Override
 	protected void setVisible(boolean p_193006_1_) {
 	}
 
@@ -97,6 +84,19 @@ public class GuiDedBook extends RecipeBookGui {
 
 	@Override
 	public void recipesShown(List<IRecipe<?>> recipes) {
+	}
+
+	@Override
+	public boolean func_195604_a(double mouseX, double mouseY, int guiLeft, int guiTop, int xSize, int ySize, int mouseButton) {
+		return false;
+	}
+
+	@Override
+	public void func_230477_a_(MatrixStack p_230477_1_, int p_230477_2_, int p_230477_3_, boolean p_230477_4_, float p_230477_5_) {
+	}
+
+	@Override
+	public void func_238924_c_(MatrixStack p_238924_1_, int p_238924_2_, int p_238924_3_, int p_238924_4_, int p_238924_5_) {
 	}
 
 }

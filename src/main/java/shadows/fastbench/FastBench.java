@@ -6,6 +6,7 @@ import org.apache.logging.log4j.Logger;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.inventory.container.PlayerContainer;
 import net.minecraft.inventory.container.Slot;
@@ -14,6 +15,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent.Register;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent.LoadFromFile;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.InterModComms;
@@ -21,12 +23,12 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
-import net.minecraftforge.fml.event.server.FMLServerAboutToStartEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.network.NetworkRegistry;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
 import net.minecraftforge.registries.ObjectHolder;
 import shadows.fastbench.block.BlockFastBench;
+import shadows.fastbench.book.DedRecipeBook;
 import shadows.fastbench.gui.ContainerFastBench;
 import shadows.fastbench.gui.CraftingInventoryExt;
 import shadows.fastbench.gui.SlotCraftingSucks;
@@ -64,7 +66,7 @@ public class FastBench {
 	public static final ContainerType<ContainerFastBench> FAST_CRAFTING = null;
 
 	public FastBench() {
-		MinecraftForge.EVENT_BUS.addListener(this::serverStartRemoval);
+		MinecraftForge.EVENT_BUS.addListener(this::serverRemoval);
 		MinecraftForge.EVENT_BUS.addListener(this::normalRemoval);
 		MinecraftForge.EVENT_BUS.addListener(this::playerContainerStuff);
 		FMLJavaModLoadingContext.get().getModEventBus().register(this);
@@ -97,8 +99,8 @@ public class FastBench {
 		PlaceboUtil.registerOverrideBlock(new BlockFastBench().setRegistryName("minecraft", "crafting_table"), MODID);
 	}
 
-	public void serverStartRemoval(FMLServerAboutToStartEvent e) {
-		if (removeRecipeBook) PROXY.replacePlayerList(e.getServer());
+	public void serverRemoval(LoadFromFile e) {
+		if (removeRecipeBook) ((ServerPlayerEntity) e.getPlayer()).recipeBook = new DedRecipeBook();
 	}
 
 	public void normalRemoval(EntityJoinWorldEvent e) {
@@ -111,11 +113,11 @@ public class FastBench {
 			PlayerContainer ctr = ((PlayerEntity) ent).container;
 			if (ctr.inventorySlots.get(0) instanceof SlotCraftingSucks) return; //Already replaced this one, do nothing.
 			CraftingInventoryExt inv = new CraftingInventoryExt(ctr, 2, 2);
-			ctr.field_75181_e = inv;
+			ctr.craftMatrix = inv;
 			for (int i = 0; i < 5; i++) {
 				Slot s = ctr.inventorySlots.get(i);
 				if (i == 0) {
-					SlotCraftingSucks craftSlot = new SlotCraftingSucks(ctr.player, ctr.field_75181_e, ctr.field_75179_f, 0, 154, 28);
+					SlotCraftingSucks craftSlot = new SlotCraftingSucks(ctr.player, ctr.craftMatrix, ctr.craftResult, 0, 154, 28);
 					craftSlot.slotNumber = 0;
 					ctr.inventorySlots.set(0, craftSlot);
 				} else {

@@ -8,11 +8,11 @@ import shadows.fastbench.gui.CraftingInventoryExt;
 public class PlayerContainerHooks {
 
 	public static void onCraftMatrixChanged(PlayerContainer ctr) {
-		ContainerFastBench.slotChangedCraftingGrid(ctr.player.world, ctr.player, (CraftingInventoryExt) ctr.field_75181_e, ctr.field_75179_f);
+		ContainerFastBench.slotChangedCraftingGrid(ctr.player.world, ctr.player, (CraftingInventoryExt) ctr.craftMatrix, ctr.craftResult);
 	}
 
 	public static ItemStack transferStackInSlot(PlayerContainer ctr) {
-		return ContainerFastBench.handleShiftCraft(ctr.player, ctr, ctr.inventorySlots.get(0), (CraftingInventoryExt) ctr.field_75181_e, ctr.field_75179_f, 9, 45);
+		return ContainerFastBench.handleShiftCraft(ctr.player, ctr, ctr.inventorySlots.get(0), (CraftingInventoryExt) ctr.craftMatrix, ctr.craftResult, 9, 45);
 	}
 
 }
