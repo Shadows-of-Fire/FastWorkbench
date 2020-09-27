@@ -59,7 +59,7 @@ public class DedRecipeBook extends ServerRecipeBook {
 	}
 
 	@Override
-	public boolean func_226144_b_(ResourceLocation p_226144_1_) {
+	public boolean isUnlocked(ResourceLocation p_226144_1_) {
 		return false;
 	}
 
