@@ -46,12 +46,18 @@ repositories {
 	maven {
 		url 'https://maven.tehnut.info'
 	}
+	maven {
+		url 'https://maven.blamejared.com'
+	}
 }
 
 dependencies {
     minecraft 'net.minecraftforge:forge:1.16.2-33.0.22'
-	compile fg.deobf('mezz.jei:jei-1.16.2:+')
+	compile fg.deobf('mezz.jei:jei-1.16.2:+'){
+		transitive = false;
+	}
 	compile fg.deobf('mcp.mobius.waila:Hwyla:1.10.11-B78_1.16.2')
+	compile fg.deobf('com.blamejared.crafttweaker:CraftTweaker-1.16.2:7.0.0.30')
 	compile fileTree(dir: 'libs', include: '*.jar')
 }
 

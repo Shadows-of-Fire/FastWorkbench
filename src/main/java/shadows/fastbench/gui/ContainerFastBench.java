@@ -2,7 +2,6 @@ package shadows.fastbench.gui;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.CraftResultInventory;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.inventory.IInventory;
@@ -17,9 +16,9 @@ import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.util.IWorldPosCallable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.network.NetworkDirection;
 import shadows.fastbench.FastBench;
 import shadows.fastbench.net.RecipeMessage;
+import shadows.placebo.util.NetworkUtils;
 
 @SuppressWarnings("unchecked")
 public class ContainerFastBench extends WorkbenchContainer {
@@ -70,18 +69,16 @@ public class ContainerFastBench extends WorkbenchContainer {
 
 			ItemStack itemstack = ItemStack.EMPTY;
 
-			IRecipe<CraftingInventory> recipe = (IRecipe<CraftingInventory>) result.getRecipeUsed();
+			IRecipe<CraftingInventory> oldRecipe = (IRecipe<CraftingInventory>) result.getRecipeUsed();
+			IRecipe<CraftingInventory> recipe = oldRecipe;
 			if (recipe == null || !recipe.matches(inv, world)) recipe = findRecipe(inv, world);
 
-			if (recipe != null) {
-				itemstack = recipe.getCraftingResult(inv);
+			if (oldRecipe != recipe) {
+				if (recipe != null) itemstack = recipe.getCraftingResult(inv);
+				NetworkUtils.sendTo(FastBench.CHANNEL, new RecipeMessage(recipe, itemstack), player);
+				result.setInventorySlotContents(0, itemstack);
+				result.setRecipeUsed(recipe);
 			}
-
-			result.setInventorySlotContents(0, itemstack);
-			ServerPlayerEntity entityplayermp = (ServerPlayerEntity) player;
-			FastBench.CHANNEL.sendTo(new RecipeMessage(recipe), entityplayermp.connection.getNetworkManager(), NetworkDirection.PLAY_TO_CLIENT);
-
-			result.setRecipeUsed(recipe);
 		}
 	}
 

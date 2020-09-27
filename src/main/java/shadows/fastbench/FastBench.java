@@ -57,7 +57,7 @@ public class FastBench {
             .named(new ResourceLocation(MODID, "channel"))
             .clientAcceptedVersions(s->true)
             .serverAcceptedVersions(s->true)
-            .networkProtocolVersion(() -> "1.0.0")
+            .networkProtocolVersion(() -> "1.1.0")
             .simpleChannel();
     //Formatter::on
 

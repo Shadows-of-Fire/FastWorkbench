@@ -21,17 +21,20 @@ public class RecipeMessage extends MessageProvider<RecipeMessage> {
 
 	public static final ResourceLocation NULL = new ResourceLocation("null", "null");
 
-	ResourceLocation rec;
+	ResourceLocation recipeId;
+	ItemStack output;
 
 	public RecipeMessage() {
 	}
 
-	public RecipeMessage(IRecipe<CraftingInventory> toSend) {
-		rec = toSend == null ? NULL : toSend.getId();
+	public RecipeMessage(IRecipe<CraftingInventory> recipeId, ItemStack output) {
+		this.recipeId = recipeId == null ? NULL : recipeId.getId();
+		this.output = output;
 	}
 
-	public RecipeMessage(ResourceLocation toSend) {
-		rec = toSend;
+	public RecipeMessage(ResourceLocation recipeId, ItemStack output) {
+		this.recipeId = recipeId;
+		this.output = output;
 	}
 
 	@Override
@@ -41,33 +44,34 @@ public class RecipeMessage extends MessageProvider<RecipeMessage> {
 
 	@Override
 	public RecipeMessage read(PacketBuffer buf) {
-		return new RecipeMessage(new ResourceLocation(buf.readString()));
+		ResourceLocation rec = new ResourceLocation(buf.readString());
+		return new RecipeMessage(rec, rec.equals(NULL) ? ItemStack.EMPTY : buf.readItemStack());
 	}
 
 	@Override
 	public void write(RecipeMessage msg, PacketBuffer buf) {
-		buf.writeString(msg.rec.toString());
+		buf.writeString(msg.recipeId.toString());
+		if (!msg.recipeId.equals(NULL)) buf.writeItemStack(msg.output);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public void handle(RecipeMessage msg, Supplier<Context> ctx) {
 		NetworkUtils.handlePacket(() -> () -> {
-			IRecipe<CraftingInventory> r = (IRecipe<CraftingInventory>) Minecraft.getInstance().world.getRecipeManager().getRecipe(msg.rec).orElse(null);
+			IRecipe<CraftingInventory> recipe = (IRecipe<CraftingInventory>) Minecraft.getInstance().world.getRecipeManager().getRecipe(msg.recipeId).orElse(null);
 			if (Minecraft.getInstance().currentScreen instanceof GuiFastBench) {
 				ContainerFastBench c = ((GuiFastBench) Minecraft.getInstance().currentScreen).getContainer();
-				updateLastRecipe(c.craftMatrix, c.craftResult, r);
+				updateLastRecipe(c.craftMatrix, c.craftResult, recipe, msg.output);
 			} else if (Minecraft.getInstance().currentScreen instanceof InventoryScreen) {
 				PlayerContainer c = ((InventoryScreen) Minecraft.getInstance().currentScreen).getContainer();
-				updateLastRecipe(c.craftMatrix, c.craftResult, r);
+				updateLastRecipe(c.craftMatrix, c.craftResult, recipe, msg.output);
 			}
 		}, ctx.get());
 	}
 
-	public static void updateLastRecipe(CraftingInventory craftMatrix, CraftResultInventory craftResult, IRecipe<CraftingInventory> rec) {
+	public static void updateLastRecipe(CraftingInventory craftMatrix, CraftResultInventory craftResult, IRecipe<CraftingInventory> rec, ItemStack output) {
 		craftResult.setRecipeUsed(rec);
-		if (rec != null) craftResult.setInventorySlotContents(0, rec.getCraftingResult(craftMatrix));
-		else craftResult.setInventorySlotContents(0, ItemStack.EMPTY);
+		craftResult.setInventorySlotContents(0, output);
 	}
 
 }
