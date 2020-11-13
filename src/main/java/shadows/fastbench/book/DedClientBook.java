@@ -25,7 +25,7 @@ public class DedClientBook extends ClientRecipeBook {
 
 	@Override
 	public boolean isUnlocked(ResourceLocation p_226144_1_) {
-		return false;
+		return true;
 	}
 
 	@Override
