@@ -26,10 +26,6 @@ public class DedRecipeBook extends ServerRecipeBook {
 	}
 
 	@Override
-	public void markNew(IRecipe<?> recipe) {
-	}
-
-	@Override
 	public void markSeen(IRecipe<?> recipe) {
 	}
 
@@ -40,7 +36,7 @@ public class DedRecipeBook extends ServerRecipeBook {
 
 	@Override
 	public boolean isUnlocked(IRecipe<?> recipe) {
-		return true;
+		return false;
 	}
 
 	@Override
@@ -95,4 +91,5 @@ public class DedRecipeBook extends ServerRecipeBook {
 	public void func_242146_b(RecipeBookCategory p_242146_1_, boolean p_242146_2_) {
 
 	}
+
 }

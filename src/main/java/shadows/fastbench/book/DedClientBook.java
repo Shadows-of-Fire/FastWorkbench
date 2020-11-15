@@ -51,7 +51,7 @@ public class DedClientBook extends ClientRecipeBook {
 
 	@Override
 	public boolean isUnlocked(IRecipe<?> recipe) {
-		return true;
+		return false;
 	}
 
 	@Override
