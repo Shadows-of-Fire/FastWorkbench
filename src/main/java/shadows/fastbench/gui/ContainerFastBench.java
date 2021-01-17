@@ -96,12 +96,10 @@ public class ContainerFastBench extends WorkbenchContainer implements ICraftingC
 	public static ItemStack handleShiftCraft(PlayerEntity player, Container container, Slot resultSlot, CraftingInventoryExt craftMatrix, CraftResultInventory craftResult, int outStart, int outEnd) {
 		ItemStack outputCopy = ItemStack.EMPTY;
 
-		int i = 0;
 		if (resultSlot != null && resultSlot.getHasStack()) {
 			craftMatrix.checkChanges = false;
 			IRecipe<CraftingInventory> recipe = (IRecipe<CraftingInventory>) craftResult.getRecipeUsed();
 			while (recipe != null && recipe.matches(craftMatrix, player.world)) {
-				System.out.println("C: " + player.world.isRemote + " i: " + i++);
 				ItemStack recipeOutput = resultSlot.getStack().copy();
 				outputCopy = recipeOutput.copy();
 
@@ -114,7 +112,7 @@ public class ContainerFastBench extends WorkbenchContainer implements ICraftingC
 
 				resultSlot.onSlotChange(recipeOutput, outputCopy);
 				resultSlot.onSlotChanged();
-				
+
 				if (!player.world.isRemote && recipeOutput.getCount() == outputCopy.getCount()) {
 					craftMatrix.checkChanges = true;
 					return ItemStack.EMPTY;

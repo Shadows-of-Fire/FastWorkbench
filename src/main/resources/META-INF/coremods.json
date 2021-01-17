@@ -1,4 +1,5 @@
 {
-  "player-transfer-stack": "javascript/player-transfer-stack.js",
-  "player-matrix-change": "javascript/player-matrix-change.js"
+  "player_transfer_stack": "javascript/player_transfer_stack.js",
+  "player_matrix_change": "javascript/player_matrix_change.js",
+  "player_container_ctor": "javascript/player_container_ctor.js"
 }
