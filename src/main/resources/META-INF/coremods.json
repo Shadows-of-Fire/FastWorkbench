@@ -1,5 +1,5 @@
 {
-  "player_transfer_stack": "javascript/player_transfer_stack.js",
-  "player_matrix_change": "javascript/player_matrix_change.js",
-  "player_container_ctor": "javascript/player_container_ctor.js"
+  "player_transfer_stack": "coremods/player_transfer_stack.js",
+  "player_matrix_change": "coremods/player_matrix_change.js",
+  "player_container_ctor": "coremods/player_container_ctor.js"
 }
