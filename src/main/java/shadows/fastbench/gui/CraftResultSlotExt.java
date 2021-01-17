@@ -28,6 +28,12 @@ public class CraftResultSlotExt extends CraftingResultSlot {
 	}
 
 	@Override
+	protected void onSwapCraft(int numItemsCrafted) {
+		super.onSwapCraft(numItemsCrafted);
+		inv.setInventorySlotContents(0, getStack().copy()); // https://github.com/Shadows-of-Fire/FastWorkbench/issues/62 - Vanilla's SWAP action will leak this stack here.
+	}
+
+	@Override
 	public void putStack(ItemStack stack) {
 	}
 
