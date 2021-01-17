@@ -32,7 +32,7 @@ import shadows.fastbench.block.BlockFastBench;
 import shadows.fastbench.book.DedRecipeBook;
 import shadows.fastbench.gui.ContainerFastBench;
 import shadows.fastbench.gui.CraftingInventoryExt;
-import shadows.fastbench.gui.SlotCraftingSucks;
+import shadows.fastbench.gui.CraftResultSlotExt;
 import shadows.fastbench.net.RecipeMessage;
 import shadows.fastbench.proxy.BenchClientProxy;
 import shadows.fastbench.proxy.BenchServerProxy;
@@ -125,13 +125,13 @@ public class FastBench {
 	}
 
 	private void updatePlayerContainer(PlayerContainer ctr) {
-		if (ctr.inventorySlots.get(0) instanceof SlotCraftingSucks) return; //Already replaced this one, do nothing.
+		if (ctr.inventorySlots.get(0) instanceof CraftResultSlotExt) return; //Already replaced this one, do nothing.
 		CraftingInventoryExt inv = new CraftingInventoryExt(ctr, 2, 2);
 		ctr.craftMatrix = inv;
 		for (int i = 0; i < 5; i++) {
 			Slot s = ctr.inventorySlots.get(i);
 			if (i == 0) {
-				SlotCraftingSucks craftSlot = new SlotCraftingSucks(ctr.player, ctr.craftMatrix, ctr.craftResult, 0, 154, 28);
+				CraftResultSlotExt craftSlot = new CraftResultSlotExt(ctr.player, ctr.craftMatrix, ctr.craftResult, 0, 154, 28);
 				craftSlot.slotNumber = 0;
 				ctr.inventorySlots.set(0, craftSlot);
 			} else {

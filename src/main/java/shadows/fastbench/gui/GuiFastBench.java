@@ -5,8 +5,9 @@ import net.minecraft.client.gui.screen.inventory.CraftingScreen;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.text.ITextComponent;
 import shadows.fastbench.FastBench;
+import shadows.fastbench.api.ICraftingScreen;
 
-public class GuiFastBench extends CraftingScreen {
+public class GuiFastBench extends CraftingScreen implements ICraftingScreen {
 
 	public GuiFastBench(ContainerFastBench container, PlayerInventory inv, ITextComponent name) {
 		super(container, inv, name);

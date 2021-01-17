@@ -17,11 +17,12 @@ import net.minecraft.util.IWorldPosCallable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import shadows.fastbench.FastBench;
+import shadows.fastbench.api.ICraftingContainer;
 import shadows.fastbench.net.RecipeMessage;
 import shadows.placebo.util.NetworkUtils;
 
 @SuppressWarnings("unchecked")
-public class ContainerFastBench extends WorkbenchContainer {
+public class ContainerFastBench extends WorkbenchContainer implements ICraftingContainer {
 
 	protected final World world;
 	protected final BlockPos pos;
@@ -40,7 +41,7 @@ public class ContainerFastBench extends WorkbenchContainer {
 		this.pos = pos;
 		this.player = player;
 
-		this.addSlot(new SlotCraftingSucks(player, this.craftMatrix, this.craftResult, 0, 124, 35));
+		this.addSlot(new CraftResultSlotExt(player, this.craftMatrix, this.craftResult, 0, 124, 35));
 
 		for (int i = 0; i < 3; ++i) {
 			for (int j = 0; j < 3; ++j) {
@@ -95,10 +96,12 @@ public class ContainerFastBench extends WorkbenchContainer {
 	public static ItemStack handleShiftCraft(PlayerEntity player, Container container, Slot resultSlot, CraftingInventoryExt craftMatrix, CraftResultInventory craftResult, int outStart, int outEnd) {
 		ItemStack outputCopy = ItemStack.EMPTY;
 
+		int i = 0;
 		if (resultSlot != null && resultSlot.getHasStack()) {
 			craftMatrix.checkChanges = false;
 			IRecipe<CraftingInventory> recipe = (IRecipe<CraftingInventory>) craftResult.getRecipeUsed();
 			while (recipe != null && recipe.matches(craftMatrix, player.world)) {
+				System.out.println("C: " + player.world.isRemote + " i: " + i++);
 				ItemStack recipeOutput = resultSlot.getStack().copy();
 				outputCopy = recipeOutput.copy();
 
@@ -111,12 +114,13 @@ public class ContainerFastBench extends WorkbenchContainer {
 
 				resultSlot.onSlotChange(recipeOutput, outputCopy);
 				resultSlot.onSlotChanged();
-
+				
 				if (!player.world.isRemote && recipeOutput.getCount() == outputCopy.getCount()) {
 					craftMatrix.checkChanges = true;
 					return ItemStack.EMPTY;
 				}
 
+				craftResult.setRecipeUsed(recipe);
 				resultSlot.onTake(player, recipeOutput);
 			}
 			craftMatrix.checkChanges = true;
@@ -133,6 +137,11 @@ public class ContainerFastBench extends WorkbenchContainer {
 	@Override
 	public ContainerType<?> getType() {
 		return FastBench.FAST_CRAFTING;
+	}
+
+	@Override
+	public CraftResultInventory getResult() {
+		return craftResult;
 	}
 
 }

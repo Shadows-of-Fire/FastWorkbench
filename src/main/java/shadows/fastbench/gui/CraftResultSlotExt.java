@@ -10,11 +10,11 @@ import net.minecraft.util.NonNullList;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.fml.hooks.BasicEventHooks;
 
-public class SlotCraftingSucks extends CraftingResultSlot {
+public class CraftResultSlotExt extends CraftingResultSlot {
 
 	protected final CraftResultInventory inv;
 
-	public SlotCraftingSucks(PlayerEntity player, CraftingInventory matrix, CraftResultInventory inv, int slotIndex, int xPosition, int yPosition) {
+	public CraftResultSlotExt(PlayerEntity player, CraftingInventory matrix, CraftResultInventory inv, int slotIndex, int xPosition, int yPosition) {
 		super(player, matrix, inv, slotIndex, xPosition, yPosition);
 		this.inv = inv;
 	}

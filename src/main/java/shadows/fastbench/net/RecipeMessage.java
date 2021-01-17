@@ -12,8 +12,8 @@ import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.network.NetworkEvent.Context;
-import shadows.fastbench.gui.ContainerFastBench;
-import shadows.fastbench.gui.GuiFastBench;
+import shadows.fastbench.api.ICraftingContainer;
+import shadows.fastbench.api.ICraftingScreen;
 import shadows.placebo.util.NetworkUtils;
 import shadows.placebo.util.NetworkUtils.MessageProvider;
 
@@ -59,17 +59,17 @@ public class RecipeMessage extends MessageProvider<RecipeMessage> {
 	public void handle(RecipeMessage msg, Supplier<Context> ctx) {
 		NetworkUtils.handlePacket(() -> () -> {
 			IRecipe<CraftingInventory> recipe = (IRecipe<CraftingInventory>) Minecraft.getInstance().world.getRecipeManager().getRecipe(msg.recipeId).orElse(null);
-			if (Minecraft.getInstance().currentScreen instanceof GuiFastBench) {
-				ContainerFastBench c = ((GuiFastBench) Minecraft.getInstance().currentScreen).getContainer();
-				updateLastRecipe(c.craftMatrix, c.craftResult, recipe, msg.output);
+			if (Minecraft.getInstance().currentScreen instanceof ICraftingScreen) {
+				ICraftingContainer c = ((ICraftingScreen) Minecraft.getInstance().currentScreen).getContainer();
+				updateLastRecipe(c.getResult(), recipe, msg.output);
 			} else if (Minecraft.getInstance().currentScreen instanceof InventoryScreen) {
 				PlayerContainer c = ((InventoryScreen) Minecraft.getInstance().currentScreen).getContainer();
-				updateLastRecipe(c.craftMatrix, c.craftResult, recipe, msg.output);
+				updateLastRecipe(c.craftResult, recipe, msg.output);
 			}
 		}, ctx.get());
 	}
 
-	public static void updateLastRecipe(CraftingInventory craftMatrix, CraftResultInventory craftResult, IRecipe<CraftingInventory> rec, ItemStack output) {
+	public static void updateLastRecipe(CraftResultInventory craftResult, IRecipe<CraftingInventory> rec, ItemStack output) {
 		craftResult.setRecipeUsed(rec);
 		craftResult.setInventorySlotContents(0, output);
 	}

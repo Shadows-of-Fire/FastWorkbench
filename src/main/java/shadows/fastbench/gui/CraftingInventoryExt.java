@@ -15,6 +15,7 @@ public class CraftingInventoryExt extends CraftingInventory {
 		this.container = container;
 	}
 
+	@Override
 	public ItemStack decrStackSize(int index, int count) {
 		ItemStack itemstack = ItemStackHelper.getAndSplit(this.stackList, index, count);
 		if (!itemstack.isEmpty()) {
@@ -24,6 +25,7 @@ public class CraftingInventoryExt extends CraftingInventory {
 		return itemstack;
 	}
 
+	@Override
 	public void setInventorySlotContents(int index, ItemStack stack) {
 		this.stackList.set(index, stack);
 		if (checkChanges) this.container.onCraftMatrixChanged(this);
