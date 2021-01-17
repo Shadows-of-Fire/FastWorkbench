@@ -8,7 +8,7 @@ function initializeCoreMod() {
 				'methodDesc': '(Lnet/minecraft/entity/player/PlayerEntity;I)Lnet/minecraft/item/ItemStack;'
 			},
 			'transformer': function(method) {
-				print('[FastWorkbench]: Patching PlayerContainer#transferStackInSlot');
+				ASMAPI.log('[FastWorkbench]: Patching PlayerContainer#transferStackInSlot');
 
                 var owner = "shadows/fastbench/asm/PlayerContainerHooks";
                 var name = "transferStackInSlot";

@@ -8,7 +8,7 @@ function initializeCoreMod() {
 				'methodDesc': '(Lnet/minecraft/inventory/IInventory;)V'
 			},
 			'transformer': function(method) {
-				print('[FastWorkbench]: Patching PlayerContainer#onCraftMatrixChanged');
+				ASMAPI.log('[FastWorkbench]: Patching PlayerContainer#onCraftMatrixChanged');
 
                 var owner = "shadows/fastbench/asm/PlayerContainerHooks";
                 var name = "onCraftMatrixChanged";
