@@ -78,6 +78,10 @@ public class ContainerFastBench extends WorkbenchContainer {
 				NetworkUtils.sendTo(FastBench.CHANNEL, new RecipeMessage(recipe, itemstack), player);
 				result.setInventorySlotContents(0, itemstack);
 				result.setRecipeUsed(recipe);
+			} else if (recipe != null && recipe.isDynamic()) {
+				NetworkUtils.sendTo(FastBench.CHANNEL, new RecipeMessage(recipe, itemstack), player);
+				result.setInventorySlotContents(0, itemstack);
+				result.setRecipeUsed(recipe);
 			}
 		}
 	}
