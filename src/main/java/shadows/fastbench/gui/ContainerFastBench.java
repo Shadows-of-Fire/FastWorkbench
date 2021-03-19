@@ -74,8 +74,9 @@ public class ContainerFastBench extends WorkbenchContainer implements ICraftingC
 			IRecipe<CraftingInventory> recipe = oldRecipe;
 			if (recipe == null || !recipe.matches(inv, world)) recipe = findRecipe(inv, world);
 
+			if (recipe != null) itemstack = recipe.getCraftingResult(inv);
+
 			if (oldRecipe != recipe) {
-				if (recipe != null) itemstack = recipe.getCraftingResult(inv);
 				NetworkUtils.sendTo(FastBench.CHANNEL, new RecipeMessage(recipe, itemstack), player);
 				result.setInventorySlotContents(0, itemstack);
 				result.setRecipeUsed(recipe);
