@@ -88,7 +88,7 @@ public class GuiDedBook extends RecipeBookGui {
 
 	@Override
 	public boolean func_195604_a(double mouseX, double mouseY, int guiLeft, int guiTop, int xSize, int ySize, int mouseButton) {
-		return false;
+		return true;
 	}
 
 	@Override
