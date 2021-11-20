@@ -1,4 +1,4 @@
-package shadows.fastbench.gui;
+package shadows.fastbench.util;
 
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.inventory.ItemStackHelper;
@@ -16,19 +16,19 @@ public class CraftingInventoryExt extends CraftingInventory {
 	}
 
 	@Override
-	public ItemStack decrStackSize(int index, int count) {
-		ItemStack itemstack = ItemStackHelper.getAndSplit(this.stackList, index, count);
+	public ItemStack removeItem(int index, int count) {
+		ItemStack itemstack = ItemStackHelper.removeItem(this.items, index, count);
 		if (!itemstack.isEmpty()) {
-			if (checkChanges) this.container.onCraftMatrixChanged(this);
+			if (checkChanges) this.container.slotsChanged(this);
 		}
 
 		return itemstack;
 	}
 
 	@Override
-	public void setInventorySlotContents(int index, ItemStack stack) {
-		this.stackList.set(index, stack);
-		if (checkChanges) this.container.onCraftMatrixChanged(this);
+	public void setItem(int index, ItemStack stack) {
+		this.items.set(index, stack);
+		if (checkChanges) this.container.slotsChanged(this);
 	}
 
 }

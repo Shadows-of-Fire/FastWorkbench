@@ -44,34 +44,34 @@ public class RecipeMessage extends MessageProvider<RecipeMessage> {
 
 	@Override
 	public RecipeMessage read(PacketBuffer buf) {
-		ResourceLocation rec = new ResourceLocation(buf.readString());
-		return new RecipeMessage(rec, rec.equals(NULL) ? ItemStack.EMPTY : buf.readItemStack());
+		ResourceLocation rec = new ResourceLocation(buf.readUtf());
+		return new RecipeMessage(rec, rec.equals(NULL) ? ItemStack.EMPTY : buf.readItem());
 	}
 
 	@Override
 	public void write(RecipeMessage msg, PacketBuffer buf) {
-		buf.writeString(msg.recipeId.toString());
-		if (!msg.recipeId.equals(NULL)) buf.writeItemStack(msg.output);
+		buf.writeUtf(msg.recipeId.toString());
+		if (!msg.recipeId.equals(NULL)) buf.writeItem(msg.output);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public void handle(RecipeMessage msg, Supplier<Context> ctx) {
 		NetworkUtils.handlePacket(() -> () -> {
-			IRecipe<CraftingInventory> recipe = (IRecipe<CraftingInventory>) Minecraft.getInstance().world.getRecipeManager().getRecipe(msg.recipeId).orElse(null);
-			if (Minecraft.getInstance().currentScreen instanceof ICraftingScreen) {
-				ICraftingContainer c = ((ICraftingScreen) Minecraft.getInstance().currentScreen).getContainer();
+			IRecipe<CraftingInventory> recipe = (IRecipe<CraftingInventory>) Minecraft.getInstance().level.getRecipeManager().byKey(msg.recipeId).orElse(null);
+			if (Minecraft.getInstance().screen instanceof ICraftingScreen) {
+				ICraftingContainer c = ((ICraftingScreen) Minecraft.getInstance().screen).getContainer();
 				updateLastRecipe(c.getResult(), recipe, msg.output);
-			} else if (Minecraft.getInstance().currentScreen instanceof InventoryScreen) {
-				PlayerContainer c = ((InventoryScreen) Minecraft.getInstance().currentScreen).getContainer();
-				updateLastRecipe(c.craftResult, recipe, msg.output);
+			} else if (Minecraft.getInstance().screen instanceof InventoryScreen) {
+				PlayerContainer c = ((InventoryScreen) Minecraft.getInstance().screen).getMenu();
+				updateLastRecipe(c.resultSlots, recipe, msg.output);
 			}
 		}, ctx.get());
 	}
 
 	public static void updateLastRecipe(CraftResultInventory craftResult, IRecipe<CraftingInventory> rec, ItemStack output) {
 		craftResult.setRecipeUsed(rec);
-		craftResult.setInventorySlotContents(0, output);
+		craftResult.setItem(0, output);
 	}
 
 }
