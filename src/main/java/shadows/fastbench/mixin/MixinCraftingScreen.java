@@ -2,7 +2,7 @@ package shadows.fastbench.mixin;
 
 import org.spongepowered.asm.mixin.Mixin;
 
-import net.minecraft.client.gui.screen.inventory.CraftingScreen;
+import net.minecraft.client.gui.screens.inventory.CraftingScreen;
 import shadows.fastbench.api.ICraftingContainer;
 import shadows.fastbench.api.ICraftingScreen;
 

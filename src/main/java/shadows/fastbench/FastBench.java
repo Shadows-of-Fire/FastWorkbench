@@ -3,16 +3,16 @@ package shadows.fastbench;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.fml.network.NetworkRegistry;
-import net.minecraftforge.fml.network.simple.SimpleChannel;
+import net.minecraftforge.fmllegacy.network.NetworkRegistry;
+import net.minecraftforge.fmllegacy.network.simple.SimpleChannel;
 import shadows.fastbench.net.RecipeMessage;
 import shadows.placebo.config.Configuration;
-import shadows.placebo.util.NetworkUtils;
+import shadows.placebo.network.MessageHelper;
 
 @Mod(FastBench.MODID)
 public class FastBench {
@@ -40,7 +40,7 @@ public class FastBench {
 
 	@SubscribeEvent
 	public void preInit(FMLCommonSetupEvent e) {
-		NetworkUtils.registerMessage(CHANNEL, 0, new RecipeMessage());
+		MessageHelper.registerMessage(CHANNEL, 0, new RecipeMessage());
 	}
 
 }

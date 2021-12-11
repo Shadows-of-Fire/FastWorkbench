@@ -1,20 +1,20 @@
 package shadows.fastbench.util;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.CraftResultInventory;
-import net.minecraft.inventory.CraftingInventory;
-import net.minecraft.inventory.container.CraftingResultSlot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.util.NonNullList;
+import net.minecraft.core.NonNullList;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.CraftingContainer;
+import net.minecraft.world.inventory.ResultContainer;
+import net.minecraft.world.inventory.ResultSlot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Recipe;
 import net.minecraftforge.common.ForgeHooks;
-import net.minecraftforge.fml.hooks.BasicEventHooks;
+import net.minecraftforge.fmllegacy.hooks.BasicEventHooks;
 
-public class CraftResultSlotExt extends CraftingResultSlot {
+public class CraftResultSlotExt extends ResultSlot {
 
-	protected final CraftResultInventory inv;
+	protected final ResultContainer inv;
 
-	public CraftResultSlotExt(PlayerEntity player, CraftingInventory matrix, CraftResultInventory inv, int slotIndex, int xPosition, int yPosition) {
+	public CraftResultSlotExt(Player player, CraftingContainer matrix, ResultContainer inv, int slotIndex, int xPosition, int yPosition) {
 		super(player, matrix, inv, slotIndex, xPosition, yPosition);
 		this.inv = inv;
 	}
@@ -48,11 +48,11 @@ public class CraftResultSlotExt extends CraftingResultSlot {
 
 	@SuppressWarnings({ "unchecked" })
 	@Override
-	public ItemStack onTake(PlayerEntity player, ItemStack stack) {
+	public void onTake(Player player, ItemStack stack) {
 		this.checkTakeAchievements(stack);
 		ForgeHooks.setCraftingPlayer(player);
 		NonNullList<ItemStack> list;
-		IRecipe<CraftingInventory> recipe = (IRecipe<CraftingInventory>) inv.getRecipeUsed();
+		Recipe<CraftingContainer> recipe = (Recipe<CraftingContainer>) inv.getRecipeUsed();
 		if (recipe != null && recipe.matches(craftSlots, player.level)) list = recipe.getRemainingItems(craftSlots);
 		else list = craftSlots.items;
 		ForgeHooks.setCraftingPlayer(null);
@@ -72,11 +72,10 @@ public class CraftResultSlotExt extends CraftingResultSlot {
 				} else if (ItemStack.isSame(itemstack, itemstack1) && ItemStack.tagMatches(itemstack, itemstack1)) {
 					itemstack1.grow(itemstack.getCount());
 					this.craftSlots.setItem(i, itemstack1);
-				} else if (!this.player.inventory.add(itemstack1)) {
+				} else if (!this.player.getInventory().add(itemstack1)) {
 					this.player.drop(itemstack1, false);
 				}
 			}
 		}
-		return stack;
 	}
 }

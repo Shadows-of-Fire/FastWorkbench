@@ -7,56 +7,56 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.CraftResultInventory;
-import net.minecraft.inventory.CraftingInventory;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.inventory.container.CraftingResultSlot;
-import net.minecraft.inventory.container.PlayerContainer;
-import net.minecraft.inventory.container.RecipeBookContainer;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.ResultContainer;
+import net.minecraft.world.inventory.CraftingContainer;
+import net.minecraft.world.Container;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.inventory.ResultSlot;
+import net.minecraft.world.inventory.InventoryMenu;
+import net.minecraft.world.inventory.RecipeBookMenu;
+import net.minecraft.world.item.ItemStack;
 import shadows.fastbench.api.ICraftingContainer;
 import shadows.fastbench.util.CraftResultSlotExt;
 import shadows.fastbench.util.CraftingInventoryExt;
 import shadows.fastbench.util.FastBenchUtil;
 
-@Mixin(PlayerContainer.class)
-public abstract class MixinPlayerContainer extends RecipeBookContainer<CraftingInventory> implements ICraftingContainer {
+@Mixin(InventoryMenu.class)
+public abstract class MixinPlayerContainer extends RecipeBookMenu<CraftingContainer> implements ICraftingContainer {
 
-	public MixinPlayerContainer(ContainerType<?> p_i50067_1_, int p_i50067_2_) {
+	public MixinPlayerContainer(MenuType<?> p_i50067_1_, int p_i50067_2_) {
 		super(p_i50067_1_, p_i50067_2_);
 	}
 
-	@Redirect(method = "<init>", at = @At(value = "NEW", target = "net/minecraft/inventory/CraftingInventory"))
-	private static CraftingInventory makeExtInv(Container container, int x, int y) {
+	@Redirect(method = "<init>", at = @At(value = "NEW", target = "net/minecraft/world/inventory/CraftingContainer"), require = 1)
+	private static CraftingContainer makeExtInv(AbstractContainerMenu container, int x, int y) {
 		return new CraftingInventoryExt(container, x, y);
 	}
 
-	@Redirect(method = "<init>", at = @At(value = "NEW", target = "net/minecraft/inventory/container/CraftingResultSlot"))
-	private static CraftingResultSlot makeExtSlot(PlayerEntity pPlayer, CraftingInventory pCraftSlots, IInventory pContainer, int pSlot, int pXPosition, int pYPosition) {
-		return new CraftResultSlotExt(pPlayer, pCraftSlots, (CraftResultInventory) pContainer, pSlot, pXPosition, pYPosition);
+	@Redirect(method = "<init>", at = @At(value = "NEW", target = "net/minecraft/world/inventory/ResultSlot"), require = 1)
+	private static ResultSlot makeExtSlot(Player pPlayer, CraftingContainer pCraftSlots, Container pContainer, int pSlot, int pXPosition, int pYPosition) {
+		return new CraftResultSlotExt(pPlayer, pCraftSlots, (ResultContainer) pContainer, pSlot, pXPosition, pYPosition);
 	}
 
 	@Overwrite
-	public void slotsChanged(IInventory inv) {
+	public void slotsChanged(Container inv) {
 		FastBenchUtil.slotChangedCraftingGrid(ths().owner.level, ths().owner, (CraftingInventoryExt) ths().craftSlots, ths().resultSlots);
 	}
 
-	@Inject(at = @At("HEAD"), method = { "quickMoveStack" }, cancellable = true)
-	public void quickMoveStack(PlayerEntity pPlayer, int pIndex, CallbackInfoReturnable<ItemStack> ci) {
+	@Inject(at = @At("HEAD"), method = { "quickMoveStack" }, cancellable = true, require = 1)
+	public void quickMoveStack(Player pPlayer, int pIndex, CallbackInfoReturnable<ItemStack> ci) {
 		if (pIndex == 0) {
 			ci.setReturnValue(FastBenchUtil.handleShiftCraft(ths().owner, ths(), ths().slots.get(0), (CraftingInventoryExt) ths().craftSlots, ths().resultSlots, 9, 45));
 		}
 	}
 
-	private PlayerContainer ths() {
-		return ((PlayerContainer) (Object) this);
+	private InventoryMenu ths() {
+		return ((InventoryMenu) (Object) this);
 	}
 
 	@Override
-	public CraftResultInventory getResult() {
+	public ResultContainer getResult() {
 		return ths().resultSlots;
 	}
 }

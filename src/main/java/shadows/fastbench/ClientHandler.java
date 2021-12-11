@@ -2,11 +2,11 @@ package shadows.fastbench;
 
 import java.util.concurrent.ThreadLocalRandom;
 
-import net.minecraft.client.gui.widget.Widget;
-import net.minecraft.client.gui.widget.button.ImageButton;
-import net.minecraft.item.Items;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.components.ImageButton;
+import net.minecraft.client.gui.components.Widget;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.item.Items;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.GuiScreenEvent.InitGuiEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
@@ -22,14 +22,14 @@ public class ClientHandler {
 	@SubscribeEvent
 	public static void removeButton(InitGuiEvent e) {
 		if (!FastBench.removeBookButton) return;
-		for (Widget b : e.getGui().buttons)
-			if (b instanceof ImageButton && isBookButton((ImageButton) b)) b.visible = false;
+		for (Widget b : e.getGui().renderables)
+			if (b instanceof ImageButton ib && isBookButton(ib)) ib.visible = false;
 	}
 
 	@SubscribeEvent
 	public static void tooltip(ItemTooltipEvent e) {
 		if (e.getItemStack().getItem() == Items.CRAFTING_TABLE) {
-			e.getToolTip().add(new TranslationTextComponent("info.fb.very_fast" + tooltipIdx).withStyle(TextFormatting.DARK_GRAY, TextFormatting.ITALIC));
+			e.getToolTip().add(new TranslatableComponent("info.fb.very_fast" + tooltipIdx).withStyle(ChatFormatting.DARK_GRAY, ChatFormatting.ITALIC));
 		}
 	}
 

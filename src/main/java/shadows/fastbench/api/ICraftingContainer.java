@@ -2,7 +2,7 @@ package shadows.fastbench.api;
 
 import javax.annotation.Nonnull;
 
-import net.minecraft.inventory.CraftResultInventory;
+import net.minecraft.world.inventory.ResultContainer;
 
 /**
  * ICraftingContainer needs to be implemented on Containers that are declaring FastWorkbench compat.<br>
@@ -15,6 +15,6 @@ public interface ICraftingContainer {
 	 * @return The container's instance of {@link CraftResultInventory}.
 	 */
 	@Nonnull
-	public CraftResultInventory getResult();
+	public ResultContainer getResult();
 
 }

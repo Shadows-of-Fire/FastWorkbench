@@ -1,22 +1,21 @@
 package shadows.fastbench.util;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.CraftResultInventory;
-import net.minecraft.inventory.CraftingInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.CraftingResultSlot;
-import net.minecraft.inventory.container.DumbShitTM;
-import net.minecraft.inventory.container.PlayerContainer;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.inventory.container.WorkbenchContainer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.CraftingContainer;
+import net.minecraft.world.inventory.CraftingMenu;
+import net.minecraft.world.inventory.InventoryMenu;
+import net.minecraft.world.inventory.ResultContainer;
+import net.minecraft.world.inventory.ResultSlot;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.level.Level;
 import shadows.fastbench.FastBench;
 import shadows.fastbench.api.ICraftingContainer;
 import shadows.fastbench.net.RecipeMessage;
-import shadows.placebo.util.NetworkUtils;
+import shadows.placebo.network.PacketDistro;
 
 @SuppressWarnings("unchecked")
 public class FastBenchUtil {
@@ -32,25 +31,25 @@ public class FastBenchUtil {
 	 * @param inv The crafting grid 
 	 * @param result The result inventory
 	 */
-	public static void slotChangedCraftingGrid(World world, PlayerEntity player, CraftingInventoryExt inv, CraftResultInventory result) {
+	public static void slotChangedCraftingGrid(Level world, Player player, CraftingInventoryExt inv, ResultContainer result) {
 		if (!world.isClientSide) {
 
 			ItemStack itemstack = ItemStack.EMPTY;
 
-			IRecipe<CraftingInventory> oldRecipe = (IRecipe<CraftingInventory>) result.getRecipeUsed();
-			IRecipe<CraftingInventory> recipe = oldRecipe;
+			Recipe<CraftingContainer> oldRecipe = (Recipe<CraftingContainer>) result.getRecipeUsed();
+			Recipe<CraftingContainer> recipe = oldRecipe;
 			if (recipe == null || !recipe.matches(inv, world)) recipe = findRecipe(inv, world);
 
 			if (recipe != null) itemstack = recipe.assemble(inv);
 
 			if (oldRecipe != recipe) {
-				NetworkUtils.sendTo(FastBench.CHANNEL, new RecipeMessage(recipe, itemstack), player);
+				PacketDistro.sendTo(FastBench.CHANNEL, new RecipeMessage(recipe, itemstack), player);
 				result.setItem(0, itemstack);
 				result.setRecipeUsed(recipe);
 			} else if (recipe != null) {
 				//https://github.com/Shadows-of-Fire/FastWorkbench/issues/72 - Some modded recipes may update the output and not mark themselves as special, moderately annoying but... bleh
 				if (recipe.isSpecial() || (!recipe.getClass().getName().startsWith("net.minecraft") && !ItemStack.matches(itemstack, result.getItem(0)))) {
-					NetworkUtils.sendTo(FastBench.CHANNEL, new RecipeMessage(recipe, itemstack), player);
+					PacketDistro.sendTo(FastBench.CHANNEL, new RecipeMessage(recipe, itemstack), player);
 					result.setItem(0, itemstack);
 					result.setRecipeUsed(recipe);
 				}
@@ -78,11 +77,11 @@ public class FastBenchUtil {
 	 * @param outEnd The index of slots to stop trying to place the output.
 	 * @return 
 	 */
-	public static ItemStack handleShiftCraft(PlayerEntity player, Container container, Slot resultSlot, CraftingInventoryExt craftMatrix, CraftResultInventory craftResult, int outStart, int outEnd) {
+	public static ItemStack handleShiftCraft(Player player, AbstractContainerMenu container, Slot resultSlot, CraftingInventoryExt craftMatrix, ResultContainer craftResult, int outStart, int outEnd) {
 		ItemStack outputCopy = ItemStack.EMPTY;
 		if (resultSlot != null && resultSlot.hasItem()) {
 			craftMatrix.checkChanges = false;
-			IRecipe<CraftingInventory> recipe = (IRecipe<CraftingInventory>) craftResult.getRecipeUsed();
+			Recipe<CraftingContainer> recipe = (Recipe<CraftingContainer>) craftResult.getRecipeUsed();
 			while (recipe != null && recipe.matches(craftMatrix, player.level)) {
 				ItemStack recipeOutput = resultSlot.getItem().copy();
 				outputCopy = recipeOutput.copy();
@@ -94,7 +93,7 @@ public class FastBenchUtil {
 					return ItemStack.EMPTY;
 				}
 
-				((CraftingResultSlot) resultSlot).removeCount += outputCopy.getCount();
+				((ResultSlot) resultSlot).removeCount += outputCopy.getCount();
 				// Handles the actual work of removing the input items.
 				resultSlot.onTake(player, recipeOutput);
 			}
@@ -104,13 +103,13 @@ public class FastBenchUtil {
 		return outputCopy;
 	}
 
-	public static IRecipe<CraftingInventory> findRecipe(CraftingInventory inv, World world) {
-		return world.getRecipeManager().getRecipeFor(IRecipeType.CRAFTING, inv, world).orElse(null);
+	public static Recipe<CraftingContainer> findRecipe(CraftingContainer inv, Level world) {
+		return world.getRecipeManager().getRecipeFor(RecipeType.CRAFTING, inv, world).orElse(null);
 	}
 
-	public static final void fuckingTellMixinToNotBeStupid(Container c, CraftingInventoryExt ex) {
-		if (c instanceof WorkbenchContainer) ((WorkbenchContainer) c).craftSlots = ex;
-		if (c instanceof PlayerContainer) ((PlayerContainer) c).craftSlots = ex;
+	public static final void fuckingTellMixinToNotBeStupid(AbstractContainerMenu c, CraftingInventoryExt ex) {
+		if (c instanceof CraftingMenu) ((CraftingMenu) c).craftSlots = ex;
+		if (c instanceof InventoryMenu) ((InventoryMenu) c).craftSlots = ex;
 	}
 
 }

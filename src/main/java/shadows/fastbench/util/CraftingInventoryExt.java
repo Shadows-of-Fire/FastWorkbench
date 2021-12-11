@@ -1,23 +1,23 @@
 package shadows.fastbench.util;
 
-import net.minecraft.inventory.CraftingInventory;
-import net.minecraft.inventory.ItemStackHelper;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.inventory.CraftingContainer;
+import net.minecraft.world.ContainerHelper;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
 
-public class CraftingInventoryExt extends CraftingInventory {
+public class CraftingInventoryExt extends CraftingContainer {
 
 	public boolean checkChanges = true;
-	protected final Container container;
+	protected final AbstractContainerMenu container;
 
-	public CraftingInventoryExt(Container container, int width, int height) {
+	public CraftingInventoryExt(AbstractContainerMenu container, int width, int height) {
 		super(container, width, height);
 		this.container = container;
 	}
 
 	@Override
 	public ItemStack removeItem(int index, int count) {
-		ItemStack itemstack = ItemStackHelper.removeItem(this.items, index, count);
+		ItemStack itemstack = ContainerHelper.removeItem(this.items, index, count);
 		if (!itemstack.isEmpty()) {
 			if (checkChanges) this.container.slotsChanged(this);
 		}
