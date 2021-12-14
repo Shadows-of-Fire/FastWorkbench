@@ -50,7 +50,7 @@ public abstract class MixinWorkbenchContainer extends RecipeBookContainer<Crafti
 	@Inject(at = @At("HEAD"), method = { "quickMoveStack" }, cancellable = true)
 	public void quickMoveStack(PlayerEntity pPlayer, int pIndex, CallbackInfoReturnable<ItemStack> ci) {
 		if (pIndex == 0) {
-			ci.setReturnValue(FastBenchUtil.handleShiftCraft(player, ths(), ths().slots.get(0), (CraftingInventoryExt) ths().craftSlots, ths().resultSlots, 9, 45));
+			ci.setReturnValue(FastBenchUtil.handleShiftCraft(player, ths(), ths().slots.get(0), (CraftingInventoryExt) ths().craftSlots, ths().resultSlots, 10, 45));
 		}
 	}
 
