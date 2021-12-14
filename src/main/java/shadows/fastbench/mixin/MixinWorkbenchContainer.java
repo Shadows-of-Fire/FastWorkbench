@@ -50,24 +50,25 @@ public abstract class MixinWorkbenchContainer extends RecipeBookMenu<CraftingCon
 	@Inject(at = @At("HEAD"), method = { "quickMoveStack" }, cancellable = true, require = 1)
 	public void quickMoveStack(Player pPlayer, int pIndex, CallbackInfoReturnable<ItemStack> ci) {
 		if (pIndex == 0) {
-			ci.setReturnValue(FastBenchUtil.handleShiftCraft(player, ths(), ths().slots.get(0), (CraftingInventoryExt) ths().craftSlots, ths().resultSlots, 9, 45));
+			ci.setReturnValue(FastBenchUtil.handleShiftCraft(this.player, this.ths(), this.ths().slots.get(0), (CraftingInventoryExt) this.ths().craftSlots, this.ths().resultSlots, 9, 45));
 		}
 	}
 
+	@Override
 	@Overwrite
 	public void slotsChanged(Container inventoryIn) {
-		access.execute((level, pos) -> {
-			FastBenchUtil.slotChangedCraftingGrid(level, player, (CraftingInventoryExt) ths().craftSlots, ths().resultSlots);
+		this.access.execute((level, pos) -> {
+			FastBenchUtil.slotChangedCraftingGrid(level, this.player, (CraftingInventoryExt) this.ths().craftSlots, this.ths().resultSlots);
 		});
 	}
 
 	private CraftingMenu ths() {
-		return ((CraftingMenu) (Object) this);
+		return (CraftingMenu) (Object) this;
 	}
 
 	@Override
 	public ResultContainer getResult() {
-		return ths().resultSlots;
+		return this.ths().resultSlots;
 	}
 
 }

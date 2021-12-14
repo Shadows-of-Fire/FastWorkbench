@@ -28,7 +28,7 @@ public class FastBenchUtil {
 	 * It also notifies the client iff the recipe has changed, or the recipe is not null and the recipe is dynamic (special).
 	 * @param world The world
 	 * @param player The crafting player
-	 * @param inv The crafting grid 
+	 * @param inv The crafting grid
 	 * @param result The result inventory
 	 */
 	public static void slotChangedCraftingGrid(Level world, Player player, CraftingInventoryExt inv, ResultContainer result) {
@@ -48,7 +48,7 @@ public class FastBenchUtil {
 				result.setRecipeUsed(recipe);
 			} else if (recipe != null) {
 				//https://github.com/Shadows-of-Fire/FastWorkbench/issues/72 - Some modded recipes may update the output and not mark themselves as special, moderately annoying but... bleh
-				if (recipe.isSpecial() || (!recipe.getClass().getName().startsWith("net.minecraft") && !ItemStack.matches(itemstack, result.getItem(0)))) {
+				if (recipe.isSpecial() || !recipe.getClass().getName().startsWith("net.minecraft") && !ItemStack.matches(itemstack, result.getItem(0))) {
 					PacketDistro.sendTo(FastBench.CHANNEL, new RecipeMessage(recipe, itemstack), player);
 					result.setItem(0, itemstack);
 					result.setRecipeUsed(recipe);
@@ -59,7 +59,7 @@ public class FastBenchUtil {
 
 	/**
 	 * Handles the shift-click-crafting operation.
-	 * 
+	 *
 	 * Assuming the result slot is not null, and an item (a crafting result) is present:
 	 * 	We tell the crafting matrix to stop checking changes, and retrieve the recipe.
 	 * 	As long as that recipe is not null, and it continues matching:
@@ -75,7 +75,7 @@ public class FastBenchUtil {
 	 * @param craftResult The crafting result inventory
 	 * @param outStart The index of slots to begin trying to place the output
 	 * @param outEnd The index of slots to stop trying to place the output.
-	 * @return 
+	 * @return
 	 */
 	public static ItemStack handleShiftCraft(Player player, AbstractContainerMenu container, Slot resultSlot, CraftingInventoryExt craftMatrix, ResultContainer craftResult, int outStart, int outEnd) {
 		ItemStack outputCopy = ItemStack.EMPTY;

@@ -22,15 +22,15 @@ public class CraftResultSlotExt extends ResultSlot {
 	@Override
 	public ItemStack remove(int amount) {
 		if (this.hasItem()) {
-			this.removeCount += Math.min(amount, getItem().getCount());
+			this.removeCount += Math.min(amount, this.getItem().getCount());
 		}
-		return getItem().copy();
+		return this.getItem().copy();
 	}
 
 	@Override
 	protected void onSwapCraft(int numItemsCrafted) {
 		super.onSwapCraft(numItemsCrafted);
-		inv.setItem(0, getItem().copy()); // https://github.com/Shadows-of-Fire/FastWorkbench/issues/62 - Vanilla's SWAP action will leak this stack here.
+		this.inv.setItem(0, this.getItem().copy()); // https://github.com/Shadows-of-Fire/FastWorkbench/issues/62 - Vanilla's SWAP action will leak this stack here.
 	}
 
 	@Override
@@ -41,7 +41,7 @@ public class CraftResultSlotExt extends ResultSlot {
 	protected void checkTakeAchievements(ItemStack stack) {
 		if (this.removeCount > 0) {
 			stack.onCraftedBy(this.player.level, this.player, this.removeCount);
-			BasicEventHooks.firePlayerCraftingEvent(this.player, stack, craftSlots);
+			BasicEventHooks.firePlayerCraftingEvent(this.player, stack, this.craftSlots);
 		}
 		this.removeCount = 0;
 	}
@@ -52,9 +52,9 @@ public class CraftResultSlotExt extends ResultSlot {
 		this.checkTakeAchievements(stack);
 		ForgeHooks.setCraftingPlayer(player);
 		NonNullList<ItemStack> list;
-		Recipe<CraftingContainer> recipe = (Recipe<CraftingContainer>) inv.getRecipeUsed();
-		if (recipe != null && recipe.matches(craftSlots, player.level)) list = recipe.getRemainingItems(craftSlots);
-		else list = craftSlots.items;
+		Recipe<CraftingContainer> recipe = (Recipe<CraftingContainer>) this.inv.getRecipeUsed();
+		if (recipe != null && recipe.matches(this.craftSlots, player.level)) list = recipe.getRemainingItems(this.craftSlots);
+		else list = this.craftSlots.items;
 		ForgeHooks.setCraftingPlayer(null);
 
 		for (int i = 0; i < list.size(); ++i) {

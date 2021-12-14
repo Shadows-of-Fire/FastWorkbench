@@ -1,8 +1,8 @@
 package shadows.fastbench.util;
 
-import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
 
 public class CraftingInventoryExt extends CraftingContainer {
@@ -19,7 +19,7 @@ public class CraftingInventoryExt extends CraftingContainer {
 	public ItemStack removeItem(int index, int count) {
 		ItemStack itemstack = ContainerHelper.removeItem(this.items, index, count);
 		if (!itemstack.isEmpty()) {
-			if (checkChanges) this.container.slotsChanged(this);
+			if (this.checkChanges) this.container.slotsChanged(this);
 		}
 
 		return itemstack;
@@ -28,7 +28,7 @@ public class CraftingInventoryExt extends CraftingContainer {
 	@Override
 	public void setItem(int index, ItemStack stack) {
 		this.items.set(index, stack);
-		if (checkChanges) this.container.slotsChanged(this);
+		if (this.checkChanges) this.container.slotsChanged(this);
 	}
 
 }

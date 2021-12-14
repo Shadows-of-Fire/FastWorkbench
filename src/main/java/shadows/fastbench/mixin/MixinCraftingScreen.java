@@ -11,7 +11,7 @@ public class MixinCraftingScreen implements ICraftingScreen {
 
 	@Override
 	public ICraftingContainer getContainer() {
-		return (ICraftingContainer) ths().getMenu();
+		return (ICraftingContainer) this.ths().getMenu();
 	}
 
 	private CraftingScreen ths() {
