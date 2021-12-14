@@ -1,5 +1,5 @@
 ## 4.6.1
-* Fixed a dupe bug that could occur if the
+* Fixed a dupe bug that could occur if the player inventory was full when using a workbench.
 
 ## 4.6.0
 * The mod has been rewritten to use mixins instead of JS coremods and registry replacement.
