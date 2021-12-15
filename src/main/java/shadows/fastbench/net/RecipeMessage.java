@@ -11,7 +11,7 @@ import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.inventory.ResultContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
-import net.minecraftforge.fmllegacy.network.NetworkEvent.Context;
+import net.minecraftforge.network.NetworkEvent.Context;
 import shadows.fastbench.api.ICraftingContainer;
 import shadows.fastbench.api.ICraftingScreen;
 import shadows.placebo.network.MessageHelper;

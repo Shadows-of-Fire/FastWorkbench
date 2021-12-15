@@ -8,7 +8,7 @@ import net.minecraft.client.gui.components.Widget;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.Items;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.GuiScreenEvent.InitGuiEvent;
+import net.minecraftforge.client.event.ScreenEvent.InitScreenEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
@@ -20,9 +20,9 @@ public class ClientHandler {
 	private static final int tooltipIdx = ThreadLocalRandom.current().nextInt(7);
 
 	@SubscribeEvent
-	public static void removeButton(InitGuiEvent e) {
+	public static void removeButton(InitScreenEvent e) {
 		if (!FastBench.removeBookButton) return;
-		for (Widget b : e.getGui().renderables)
+		for (Widget b : e.getScreen().renderables)
 			if (b instanceof ImageButton ib && isBookButton(ib)) ib.visible = false;
 	}
 

@@ -1,3 +1,6 @@
+## 6.0.0
+* Updated to 1.18.1
+
 ## 5.0.1
 * Ported changes from 4.6.1 to 1.17.1
 
