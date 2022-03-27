@@ -1,5 +1,6 @@
 ## 6.0.2
 * Rebuilt for 1.18.2
+* dracnis: Added French Translation.
 
 ## 6.0.1
 * Updated to Placebo 6.1.0
