@@ -13,6 +13,8 @@ import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
+import static shadows.fastbench.FastBench.disableToolTip;
+
 @EventBusSubscriber(modid = FastBench.MODID, value = Dist.CLIENT)
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class ClientHandler {
@@ -28,8 +30,10 @@ public class ClientHandler {
 
 	@SubscribeEvent
 	public static void tooltip(ItemTooltipEvent e) {
-		if (e.getItemStack().getItem() == Items.CRAFTING_TABLE) {
-			e.getToolTip().add(new TranslatableComponent("info.fb.very_fast" + tooltipIdx).withStyle(ChatFormatting.DARK_GRAY, ChatFormatting.ITALIC));
+		if(!disableToolTip){
+			if (e.getItemStack().getItem() == Items.CRAFTING_TABLE) {
+				e.getToolTip().add(new TranslatableComponent("info.fb.very_fast" + tooltipIdx).withStyle(ChatFormatting.DARK_GRAY, ChatFormatting.ITALIC));
+			}
 		}
 	}
 
