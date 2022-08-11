@@ -1,4 +1,4 @@
-# FastWorkbench
+# FastWorkbench [![](http://cf.way2muchnoise.eu/fastworkbench.svg)](https://www.curseforge.com/minecraft/mc-mods/fastworkbench) [![](http://cf.way2muchnoise.eu/versions/fastworkbench.svg)](https://www.curseforge.com/minecraft/mc-mods/fastworkbench)
 Caching recipes in the crafting table
 
 
