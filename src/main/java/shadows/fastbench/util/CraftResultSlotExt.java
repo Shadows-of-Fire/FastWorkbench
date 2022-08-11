@@ -58,22 +58,22 @@ public class CraftResultSlotExt extends ResultSlot {
 		ForgeHooks.setCraftingPlayer(null);
 
 		for (int i = 0; i < list.size(); ++i) {
-			ItemStack itemstack = this.craftSlots.getItem(i);
-			ItemStack itemstack1 = list.get(i);
+			ItemStack current = this.craftSlots.getItem(i);
+			ItemStack remaining = list.get(i);
 
-			if (!itemstack.isEmpty()) {
+			if (!current.isEmpty()) {
 				this.craftSlots.removeItem(i, 1);
-				itemstack = this.craftSlots.getItem(i);
+				current = this.craftSlots.getItem(i);
 			}
 
-			if (!itemstack1.isEmpty()) {
-				if (itemstack.isEmpty()) {
-					this.craftSlots.setItem(i, itemstack1);
-				} else if (ItemStack.isSame(itemstack, itemstack1) && ItemStack.tagMatches(itemstack, itemstack1)) {
-					itemstack1.grow(itemstack.getCount());
-					this.craftSlots.setItem(i, itemstack1);
-				} else if (!this.player.getInventory().add(itemstack1)) {
-					this.player.drop(itemstack1, false);
+			if (!remaining.isEmpty()) {
+				if (current.isEmpty()) {
+					this.craftSlots.setItem(i, remaining);
+				} else if (ItemStack.isSame(current, remaining) && ItemStack.tagMatches(current, remaining)) {
+					remaining.grow(current.getCount());
+					this.craftSlots.setItem(i, remaining);
+				} else if (!this.player.getInventory().add(remaining)) {
+					this.player.drop(remaining, false);
 				}
 			}
 		}

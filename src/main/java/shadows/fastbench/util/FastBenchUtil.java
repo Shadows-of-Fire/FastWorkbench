@@ -3,8 +3,6 @@ package shadows.fastbench.util;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.CraftingContainer;
-import net.minecraft.world.inventory.CraftingMenu;
-import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.inventory.ResultContainer;
 import net.minecraft.world.inventory.ResultSlot;
 import net.minecraft.world.inventory.Slot;
@@ -78,6 +76,10 @@ public class FastBenchUtil {
 	 * @return
 	 */
 	public static ItemStack handleShiftCraft(Player player, AbstractContainerMenu container, Slot resultSlot, CraftingInventoryExt craftMatrix, ResultContainer craftResult, int outStart, int outEnd) {
+		return handleShiftCraft(player, container, resultSlot, craftMatrix, craftResult, (c, p) -> !DumbShitTM.mergeItemStack(c, p, outStart, outEnd));
+	}
+	
+	public static ItemStack handleShiftCraft(Player player, AbstractContainerMenu container, Slot resultSlot, CraftingInventoryExt craftMatrix, ResultContainer craftResult, OutputMover mover) {
 		ItemStack outputCopy = ItemStack.EMPTY;
 		if (resultSlot != null && resultSlot.hasItem()) {
 			craftMatrix.checkChanges = false;
@@ -89,7 +91,7 @@ public class FastBenchUtil {
 
 				recipeOutput.getItem().onCraftedBy(recipeOutput, player.level, player);
 
-				if (!player.level.isClientSide && !DumbShitTM.mergeItemStack(container, recipeOutput, outStart, outEnd)) {
+				if (!player.level.isClientSide && mover.merge(container, recipeOutput)) {
 					craftMatrix.checkChanges = true;
 					return ItemStack.EMPTY;
 				}
@@ -107,10 +109,9 @@ public class FastBenchUtil {
 	public static Recipe<CraftingContainer> findRecipe(CraftingContainer inv, Level world) {
 		return world.getRecipeManager().getRecipeFor(RecipeType.CRAFTING, inv, world).orElse(null);
 	}
-
-	public static final void fuckingTellMixinToNotBeStupid(AbstractContainerMenu c, CraftingInventoryExt ex) {
-		if (c instanceof CraftingMenu) ((CraftingMenu) c).craftSlots = ex;
-		if (c instanceof InventoryMenu) ((InventoryMenu) c).craftSlots = ex;
+	
+	public static interface OutputMover {
+		boolean merge(AbstractContainerMenu container, ItemStack recipeOutput);
 	}
 
 }

@@ -54,6 +54,10 @@ public abstract class MixinWorkbenchContainer extends RecipeBookMenu<CraftingCon
 		}
 	}
 
+	/**
+	 * @author Shadows
+	 * @reason FB handles recipe updates
+	 */
 	@Override
 	@Overwrite
 	public void slotsChanged(Container inventoryIn) {

@@ -39,6 +39,10 @@ public abstract class MixinPlayerContainer extends RecipeBookMenu<CraftingContai
 		return new CraftResultSlotExt(pPlayer, pCraftSlots, (ResultContainer) pContainer, pSlot, pXPosition, pYPosition);
 	}
 
+	/**
+	 * @author Shadows
+	 * @reason FB handles recipe updates
+	 */
 	@Override
 	@Overwrite
 	public void slotsChanged(Container inv) {
