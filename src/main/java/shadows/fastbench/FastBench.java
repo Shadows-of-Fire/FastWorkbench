@@ -30,11 +30,13 @@ public class FastBench {
     //Formatter::on
 
 	public static boolean removeBookButton = true;
+	public static boolean disableToolTip = false;
 
 	public FastBench() {
 		FMLJavaModLoadingContext.get().getModEventBus().register(this);
 		Configuration c = new Configuration(MODID);
 		removeBookButton = c.getBoolean("Remove Recipe Book Button", "general", true, "If the recipe book button is removed.");
+		disableToolTip = c.getBoolean("Disable tooltip on crafting table", "general", false, "If the crafting table has a tooltip");
 		if (c.hasChanged()) c.save();
 	}
 
