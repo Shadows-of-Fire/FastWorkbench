@@ -1,3 +1,6 @@
+## 4.6.2
+* Fixed a dupe bug regarding shift clicking special recipes.
+
 ## 4.6.1
 * Fixed a dupe bug that could occur if the player inventory was full when using a workbench.
 * FB will now crash the game when an invalid recipe (a recipe that matches but produces no output) is detected, instead of infinitely looping.

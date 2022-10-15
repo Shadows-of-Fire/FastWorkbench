@@ -84,7 +84,7 @@ public class FastBenchUtil {
 			craftMatrix.checkChanges = false;
 			IRecipe<CraftingInventory> recipe = (IRecipe<CraftingInventory>) craftResult.getRecipeUsed();
 			while (recipe != null && recipe.matches(craftMatrix, player.level)) {
-				ItemStack recipeOutput = resultSlot.getItem().copy();
+				ItemStack recipeOutput = recipe.assemble(craftMatrix);
 				if (recipeOutput.isEmpty()) throw new RuntimeException("A recipe matched but produced an empty output - Offending Recipe : " + recipe.getId() + " - This is NOT a bug in FastWorkbench!");
 				outputCopy = recipeOutput.copy();
 
