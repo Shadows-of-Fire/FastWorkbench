@@ -1,3 +1,6 @@
+## 6.1.1
+* Fixed a dupe bug regarding shift clicking special recipes.
+
 ## 6.1.0
 * Allowed the API to handle cases where you need to move crafted stacks to multiple locations.
 * Fixed shift-click-crafting issues with Quark Oddities' Backpack.
