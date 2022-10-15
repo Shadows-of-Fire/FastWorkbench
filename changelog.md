@@ -1,3 +1,6 @@
+## 7.0.1
+* Fixed a dupe bug regarding shift clicking special recipes.
+
 ## 7.0.0
 * Updated to 1.19.2
 
