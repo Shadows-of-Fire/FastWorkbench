@@ -118,7 +118,7 @@ public class ContainerFastBench extends ContainerWorkbench {
 		if (slot != null && slot.getHasStack()) {
 			checkMatrixChanges = false;
 			while (lastRecipe != null && lastRecipe.matches(this.craftMatrix, this.world)) {
-				ItemStack itemstack1 = slot.getStack();
+				ItemStack itemstack1 = lastRecipe.getCraftingResult(this.craftMatrix);
 				itemstack = itemstack1.copy();
 
 				itemstack1.getItem().onCreated(itemstack1, this.world, player);
