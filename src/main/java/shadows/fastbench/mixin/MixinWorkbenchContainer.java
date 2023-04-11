@@ -62,7 +62,7 @@ public abstract class MixinWorkbenchContainer extends RecipeBookMenu<CraftingCon
 	@Overwrite
 	public void slotsChanged(Container inventoryIn) {
 		this.access.execute((level, pos) -> {
-			FastBenchUtil.slotChangedCraftingGrid(level, this.player, (CraftingInventoryExt) this.ths().craftSlots, this.ths().resultSlots);
+			FastBenchUtil.queueSlotUpdate(level, this.player, (CraftingInventoryExt) this.ths().craftSlots, this.ths().resultSlots);
 		});
 	}
 

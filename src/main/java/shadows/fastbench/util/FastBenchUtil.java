@@ -19,6 +19,14 @@ import shadows.placebo.network.PacketDistro;
 public class FastBenchUtil {
 
 	/**
+	 * Queues an update for the grid that will execute after the next 5-tick window.
+	 * Multiple queue-ups will not stack, and only the latest one will be processed.
+	 */
+	public static void queueSlotUpdate(Level level, Player player, CraftingInventoryExt inv, ResultContainer result) {
+		SlotUpdateManager.queueSlotUpdate(level, player, inv, result);
+	}
+
+	/**
 	 * Called when a slot is changed in the crafting grid in a {@link ICraftingContainer}
 	 * Does no work on the client.
 	 * On the server, checks if a recipe is cached, and checks if it still matches. If it doesn't match, a new match is attempted to be found.
@@ -28,9 +36,10 @@ public class FastBenchUtil {
 	 * @param player The crafting player
 	 * @param inv The crafting grid
 	 * @param result The result inventory
+	 * @apiNote Use {@link #queueSlotUpdate(Level, Player, CraftingInventoryExt, ResultContainer)} unless you need immediate results for some reason.
 	 */
 	public static void slotChangedCraftingGrid(Level world, Player player, CraftingInventoryExt inv, ResultContainer result) {
-		if (!world.isClientSide) {
+		if (!world.isClientSide && inv.checkChanges) {
 
 			ItemStack itemstack = ItemStack.EMPTY;
 
@@ -78,7 +87,7 @@ public class FastBenchUtil {
 	public static ItemStack handleShiftCraft(Player player, AbstractContainerMenu container, Slot resultSlot, CraftingInventoryExt craftMatrix, ResultContainer craftResult, int outStart, int outEnd) {
 		return handleShiftCraft(player, container, resultSlot, craftMatrix, craftResult, (c, p) -> !DumbShitTM.mergeItemStack(c, p, outStart, outEnd));
 	}
-	
+
 	public static ItemStack handleShiftCraft(Player player, AbstractContainerMenu container, Slot resultSlot, CraftingInventoryExt craftMatrix, ResultContainer craftResult, OutputMover mover) {
 		ItemStack outputCopy = ItemStack.EMPTY;
 		if (resultSlot != null && resultSlot.hasItem()) {
@@ -109,7 +118,7 @@ public class FastBenchUtil {
 	public static Recipe<CraftingContainer> findRecipe(CraftingContainer inv, Level world) {
 		return world.getRecipeManager().getRecipeFor(RecipeType.CRAFTING, inv, world).orElse(null);
 	}
-	
+
 	public static interface OutputMover {
 		boolean merge(AbstractContainerMenu container, ItemStack recipeOutput);
 	}

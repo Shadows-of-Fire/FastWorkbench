@@ -1,3 +1,9 @@
+## 7.1.0
+* Added Recipe Update Batching.
+  * With this change, all recipe updates within a certain threshold (default: 2 ticks) will be batched and executed at the end of the time period.
+  * TThis significantly reduces the load of operations that rapidly modify the crafting table, such as autofilling (JEI) or rotating the crafting grid (Crafting Tweaks).
+  * I have not observed any noticable delays with the 2-tick threshold, but it can be reduced to 1-tick (or increased), if desired.
+
 ## 7.0.1
 * Fixed a dupe bug regarding shift clicking special recipes.
 

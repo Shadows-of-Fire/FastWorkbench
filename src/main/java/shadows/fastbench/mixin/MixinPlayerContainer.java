@@ -46,7 +46,7 @@ public abstract class MixinPlayerContainer extends RecipeBookMenu<CraftingContai
 	@Override
 	@Overwrite
 	public void slotsChanged(Container inv) {
-		FastBenchUtil.slotChangedCraftingGrid(this.ths().owner.level, this.ths().owner, (CraftingInventoryExt) this.ths().craftSlots, this.ths().resultSlots);
+		FastBenchUtil.queueSlotUpdate(this.ths().owner.level, this.ths().owner, (CraftingInventoryExt) this.ths().craftSlots, this.ths().resultSlots);
 	}
 
 	@Inject(at = @At("HEAD"), method = { "quickMoveStack" }, cancellable = true, require = 1)
