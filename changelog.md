@@ -1,3 +1,6 @@
+## 7.1.1
+* Fixed an issue with the recipe book's autofill causing recipes to be uncraftable.
+
 ## 7.1.0
 * Added Recipe Update Batching.
   * With this change, all recipe updates within a certain threshold (default: 2 ticks) will be batched and executed at the end of the time period.

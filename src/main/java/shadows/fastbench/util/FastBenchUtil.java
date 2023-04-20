@@ -49,7 +49,8 @@ public class FastBenchUtil {
 
 			if (recipe != null) itemstack = recipe.assemble(inv);
 
-			if (oldRecipe != recipe) {
+			// Need to check if the output is empty, because if the recipe book is being used, the recipe will already be set.
+			if (oldRecipe != recipe || result.getItem(0).isEmpty()) {
 				PacketDistro.sendTo(FastBench.CHANNEL, new RecipeMessage(recipe, itemstack), player);
 				result.setItem(0, itemstack);
 				result.setRecipeUsed(recipe);
