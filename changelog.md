@@ -1,3 +1,6 @@
+## 7.1.2
+* Fixed a dupe bug induced by crafting tweaks.
+
 ## 7.1.1
 * Fixed an issue with the recipe book's autofill causing recipes to be uncraftable.
 
