@@ -82,6 +82,7 @@ public class CraftResultSlotExt extends ResultSlot {
 	@Override
 	@SuppressWarnings("unchecked")
 	public ItemStack getItem() {
+		if (player.level.isClientSide) return super.getItem();
 		// Crafting Tweaks fakes 64x right click operations to right-click craft a stack to the "held" item, so we need to verify the recipe here.
 		Recipe<CraftingContainer> recipe = (Recipe<CraftingContainer>) this.inv.getRecipeUsed();
 		if (recipe != null && recipe.matches(this.craftSlots, player.level)) return super.getItem();
