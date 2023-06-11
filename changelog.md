@@ -1,3 +1,7 @@
+## 7.1.3
+* Fixed a conflict with a specific quark recipes.
+* Fixed shift-click crafting not working when only the last hotbar slot was empty in the crafting inventory.
+
 ## 7.1.2
 * Fixed a dupe bug induced by crafting tweaks.
 
