@@ -39,6 +39,7 @@ public class FastBench {
 	public FastBench() {
 		FMLJavaModLoadingContext.get().getModEventBus().register(this);
 		MinecraftForge.EVENT_BUS.addListener(this::reloads);
+		loadConfig();
 	}
 
 	private static void loadConfig() {

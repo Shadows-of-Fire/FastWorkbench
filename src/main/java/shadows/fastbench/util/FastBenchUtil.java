@@ -10,6 +10,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.event.ForgeEventFactory;
 import shadows.fastbench.FastBench;
 import shadows.fastbench.api.ICraftingContainer;
 import shadows.fastbench.net.RecipeMessage;
@@ -99,7 +100,8 @@ public class FastBenchUtil {
 				if (recipeOutput.isEmpty()) throw new RuntimeException("A recipe matched but produced an empty output - Offending Recipe : " + recipe.getId() + " - This is NOT a bug in FastWorkbench!");
 				outputCopy = recipeOutput.copy();
 
-				recipeOutput.getItem().onCraftedBy(recipeOutput, player.level, player);
+				recipeOutput.onCraftedBy(player.level, player, 1);
+				ForgeEventFactory.firePlayerCraftingEvent(player, recipeOutput, craftMatrix);
 
 				if (!player.level.isClientSide && mover.merge(container, recipeOutput)) {
 					craftMatrix.checkChanges = true;

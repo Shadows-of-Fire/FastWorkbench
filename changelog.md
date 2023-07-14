@@ -1,3 +1,8 @@
+## 7.1.4
+* Fixed an issue where the config was not read until world start, resulting in client values being ignored unless a singleplayer world was booted.
+* Fixed a longstanding forge issue where PlayerEvent.ItemCraftedEvent is not fired for shift-click-crafted items.
+  * This differs from normal Forge behavior, but fulfills the contract of the event properly.
+
 ## 7.1.3
 * Fixed a conflict with a specific quark recipes.
 * Fixed shift-click crafting not working when only the last hotbar slot was empty in the crafting inventory.
