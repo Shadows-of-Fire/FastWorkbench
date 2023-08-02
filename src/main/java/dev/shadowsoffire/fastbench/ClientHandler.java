@@ -1,6 +1,6 @@
-package shadows.fastbench;
+package dev.shadowsoffire.fastbench;
 
-import static shadows.fastbench.FastBench.disableToolTip;
+import static dev.shadowsoffire.fastbench.FastBench.disableToolTip;
 
 import java.util.concurrent.ThreadLocalRandom;
 

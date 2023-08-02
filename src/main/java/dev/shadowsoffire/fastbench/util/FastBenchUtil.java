@@ -1,5 +1,8 @@
-package shadows.fastbench.util;
+package dev.shadowsoffire.fastbench.util;
 
+import dev.shadowsoffire.fastbench.FastBench;
+import dev.shadowsoffire.fastbench.api.ICraftingContainer;
+import dev.shadowsoffire.fastbench.net.RecipeMessage;
 import dev.shadowsoffire.placebo.network.PacketDistro;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -12,9 +15,6 @@ import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.event.ForgeEventFactory;
-import shadows.fastbench.FastBench;
-import shadows.fastbench.api.ICraftingContainer;
-import shadows.fastbench.net.RecipeMessage;
 
 @SuppressWarnings("unchecked")
 public class FastBenchUtil {

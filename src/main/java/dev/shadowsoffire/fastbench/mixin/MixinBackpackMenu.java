@@ -1,4 +1,4 @@
-package shadows.fastbench.mixin;
+package dev.shadowsoffire.fastbench.mixin;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Pseudo;
@@ -6,13 +6,13 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import dev.shadowsoffire.fastbench.util.CraftingInventoryExt;
+import dev.shadowsoffire.fastbench.util.DumbShitTM;
+import dev.shadowsoffire.fastbench.util.FastBenchUtil;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.ItemStack;
-import shadows.fastbench.util.CraftingInventoryExt;
-import shadows.fastbench.util.DumbShitTM;
-import shadows.fastbench.util.FastBenchUtil;
 
 // https://github.com/Shadows-of-Fire/FastWorkbench/issues/87 - Quark's backpack overrides quickMoveStack, we need to ensure this variant of handleShiftCraft is called.
 @Pseudo

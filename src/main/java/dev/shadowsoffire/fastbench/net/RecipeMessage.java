@@ -1,7 +1,9 @@
-package shadows.fastbench.net;
+package dev.shadowsoffire.fastbench.net;
 
 import java.util.function.Supplier;
 
+import dev.shadowsoffire.fastbench.api.ICraftingContainer;
+import dev.shadowsoffire.fastbench.api.ICraftingScreen;
 import dev.shadowsoffire.placebo.network.MessageHelper;
 import dev.shadowsoffire.placebo.network.MessageProvider;
 import net.minecraft.client.Minecraft;
@@ -14,8 +16,6 @@ import net.minecraft.world.inventory.ResultContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraftforge.network.NetworkEvent.Context;
-import shadows.fastbench.api.ICraftingContainer;
-import shadows.fastbench.api.ICraftingScreen;
 
 public class RecipeMessage {
 

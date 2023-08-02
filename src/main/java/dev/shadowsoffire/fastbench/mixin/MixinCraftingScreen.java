@@ -1,10 +1,10 @@
-package shadows.fastbench.mixin;
+package dev.shadowsoffire.fastbench.mixin;
 
 import org.spongepowered.asm.mixin.Mixin;
 
+import dev.shadowsoffire.fastbench.api.ICraftingContainer;
+import dev.shadowsoffire.fastbench.api.ICraftingScreen;
 import net.minecraft.client.gui.screens.inventory.CraftingScreen;
-import shadows.fastbench.api.ICraftingContainer;
-import shadows.fastbench.api.ICraftingScreen;
 
 @Mixin(CraftingScreen.class)
 public class MixinCraftingScreen implements ICraftingScreen {

@@ -1,4 +1,4 @@
-package shadows.fastbench.util;
+package dev.shadowsoffire.fastbench.util;
 
 import java.util.List;
 

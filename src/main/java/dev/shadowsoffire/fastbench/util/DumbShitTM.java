@@ -1,4 +1,4 @@
-package shadows.fastbench.util;
+package dev.shadowsoffire.fastbench.util;
 
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;

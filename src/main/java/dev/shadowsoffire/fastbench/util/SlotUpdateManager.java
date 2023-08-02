@@ -1,8 +1,9 @@
-package shadows.fastbench.util;
+package dev.shadowsoffire.fastbench.util;
 
 import java.util.IdentityHashMap;
 import java.util.Map;
 
+import dev.shadowsoffire.fastbench.FastBench;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ResultContainer;
 import net.minecraft.world.level.Level;
@@ -10,7 +11,6 @@ import net.minecraftforge.event.TickEvent.Phase;
 import net.minecraftforge.event.TickEvent.ServerTickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-import shadows.fastbench.FastBench;
 
 @EventBusSubscriber(modid = FastBench.MODID)
 public class SlotUpdateManager {

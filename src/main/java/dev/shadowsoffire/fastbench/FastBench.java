@@ -1,8 +1,9 @@
-package shadows.fastbench;
+package dev.shadowsoffire.fastbench;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import dev.shadowsoffire.fastbench.net.RecipeMessage;
 import dev.shadowsoffire.placebo.config.Configuration;
 import dev.shadowsoffire.placebo.network.MessageHelper;
 import dev.shadowsoffire.placebo.util.RunnableReloader;
@@ -15,7 +16,6 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.simple.SimpleChannel;
-import shadows.fastbench.net.RecipeMessage;
 
 @Mod(FastBench.MODID)
 public class FastBench {

@@ -1,10 +1,10 @@
-package shadows.fastbench.api;
+package dev.shadowsoffire.fastbench.api;
 
 import javax.annotation.Nonnull;
 
 /**
  * ICraftingScreen needs to be implemented on ContainerScreens that are declaring FastWorkbench compat.<br>
- * This interface allows the {@link shadows.fastbench.net.RecipeMessage} to update your screen on the client.
+ * This interface allows the {@link dev.shadowsoffire.fastbench.net.RecipeMessage} to update your screen on the client.
  */
 public interface ICraftingScreen {
 
