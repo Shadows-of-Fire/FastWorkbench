@@ -38,7 +38,7 @@ public class ClientHandler {
     }
 
     private static boolean isBookButton(ImageButton b) {
-        return b.resourceLocation.getPath().equals("textures/gui/recipe_button.png");
+        return "textures/gui/recipe_button.png".equals(b.resourceLocation.getPath());
     }
 
 }

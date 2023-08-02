@@ -23,14 +23,12 @@ public class FastBench {
     public static final String MODID = "fastbench";
     public static final Logger LOG = LogManager.getLogger(MODID);
 
-    // Formatter::off
     public static final SimpleChannel CHANNEL = NetworkRegistry.ChannelBuilder
         .named(new ResourceLocation(MODID, "channel"))
         .clientAcceptedVersions(s -> true)
         .serverAcceptedVersions(s -> true)
         .networkProtocolVersion(() -> "4.6.0")
         .simpleChannel();
-    // Formatter::on
 
     public static boolean removeBookButton = true;
     public static boolean disableToolTip = false;

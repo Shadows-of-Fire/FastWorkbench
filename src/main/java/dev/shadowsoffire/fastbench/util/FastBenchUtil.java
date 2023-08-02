@@ -3,6 +3,7 @@ package dev.shadowsoffire.fastbench.util;
 import dev.shadowsoffire.fastbench.FastBench;
 import dev.shadowsoffire.fastbench.api.ICraftingContainer;
 import dev.shadowsoffire.fastbench.net.RecipeMessage;
+import dev.shadowsoffire.placebo.mixin.AbstractContainerMenuInvoker;
 import dev.shadowsoffire.placebo.network.PacketDistro;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -90,7 +91,7 @@ public class FastBenchUtil {
      * @return
      */
     public static ItemStack handleShiftCraft(Player player, AbstractContainerMenu container, Slot resultSlot, CraftingInventoryExt craftMatrix, ResultContainer craftResult, int outStart, int outEnd) {
-        return handleShiftCraft(player, container, resultSlot, craftMatrix, craftResult, (c, p) -> !DumbShitTM.mergeItemStack(c, p, outStart, outEnd));
+        return handleShiftCraft(player, container, resultSlot, craftMatrix, craftResult, (c, p) -> !((AbstractContainerMenuInvoker) c)._moveItemStackTo(p, outStart, outEnd, true));
     }
 
     public static ItemStack handleShiftCraft(Player player, AbstractContainerMenu container, Slot resultSlot, CraftingInventoryExt craftMatrix, ResultContainer craftResult, OutputMover mover) {

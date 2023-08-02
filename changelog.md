@@ -1,3 +1,6 @@
+## 8.0.0
+* Updated to 1.20.1
+
 ## 7.1.4
 * Fixed an issue where the config was not read until world start, resulting in client values being ignored unless a singleplayer world was booted.
 * Fixed a longstanding forge issue where PlayerEvent.ItemCraftedEvent is not fired for shift-click-crafted items.

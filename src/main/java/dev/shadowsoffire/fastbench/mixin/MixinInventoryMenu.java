@@ -20,17 +20,18 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.RecipeBookMenu;
 import net.minecraft.world.inventory.ResultContainer;
 import net.minecraft.world.inventory.ResultSlot;
+import net.minecraft.world.inventory.TransientCraftingContainer;
 import net.minecraft.world.item.ItemStack;
 
 @Mixin(InventoryMenu.class)
-public abstract class MixinPlayerContainer extends RecipeBookMenu<CraftingContainer> implements ICraftingContainer {
+public abstract class MixinInventoryMenu extends RecipeBookMenu<CraftingContainer> implements ICraftingContainer {
 
-    public MixinPlayerContainer(MenuType<?> p_i50067_1_, int p_i50067_2_) {
-        super(p_i50067_1_, p_i50067_2_);
+    public MixinInventoryMenu(MenuType<?> type, int id) {
+        super(type, id);
     }
 
-    @Redirect(method = "<init>", at = @At(value = "NEW", target = "net/minecraft/world/inventory/CraftingContainer"), require = 1)
-    private static CraftingContainer makeExtInv(AbstractContainerMenu container, int x, int y) {
+    @Redirect(method = "<init>", at = @At(value = "NEW", target = "net/minecraft/world/inventory/TransientCraftingContainer"), require = 1)
+    private static TransientCraftingContainer makeExtInv(AbstractContainerMenu container, int x, int y) {
         return new CraftingInventoryExt(container, x, y);
     }
 
@@ -41,7 +42,7 @@ public abstract class MixinPlayerContainer extends RecipeBookMenu<CraftingContai
 
     /**
      * @author Shadows
-     * @reason FB handles recipe updates
+     * @reason FB batches recipe updates so that all container updates in a short window are merged into one check.
      */
     @Override
     @Overwrite
