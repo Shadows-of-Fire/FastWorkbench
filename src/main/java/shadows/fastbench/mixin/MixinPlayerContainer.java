@@ -25,43 +25,43 @@ import shadows.fastbench.util.FastBenchUtil;
 @Mixin(InventoryMenu.class)
 public abstract class MixinPlayerContainer extends RecipeBookMenu<CraftingContainer> implements ICraftingContainer {
 
-	public MixinPlayerContainer(MenuType<?> p_i50067_1_, int p_i50067_2_) {
-		super(p_i50067_1_, p_i50067_2_);
-	}
+    public MixinPlayerContainer(MenuType<?> p_i50067_1_, int p_i50067_2_) {
+        super(p_i50067_1_, p_i50067_2_);
+    }
 
-	@Redirect(method = "<init>", at = @At(value = "NEW", target = "net/minecraft/world/inventory/CraftingContainer"), require = 1)
-	private static CraftingContainer makeExtInv(AbstractContainerMenu container, int x, int y) {
-		return new CraftingInventoryExt(container, x, y);
-	}
+    @Redirect(method = "<init>", at = @At(value = "NEW", target = "net/minecraft/world/inventory/CraftingContainer"), require = 1)
+    private static CraftingContainer makeExtInv(AbstractContainerMenu container, int x, int y) {
+        return new CraftingInventoryExt(container, x, y);
+    }
 
-	@Redirect(method = "<init>", at = @At(value = "NEW", target = "net/minecraft/world/inventory/ResultSlot"), require = 1)
-	private static ResultSlot makeExtSlot(Player pPlayer, CraftingContainer pCraftSlots, Container pContainer, int pSlot, int pXPosition, int pYPosition) {
-		return new CraftResultSlotExt(pPlayer, pCraftSlots, (ResultContainer) pContainer, pSlot, pXPosition, pYPosition);
-	}
+    @Redirect(method = "<init>", at = @At(value = "NEW", target = "net/minecraft/world/inventory/ResultSlot"), require = 1)
+    private static ResultSlot makeExtSlot(Player pPlayer, CraftingContainer pCraftSlots, Container pContainer, int pSlot, int pXPosition, int pYPosition) {
+        return new CraftResultSlotExt(pPlayer, pCraftSlots, (ResultContainer) pContainer, pSlot, pXPosition, pYPosition);
+    }
 
-	/**
-	 * @author Shadows
-	 * @reason FB handles recipe updates
-	 */
-	@Override
-	@Overwrite
-	public void slotsChanged(Container inv) {
-		FastBenchUtil.queueSlotUpdate(this.ths().owner.level, this.ths().owner, (CraftingInventoryExt) this.ths().craftSlots, this.ths().resultSlots);
-	}
+    /**
+     * @author Shadows
+     * @reason FB handles recipe updates
+     */
+    @Override
+    @Overwrite
+    public void slotsChanged(Container inv) {
+        FastBenchUtil.queueSlotUpdate(this.ths().owner.level(), this.ths().owner, (CraftingInventoryExt) this.ths().craftSlots, this.ths().resultSlots);
+    }
 
-	@Inject(at = @At("HEAD"), method = { "quickMoveStack" }, cancellable = true, require = 1)
-	public void quickMoveStack(Player pPlayer, int pIndex, CallbackInfoReturnable<ItemStack> ci) {
-		if (pIndex == 0) {
-			ci.setReturnValue(FastBenchUtil.handleShiftCraft(this.ths().owner, this.ths(), this.ths().slots.get(0), (CraftingInventoryExt) this.ths().craftSlots, this.ths().resultSlots, 9, 45));
-		}
-	}
+    @Inject(at = @At("HEAD"), method = { "quickMoveStack" }, cancellable = true, require = 1)
+    public void quickMoveStack(Player pPlayer, int pIndex, CallbackInfoReturnable<ItemStack> ci) {
+        if (pIndex == 0) {
+            ci.setReturnValue(FastBenchUtil.handleShiftCraft(this.ths().owner, this.ths(), this.ths().slots.get(0), (CraftingInventoryExt) this.ths().craftSlots, this.ths().resultSlots, 9, 45));
+        }
+    }
 
-	private InventoryMenu ths() {
-		return (InventoryMenu) (Object) this;
-	}
+    private InventoryMenu ths() {
+        return (InventoryMenu) (Object) this;
+    }
 
-	@Override
-	public ResultContainer getResult() {
-		return this.ths().resultSlots;
-	}
+    @Override
+    public ResultContainer getResult() {
+        return this.ths().resultSlots;
+    }
 }
