@@ -56,7 +56,7 @@ public class RecipeMessage {
         @Override
         @SuppressWarnings("unchecked")
         public void handle(RecipeMessage msg, Supplier<Context> ctx) {
-            MessageHelper.handlePacket(() -> () -> {
+            MessageHelper.handlePacket(() -> {
                 Recipe<CraftingContainer> recipe = (Recipe<CraftingContainer>) Minecraft.getInstance().level.getRecipeManager().byKey(msg.recipeId).orElse(null);
                 if (Minecraft.getInstance().screen instanceof ICraftingScreen) {
                     ICraftingContainer c = ((ICraftingScreen) Minecraft.getInstance().screen).getContainer();
