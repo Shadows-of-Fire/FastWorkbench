@@ -1,3 +1,7 @@
+## 8.0.2
+* Removed forge dependency line from the mods.toml and marked as Forge and NeoForge for CF.
+  * The dependency will be added back and the Forge marker will be removed once CF supports Neo correctly.
+
 ## 8.0.1
 * Updated to Placebo 8.2.1
 
