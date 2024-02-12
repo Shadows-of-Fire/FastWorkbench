@@ -1,3 +1,6 @@
+## 8.0.3
+* Fixed `minecraft:recipe_crafted` advancement trigger not being fired.
+
 ## 8.0.2
 * Removed forge dependency line from the mods.toml and marked as Forge and NeoForge for CF.
   * The dependency will be added back and the Forge marker will be removed once CF supports Neo correctly.
