@@ -1,5 +1,6 @@
 package dev.shadowsoffire.fastbench.util;
 
+import java.util.Collections;
 import java.util.List;
 
 import net.minecraft.world.entity.player.Player;
@@ -9,6 +10,7 @@ import net.minecraft.world.inventory.ResultSlot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraftforge.common.ForgeHooks;
+import net.minecraftforge.event.ForgeEventFactory;
 
 public class CraftResultSlotExt extends ResultSlot {
 
@@ -36,8 +38,26 @@ public class CraftResultSlotExt extends ResultSlot {
     @Override
     public void set(ItemStack stack) {}
 
-    @SuppressWarnings({ "unchecked" })
     @Override
+    protected void checkTakeAchievements(ItemStack stack) {
+        if (this.removeCount > 0) {
+            stack.onCraftedBy(this.player.level(), this.player, this.removeCount);
+            ForgeEventFactory.firePlayerCraftingEvent(this.player, stack, this.craftSlots);
+        }
+        this.removeCount = 0;
+
+        // Have to copy this code because vanilla nulls out the recipe, which shouldn't be done.
+        Recipe<?> recipe = this.inv.getRecipeUsed();
+        if (recipe != null) {
+            this.player.triggerRecipeCrafted(this.inv.getRecipeUsed(), this.craftSlots.getItems());
+            if (!recipe.isSpecial()) {
+                this.player.awardRecipes(Collections.singleton(recipe));
+            }
+        }
+    }
+
+    @Override
+    @SuppressWarnings({ "unchecked" })
     public void onTake(Player player, ItemStack stack) {
         this.checkTakeAchievements(stack);
         ForgeHooks.setCraftingPlayer(player);
