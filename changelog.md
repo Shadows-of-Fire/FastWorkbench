@@ -1,3 +1,6 @@
+## 8.0.4
+* Fixed a dupe issue caused by using vanilla's `RecipeHolder#awardUsedRecipes` method.
+
 ## 8.0.3
 * Fixed `minecraft:recipe_crafted` advancement trigger not being fired.
 
