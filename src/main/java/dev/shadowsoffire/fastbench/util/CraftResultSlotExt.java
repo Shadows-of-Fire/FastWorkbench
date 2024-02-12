@@ -9,7 +9,6 @@ import net.minecraft.world.inventory.ResultSlot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraftforge.common.ForgeHooks;
-import net.minecraftforge.event.ForgeEventFactory;
 
 public class CraftResultSlotExt extends ResultSlot {
 
@@ -36,15 +35,6 @@ public class CraftResultSlotExt extends ResultSlot {
 
     @Override
     public void set(ItemStack stack) {}
-
-    @Override
-    protected void checkTakeAchievements(ItemStack stack) {
-        if (this.removeCount > 0) {
-            stack.onCraftedBy(this.player.level(), this.player, this.removeCount);
-            ForgeEventFactory.firePlayerCraftingEvent(this.player, stack, this.craftSlots);
-        }
-        this.removeCount = 0;
-    }
 
     @SuppressWarnings({ "unchecked" })
     @Override
