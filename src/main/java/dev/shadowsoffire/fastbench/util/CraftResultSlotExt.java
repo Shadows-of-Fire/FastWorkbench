@@ -8,9 +8,10 @@ import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.inventory.ResultContainer;
 import net.minecraft.world.inventory.ResultSlot;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Recipe;
-import net.minecraftforge.common.ForgeHooks;
-import net.minecraftforge.event.ForgeEventFactory;
+import net.minecraft.world.item.crafting.CraftingRecipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
+import net.neoforged.neoforge.common.CommonHooks;
+import net.neoforged.neoforge.event.EventHooks;
 
 public class CraftResultSlotExt extends ResultSlot {
 
@@ -42,15 +43,15 @@ public class CraftResultSlotExt extends ResultSlot {
     protected void checkTakeAchievements(ItemStack stack) {
         if (this.removeCount > 0) {
             stack.onCraftedBy(this.player.level(), this.player, this.removeCount);
-            ForgeEventFactory.firePlayerCraftingEvent(this.player, stack, this.craftSlots);
+            EventHooks.firePlayerCraftingEvent(this.player, stack, this.craftSlots);
         }
         this.removeCount = 0;
 
         // Have to copy this code because vanilla nulls out the recipe, which shouldn't be done.
-        Recipe<?> recipe = this.inv.getRecipeUsed();
+        RecipeHolder<?> recipe = this.inv.getRecipeUsed();
         if (recipe != null) {
             this.player.triggerRecipeCrafted(this.inv.getRecipeUsed(), this.craftSlots.getItems());
-            if (!recipe.isSpecial()) {
+            if (!recipe.value().isSpecial()) {
                 this.player.awardRecipes(Collections.singleton(recipe));
             }
         }
@@ -60,12 +61,12 @@ public class CraftResultSlotExt extends ResultSlot {
     @SuppressWarnings({ "unchecked" })
     public void onTake(Player player, ItemStack stack) {
         this.checkTakeAchievements(stack);
-        ForgeHooks.setCraftingPlayer(player);
+        CommonHooks.setCraftingPlayer(player);
         List<ItemStack> list;
-        Recipe<CraftingContainer> recipe = (Recipe<CraftingContainer>) this.inv.getRecipeUsed();
-        if (recipe != null && recipe.matches(this.craftSlots, player.level())) list = recipe.getRemainingItems(this.craftSlots);
+        RecipeHolder<CraftingRecipe> recipe = (RecipeHolder<CraftingRecipe>) this.inv.getRecipeUsed();
+        if (recipe != null && recipe.value().matches(this.craftSlots, player.level())) list = recipe.value().getRemainingItems(this.craftSlots);
         else list = this.craftSlots.getItems();
-        ForgeHooks.setCraftingPlayer(null);
+        CommonHooks.setCraftingPlayer(null);
 
         for (int i = 0; i < list.size(); ++i) {
             ItemStack current = this.craftSlots.getItem(i);
@@ -96,8 +97,8 @@ public class CraftResultSlotExt extends ResultSlot {
     public ItemStack getItem() {
         if (player.level().isClientSide) return super.getItem();
         // Crafting Tweaks fakes 64x right click operations to right-click craft a stack to the "held" item, so we need to verify the recipe here.
-        Recipe<CraftingContainer> recipe = (Recipe<CraftingContainer>) this.inv.getRecipeUsed();
-        if (recipe != null && recipe.matches(this.craftSlots, player.level())) return super.getItem();
+        RecipeHolder<CraftingRecipe> recipe = (RecipeHolder<CraftingRecipe>) this.inv.getRecipeUsed();
+        if (recipe != null && recipe.value().matches(this.craftSlots, player.level())) return super.getItem();
         return ItemStack.EMPTY;
     }
 }

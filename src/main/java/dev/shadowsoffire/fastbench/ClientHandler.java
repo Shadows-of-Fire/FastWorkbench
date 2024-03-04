@@ -7,13 +7,14 @@ import java.util.concurrent.ThreadLocalRandom;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.components.Renderable;
+import net.minecraft.client.gui.screens.recipebook.RecipeBookComponent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Items;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.ScreenEvent;
-import net.minecraftforge.event.entity.player.ItemTooltipEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod.EventBusSubscriber;
+import net.neoforged.neoforge.client.event.ScreenEvent;
+import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
 
 @EventBusSubscriber(modid = FastBench.MODID, value = Dist.CLIENT)
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -38,7 +39,7 @@ public class ClientHandler {
     }
 
     private static boolean isBookButton(ImageButton b) {
-        return "textures/gui/recipe_button.png".equals(b.resourceLocation.getPath());
+        return RecipeBookComponent.RECIPE_BUTTON_SPRITES == b.sprites;
     }
 
 }

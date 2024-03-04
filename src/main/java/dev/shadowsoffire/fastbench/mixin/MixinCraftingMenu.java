@@ -25,7 +25,7 @@ import net.minecraft.world.inventory.ResultSlot;
 import net.minecraft.world.inventory.TransientCraftingContainer;
 import net.minecraft.world.item.ItemStack;
 
-@Mixin(CraftingMenu.class)
+@Mixin(value = CraftingMenu.class, remap = false)
 public abstract class MixinCraftingMenu extends RecipeBookMenu<CraftingContainer> implements ICraftingContainer {
 
     public MixinCraftingMenu(MenuType<?> type, int id) {
@@ -48,7 +48,7 @@ public abstract class MixinCraftingMenu extends RecipeBookMenu<CraftingContainer
         return new CraftResultSlotExt(pPlayer, pCraftSlots, (ResultContainer) pContainer, pSlot, pXPosition, pYPosition);
     }
 
-    @Inject(at = @At("HEAD"), method = { "quickMoveStack" }, cancellable = true, require = 1)
+    @Inject(at = @At("HEAD"), method = "quickMoveStack", cancellable = true, require = 1)
     public void quickMoveStack(Player pPlayer, int pIndex, CallbackInfoReturnable<ItemStack> ci) {
         if (pIndex == 0) {
             ci.setReturnValue(FastBenchUtil.handleShiftCraft(this.player, this.ths(), this.ths().slots.get(0), (CraftingInventoryExt) this.ths().craftSlots, this.ths().resultSlots, 10, 46));

@@ -7,10 +7,10 @@ import dev.shadowsoffire.fastbench.FastBench;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ResultContainer;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.event.TickEvent.Phase;
-import net.minecraftforge.event.TickEvent.ServerTickEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod.EventBusSubscriber;
+import net.neoforged.neoforge.event.TickEvent.Phase;
+import net.neoforged.neoforge.event.TickEvent.ServerTickEvent;
 
 @EventBusSubscriber(modid = FastBench.MODID)
 public class SlotUpdateManager {

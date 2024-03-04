@@ -17,14 +17,14 @@ import net.minecraft.world.item.ItemStack;
 // https://github.com/Shadows-of-Fire/FastWorkbench/issues/87 - Quark's backpack overrides quickMoveStack, we need to ensure this variant of handleShiftCraft is
 // called.
 @Pseudo
-@Mixin(targets = { "vazkii.quark.addons.oddities.inventory.BackpackMenu" })
+@Mixin(targets = { "vazkii.quark.addons.oddities.inventory.BackpackMenu" }, remap = false)
 public class MixinBackpackMenu extends InventoryMenu {
 
     public MixinBackpackMenu(Inventory p_39706_, boolean p_39707_, Player p_39708_) {
         super(p_39706_, p_39707_, p_39708_);
     }
 
-    @Inject(at = @At("HEAD"), method = { "quickMoveStack(Lnet/minecraft/world/entity/player/Player;I)Lnet/minecraft/world/item/ItemStack;" }, cancellable = true, require = 1)
+    @Inject(at = @At("HEAD"), method = { "quickMoveStack(Lnet/minecraft/world/entity/player/Player;I)Lnet/minecraft/world/item/ItemStack;" }, cancellable = true, require = 1, remap = false)
     public void quickMoveStack(Player pPlayer, int pIndex, CallbackInfoReturnable<ItemStack> ci) {
         if (pIndex == 0) {
             final int topSlots = 8;

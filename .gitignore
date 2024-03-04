@@ -19,6 +19,6 @@ build
 
 # other
 eclipse
-run
+runs
 logs
 .factorypath

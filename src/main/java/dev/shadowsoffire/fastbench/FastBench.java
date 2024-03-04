@@ -5,38 +5,29 @@ import org.apache.logging.log4j.Logger;
 
 import dev.shadowsoffire.fastbench.net.RecipeMessage;
 import dev.shadowsoffire.placebo.config.Configuration;
-import dev.shadowsoffire.placebo.network.MessageHelper;
+import dev.shadowsoffire.placebo.network.PayloadHelper;
 import dev.shadowsoffire.placebo.util.RunnableReloader;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.AddReloadListenerEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.network.NetworkRegistry;
-import net.minecraftforge.network.simple.SimpleChannel;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.AddReloadListenerEvent;
 
 @Mod(FastBench.MODID)
 public class FastBench {
 
     public static final String MODID = "fastbench";
-    public static final Logger LOG = LogManager.getLogger(MODID);
-
-    public static final SimpleChannel CHANNEL = NetworkRegistry.ChannelBuilder
-        .named(new ResourceLocation(MODID, "channel"))
-        .clientAcceptedVersions(s -> true)
-        .serverAcceptedVersions(s -> true)
-        .networkProtocolVersion(() -> "4.6.0")
-        .simpleChannel();
+    public static final Logger LOGGER = LogManager.getLogger(MODID);
 
     public static boolean removeBookButton = true;
     public static boolean disableToolTip = false;
-    public static int gridUpdateInterval = 2;
+    public static int gridUpdateInterval = 1;
 
-    public FastBench() {
-        FMLJavaModLoadingContext.get().getModEventBus().register(this);
-        MinecraftForge.EVENT_BUS.addListener(this::reloads);
+    public FastBench(IEventBus bus) {
+        bus.register(this);
+        NeoForge.EVENT_BUS.addListener(this::reloads);
         loadConfig();
     }
 
@@ -50,11 +41,15 @@ public class FastBench {
 
     @SubscribeEvent
     public void preInit(FMLCommonSetupEvent e) {
-        MessageHelper.registerMessage(CHANNEL, 0, new RecipeMessage.Provider());
+        PayloadHelper.registerPayload(new RecipeMessage.Provider());
     }
 
     public void reloads(AddReloadListenerEvent e) {
         e.addListener(RunnableReloader.of(FastBench::loadConfig));
+    }
+
+    public static ResourceLocation loc(String string) {
+        return new ResourceLocation(MODID, string);
     }
 
 }
