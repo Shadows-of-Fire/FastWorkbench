@@ -1,3 +1,6 @@
+## 9.0.0
+* Initial update to 1.20.4
+
 ## 8.0.4
 * Fixed a dupe issue caused by using vanilla's `RecipeHolder#awardUsedRecipes` method.
 
