@@ -1,3 +1,6 @@
+## 9.0.1
+* Removed unnecessary refmap declaration.
+
 ## 9.0.0
 * Initial update to 1.20.4
 
