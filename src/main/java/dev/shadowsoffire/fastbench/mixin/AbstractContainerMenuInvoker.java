@@ -6,7 +6,7 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 
-@Mixin(AbstractContainerMenu.class)
+@Mixin(value = AbstractContainerMenu.class, remap = false)
 public interface AbstractContainerMenuInvoker {
 
     @Invoker("moveItemStackTo")
