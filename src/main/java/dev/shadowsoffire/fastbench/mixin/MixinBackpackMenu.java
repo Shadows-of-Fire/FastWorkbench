@@ -8,7 +8,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import dev.shadowsoffire.fastbench.util.CraftingInventoryExt;
 import dev.shadowsoffire.fastbench.util.FastBenchUtil;
-import dev.shadowsoffire.placebo.mixin.AbstractContainerMenuInvoker;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.InventoryMenu;
