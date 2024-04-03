@@ -1,3 +1,6 @@
+## 9.0.2
+* Updated to Placebo 9.2.2
+
 ## 9.0.1
 * Removed unnecessary refmap declaration.
 
