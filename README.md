@@ -1,21 +1,24 @@
 # FastWorkbench [![](http://cf.way2muchnoise.eu/fastworkbench.svg)](https://www.curseforge.com/minecraft/mc-mods/fastworkbench) [![](http://cf.way2muchnoise.eu/versions/fastworkbench.svg)](https://www.curseforge.com/minecraft/mc-mods/fastworkbench)
-Caching recipes in the crafting table
+FastWorkbench causes all crafting operations to cache the last recipe used. This resolves the game freeze that triggers when shift-click (batch) crafting a full stack of items when many recipes are loaded, since the number of match ops is reduced to one.
 
+## Technical Details
+Minecraft retains a list of recipes, which are a mapping from 1-9 inputs to a single output. Vanilla has about 2,000 recipes, but large modpacks will typically reach 20,000 or higher.
+When using a crafting grid, any time an input item changes, a full iteration of this list is performed to compute the updated output. This match operation is O(r) on the number of loaded recipes `r`, and as such, is fairly expensive.
 
-## Developers Wishing to Add Support
-Adding compatability for FastWorkbench to modded crafting tables is made to be as painless as possible.  There are only five changes that need to be made from the standard
-vanilla table, and FastWorkbench will handle the rest.
+When a user crafts an item (picking it up from the output slot), all the inputs are decremented individually. Each decrement triggers another match operation, which means that crafting a recipe triggers O(i) match ops on the number of inputs `i`.
+Compounding this further, Minecraft permits batch crafting via shift-click, which crafts all items until the input is extinguished. This single operation can then trigger O(i * s) match ops, on the number of inputs `i` times the stack size of the inputs `s`.
 
-### If you are extending WorkbenchContainer:  
-You need to replace the existing `CraftingInventory` field (`WorkbenchContainer.craftMatrix`) with an instance of `CraftingInventoryExt` [as shown here.](https://github.com/Shadows-of-Fire/FastWorkbench/blob/1.16/src/main/java/shadows/fastbench/gui/ContainerFastBench.java#L36)
+The result is several hundred match operations executed immediately as a result of a normal game operation (batch crafting), which stalls out the game when the recipe list is large.
 
-You then need to override `onCraftMatrixChanged` to invoke `ContainerFastBench.slotChangedCraftingGrid`.  It need not make any other calls.
+FastWorkbench optimizes this logic such that only one match op is performed for any crafting op (batch and non-batch). Additionally, it prevents duplication of work by not computing the matched recipe on the client as Minecraft does.
 
-Third, you need to override `transferStackInSlot` such that it returns `ContainerFastBench.handleShiftCraft` when called for the `CraftingResultSlot`.  In this case, that slot is index 0.  For all other slots, simply return super.
+## Adding FastWorkbench Compatibility
+Adding compatibility for FastWorkbench to modded crafting tables can be divided into two paths:
 
-Fourth, you need to implement `ICraftingContainer` on your container, and `ICraftingScreen` on your screen.  These allow the packet to process properly.  These classes are located in `shadows.fastbench.api` and may be repacked with any mod.
+#### 1. If you are extending CraftingMenu:  
+Everything will be handled automatically, as long as you do not override the methods `quickMoveStack` or `slotsChanged`.  If you override these methods, you need to match the implementation found in FastWorkbench's overrides [here](https://github.com/Shadows-of-Fire/FastWorkbench/blob/1.20/src/main/java/dev/shadowsoffire/fastbench/mixin/MixinCraftingMenu.java).
 
-Finally, you need to replace any instances of `CraftingResultSlot` with `CraftResultSlotExt`.  Failure to do so will cause all kinds of shenanigans.
+#### 2. If you are not extending CraftingMenu:  
+You will need to use the FastWorkbench classes `CraftingInventoryExt` and `CraftResultSlotExt` in place of `TransientCraftingContainer` and `ResultSlot` respectively.
 
-### If you are not extending WorkbenchContainer:  
-You need to make similar changes as described above, but you will need to find the right slot numbers and changes for your implementation of a crafting screen.  The FastWorkbench solutions are generally equipped to allow any container to implement their functions seamlessly.
+Additionally, you will need to call `FastBenchUtil.queueSlotUpdate` from your `slotsChanged` method (or other mechanism you use to detect crafting grid updates), and call `FastBenchUtil.handleShiftCraft` from your `quickMoveStack` function when the output slot is clicked.
