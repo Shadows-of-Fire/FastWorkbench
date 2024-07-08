@@ -1,13 +1,14 @@
 package dev.shadowsoffire.fastbench.util;
 
 import java.util.Collections;
-import java.util.List;
 
+import net.minecraft.core.NonNullList;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.inventory.ResultContainer;
 import net.minecraft.world.inventory.ResultSlot;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.neoforged.neoforge.common.CommonHooks;
@@ -61,35 +62,44 @@ public class CraftResultSlotExt extends ResultSlot {
     @SuppressWarnings({ "unchecked" })
     public void onTake(Player player, ItemStack stack) {
         this.checkTakeAchievements(stack);
-        CommonHooks.setCraftingPlayer(player);
-        List<ItemStack> list;
+        CraftingInput.Positioned pos = this.craftSlots.asPositionedCraftInput();
+        CraftingInput input = pos.input();
+        int left = pos.left();
+        int top = pos.top();
         RecipeHolder<CraftingRecipe> recipe = (RecipeHolder<CraftingRecipe>) this.inv.getRecipeUsed();
-        if (recipe != null && recipe.value().matches(this.craftSlots, player.level())) list = recipe.value().getRemainingItems(this.craftSlots);
-        else list = this.craftSlots.getItems();
-        CommonHooks.setCraftingPlayer(null);
 
-        for (int i = 0; i < list.size(); ++i) {
-            ItemStack current = this.craftSlots.getItem(i);
-            ItemStack remaining = list.get(i);
+        CommonHooks.setCraftingPlayer(player);
 
-            if (!current.isEmpty()) {
-                this.craftSlots.removeItem(i, 1);
-                current = this.craftSlots.getItem(i);
-            }
+        if (recipe != null && recipe.value().matches(input, player.level())) {
+            NonNullList<ItemStack> remaining = recipe.value().getRemainingItems(input);
 
-            if (!remaining.isEmpty()) {
-                if (current.isEmpty()) {
-                    this.craftSlots.setItem(i, remaining);
-                }
-                else if (ItemStack.isSameItemSameTags(current, remaining)) {
-                    remaining.grow(current.getCount());
-                    this.craftSlots.setItem(i, remaining);
-                }
-                else if (!this.player.getInventory().add(remaining)) {
-                    this.player.drop(remaining, false);
+            for (int x = 0; x < input.width(); x++) {
+                for (int y = 0; y < input.height(); y++) {
+                    int realIdx = x + left + (y + top) * this.craftSlots.getWidth();
+                    ItemStack current = this.craftSlots.getItem(realIdx);
+                    ItemStack remainder = remaining.get(x + y * input.width());
+                    if (!current.isEmpty()) {
+                        this.craftSlots.removeItem(realIdx, 1);
+                        current = this.craftSlots.getItem(realIdx);
+                    }
+
+                    if (!remainder.isEmpty()) {
+                        if (current.isEmpty()) {
+                            this.craftSlots.setItem(realIdx, remainder);
+                        }
+                        else if (ItemStack.isSameItemSameComponents(current, remainder)) {
+                            remainder.grow(current.getCount());
+                            this.craftSlots.setItem(realIdx, remainder);
+                        }
+                        else if (!this.player.getInventory().add(remainder)) {
+                            this.player.drop(remainder, false);
+                        }
+                    }
                 }
             }
         }
+
+        CommonHooks.setCraftingPlayer(null);
     }
 
     @Override
@@ -98,7 +108,9 @@ public class CraftResultSlotExt extends ResultSlot {
         if (player.level().isClientSide) return super.getItem();
         // Crafting Tweaks fakes 64x right click operations to right-click craft a stack to the "held" item, so we need to verify the recipe here.
         RecipeHolder<CraftingRecipe> recipe = (RecipeHolder<CraftingRecipe>) this.inv.getRecipeUsed();
-        if (recipe != null && recipe.value().matches(this.craftSlots, player.level())) return super.getItem();
+        if (recipe != null && recipe.value().matches(this.craftSlots.asCraftInput(), player.level())) {
+            return super.getItem();
+        }
         return ItemStack.EMPTY;
     }
 }

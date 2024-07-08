@@ -3,7 +3,7 @@ package dev.shadowsoffire.fastbench;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import dev.shadowsoffire.fastbench.net.RecipeMessage;
+import dev.shadowsoffire.fastbench.net.RecipePayload;
 import dev.shadowsoffire.placebo.config.Configuration;
 import dev.shadowsoffire.placebo.network.PayloadHelper;
 import dev.shadowsoffire.placebo.util.RunnableReloader;
@@ -35,13 +35,13 @@ public class FastBench {
         Configuration c = new Configuration(MODID);
         removeBookButton = c.getBoolean("Remove Recipe Book Button", "general", true, "If the recipe book button is removed.");
         disableToolTip = c.getBoolean("Disable tooltip on crafting table", "general", false, "If the crafting table has a tooltip");
-        gridUpdateInterval = c.getInt("Grid Update Interval", "general", 2, 1, 100, "The tick interval at which all pooled grid updates will be run. Duplicate updates within the interval will be squashed.");
+        gridUpdateInterval = c.getInt("Grid Update Interval", "general", 1, 1, 100, "The tick interval at which all pooled grid updates will be run. Duplicate updates within the interval will be squashed.");
         if (c.hasChanged()) c.save();
     }
 
     @SubscribeEvent
     public void preInit(FMLCommonSetupEvent e) {
-        PayloadHelper.registerPayload(new RecipeMessage.Provider());
+        PayloadHelper.registerPayload(new RecipePayload.Provider());
     }
 
     public void reloads(AddReloadListenerEvent e) {
@@ -49,7 +49,7 @@ public class FastBench {
     }
 
     public static ResourceLocation loc(String string) {
-        return new ResourceLocation(MODID, string);
+        return ResourceLocation.fromNamespaceAndPath(MODID, string);
     }
 
 }

@@ -6,7 +6,7 @@ import net.minecraft.world.inventory.ResultContainer;
 
 /**
  * ICraftingContainer needs to be implemented on Containers that are declaring FastWorkbench compat.<br>
- * This interface allows the {@link dev.shadowsoffire.fastbench.net.RecipeMessage} to update your screen on the client.
+ * This interface allows the {@link dev.shadowsoffire.fastbench.net.RecipePayload} to update your screen on the client.
  */
 public interface ICraftingContainer {
 

@@ -22,9 +22,11 @@ import net.minecraft.world.inventory.ResultContainer;
 import net.minecraft.world.inventory.ResultSlot;
 import net.minecraft.world.inventory.TransientCraftingContainer;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.CraftingInput;
+import net.minecraft.world.item.crafting.CraftingRecipe;
 
 @Mixin(value = InventoryMenu.class, remap = false)
-public abstract class MixinInventoryMenu extends RecipeBookMenu<CraftingContainer> implements ICraftingContainer {
+public abstract class MixinInventoryMenu extends RecipeBookMenu<CraftingInput, CraftingRecipe> implements ICraftingContainer {
 
     public MixinInventoryMenu(MenuType<?> type, int id) {
         super(type, id);

@@ -4,20 +4,21 @@ import org.jetbrains.annotations.Nullable;
 
 import dev.shadowsoffire.fastbench.api.ICraftingContainer;
 import dev.shadowsoffire.fastbench.mixin.AbstractContainerMenuInvoker;
-import dev.shadowsoffire.fastbench.net.RecipeMessage;
-import dev.shadowsoffire.placebo.network.PacketDistro;
+import dev.shadowsoffire.fastbench.net.RecipePayload;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.inventory.ResultContainer;
 import net.minecraft.world.inventory.ResultSlot;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.event.EventHooks;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 @SuppressWarnings("unchecked")
 public class FastBenchUtil {
@@ -47,16 +48,17 @@ public class FastBenchUtil {
         if (!world.isClientSide && inv.checkChanges) {
 
             ItemStack itemstack = ItemStack.EMPTY;
+            CraftingInput input = inv.asCraftInput();
 
             RecipeHolder<CraftingRecipe> oldRecipe = (RecipeHolder<CraftingRecipe>) result.getRecipeUsed();
             RecipeHolder<CraftingRecipe> recipe = oldRecipe;
-            if (recipe == null || !recipe.value().matches(inv, world)) recipe = findRecipe(inv, world);
+            if (recipe == null || !recipe.value().matches(input, world)) recipe = findRecipe(input, world);
 
-            if (recipe != null) itemstack = recipe.value().assemble(inv, world.registryAccess());
+            if (recipe != null) itemstack = recipe.value().assemble(input, world.registryAccess());
 
             // Need to check if the output is empty, because if the recipe book is being used, the recipe will already be set.
             if (oldRecipe != recipe || result.getItem(0).isEmpty()) {
-                PacketDistro.sendTo(new RecipeMessage(recipe, itemstack), player);
+                PacketDistributor.sendToPlayer((ServerPlayer) player, new RecipePayload(recipe, itemstack));
                 result.setItem(0, itemstack);
                 result.setRecipeUsed(recipe);
             }
@@ -64,7 +66,7 @@ public class FastBenchUtil {
                 // https://github.com/Shadows-of-Fire/FastWorkbench/issues/72 - Some modded recipes may update the output and not mark themselves as special, moderately
                 // annoying but... bleh
                 if (recipe.value().isSpecial() || !recipe.getClass().getName().startsWith("net.minecraft") && !ItemStack.matches(itemstack, result.getItem(0))) {
-                    PacketDistro.sendTo(new RecipeMessage(recipe, itemstack), player);
+                    PacketDistributor.sendToPlayer((ServerPlayer) player, new RecipePayload(recipe, itemstack));
                     result.setItem(0, itemstack);
                     result.setRecipeUsed(recipe);
                 }
@@ -98,11 +100,13 @@ public class FastBenchUtil {
 
     public static ItemStack handleShiftCraft(Player player, AbstractContainerMenu container, Slot resultSlot, CraftingInventoryExt craftMatrix, ResultContainer craftResult, OutputMover mover) {
         ItemStack outputCopy = ItemStack.EMPTY;
+        CraftingInput input = craftMatrix.asCraftInput();
+
         if (resultSlot != null && resultSlot.hasItem()) {
             craftMatrix.checkChanges = false;
             RecipeHolder<CraftingRecipe> recipe = (RecipeHolder<CraftingRecipe>) craftResult.getRecipeUsed();
-            while (recipe != null && recipe.value().matches(craftMatrix, player.level())) {
-                ItemStack recipeOutput = recipe.value().assemble(craftMatrix, player.level().registryAccess());
+            while (recipe != null && recipe.value().matches(input, player.level())) {
+                ItemStack recipeOutput = recipe.value().assemble(input, player.level().registryAccess());
                 if (recipeOutput.isEmpty()) throw new RuntimeException("A recipe matched but produced an empty output - Offending Recipe : " + recipe.id() + " - This is NOT a bug in FastWorkbench!");
                 outputCopy = recipeOutput.copy();
 
@@ -125,8 +129,8 @@ public class FastBenchUtil {
     }
 
     @Nullable
-    public static RecipeHolder<CraftingRecipe> findRecipe(CraftingContainer inv, Level world) {
-        return world.getRecipeManager().getRecipeFor(RecipeType.CRAFTING, inv, world).orElse(null);
+    public static RecipeHolder<CraftingRecipe> findRecipe(CraftingInput input, Level world) {
+        return world.getRecipeManager().getRecipeFor(RecipeType.CRAFTING, input, world).orElse(null);
     }
 
     public static interface OutputMover {
