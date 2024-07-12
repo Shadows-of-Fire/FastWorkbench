@@ -1,3 +1,6 @@
+## 9.1.1
+* Fixed infinite loop when shift-click crafting a shapeless recipe.
+
 ## 9.1.0
 * Updated to Minecraft 1.21
 
