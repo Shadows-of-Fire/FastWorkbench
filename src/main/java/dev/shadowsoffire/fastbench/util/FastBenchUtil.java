@@ -7,6 +7,7 @@ import dev.shadowsoffire.fastbench.mixin.AbstractContainerMenuInvoker;
 import dev.shadowsoffire.fastbench.net.RecipePayload;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.StackedContents;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ResultContainer;
 import net.minecraft.world.inventory.ResultSlot;
@@ -46,7 +47,6 @@ public class FastBenchUtil {
      */
     public static void slotChangedCraftingGrid(Level world, Player player, CraftingInventoryExt inv, ResultContainer result) {
         if (!world.isClientSide && inv.checkChanges) {
-
             ItemStack itemstack = ItemStack.EMPTY;
             CraftingInput input = inv.asCraftInput();
 
@@ -107,7 +107,10 @@ public class FastBenchUtil {
             RecipeHolder<CraftingRecipe> recipe = (RecipeHolder<CraftingRecipe>) craftResult.getRecipeUsed();
             while (recipe != null && recipe.value().matches(input, player.level())) {
                 ItemStack recipeOutput = recipe.value().assemble(input, player.level().registryAccess());
-                if (recipeOutput.isEmpty()) throw new RuntimeException("A recipe matched but produced an empty output - Offending Recipe : " + recipe.id() + " - This is NOT a bug in FastWorkbench!");
+                if (recipeOutput.isEmpty()) {
+                    throw new RuntimeException("A recipe matched but produced an empty output - Offending Recipe : " + recipe.id() + " - This is NOT a bug in FastWorkbench!");
+                }
+
                 outputCopy = recipeOutput.copy();
 
                 recipeOutput.onCraftedBy(player.level(), player, 1);
@@ -121,6 +124,7 @@ public class FastBenchUtil {
                 ((ResultSlot) resultSlot).removeCount += outputCopy.getCount();
                 // Handles the actual work of removing the input items.
                 resultSlot.onTake(player, recipeOutput);
+                resetStackedContents(input);
             }
             craftMatrix.checkChanges = true;
             slotChangedCraftingGrid(player.level(), player, craftMatrix, craftResult);
@@ -131,6 +135,21 @@ public class FastBenchUtil {
     @Nullable
     public static RecipeHolder<CraftingRecipe> findRecipe(CraftingInput input, Level world) {
         return world.getRecipeManager().getRecipeFor(RecipeType.CRAFTING, input, world).orElse(null);
+    }
+
+    /**
+     * Resets the {@link StackedContents} held by a {@link CraftingInput} so that it reflects the current state of the input.
+     * <p>
+     * Without this, the contents will always reflect the initial state of the input, as the contents is only filled once at construction time.
+     */
+    public static void resetStackedContents(CraftingInput input) {
+        StackedContents contents = input.stackedContents();
+        contents.clear();
+        for (ItemStack i : input.items()) {
+            if (!i.isEmpty()) {
+                contents.accountStack(i, 1);
+            }
+        }
     }
 
     public static interface OutputMover {
