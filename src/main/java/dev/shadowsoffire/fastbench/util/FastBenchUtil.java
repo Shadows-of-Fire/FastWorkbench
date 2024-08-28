@@ -65,7 +65,7 @@ public class FastBenchUtil {
             else if (recipe != null) {
                 // https://github.com/Shadows-of-Fire/FastWorkbench/issues/72 - Some modded recipes may update the output and not mark themselves as special, moderately
                 // annoying but... bleh
-                if (recipe.value().isSpecial() || !recipe.getClass().getName().startsWith("net.minecraft") && !ItemStack.matches(itemstack, result.getItem(0))) {
+                if (recipe.value().isSpecial() || !recipe.value().getClass().getName().startsWith("net.minecraft") && !ItemStack.matches(itemstack, result.getItem(0))) {
                     PacketDistributor.sendToPlayer((ServerPlayer) player, new RecipePayload(recipe, itemstack));
                     result.setItem(0, itemstack);
                     result.setRecipeUsed(recipe);
