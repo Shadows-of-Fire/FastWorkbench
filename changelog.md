@@ -1,3 +1,6 @@
+## 9.1.2
+* Fixed an issue where non-special recipes which have a dynamically computed output would not have the recipe output sent to the client on change.
+
 ## 9.1.1
 * Fixed infinite loop when shift-click crafting a shapeless recipe.
 
