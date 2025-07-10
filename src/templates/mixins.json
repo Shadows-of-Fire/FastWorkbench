@@ -2,6 +2,8 @@
     "required": true,
     "package": "${modGroup}.${modid}.mixin",
     "compatibilityLevel": "JAVA_${javaVersion}",
+    "refmap": "${modid}.refmap.json",
+    "maxShiftBy": 0,
     "mixins": [
 ${mixins}
     ],

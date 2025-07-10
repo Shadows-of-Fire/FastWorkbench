@@ -1,0 +1,41 @@
+modLoader="javafml"
+
+loaderVersion="[2,)"
+
+license="MIT License"
+
+[[mods]] #mandatory
+
+modId="fastbench"
+
+version="9.1.2"
+
+displayName="Fast Workbench"
+
+authors="Shadows_of_Fire"
+
+description='''Speeding up crafting operations - massively.'''
+
+[[mixins]]
+config="fastbench.mixins.json"
+
+[[dependencies.fastbench]]
+    modId="minecraft"
+    type="required"
+    versionRange="[1.21.1,)"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.fastbench]]
+    modId="neoforge"
+    type="required"
+    versionRange="[21.1.187,)"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.fastbench]]
+    modId="placebo"
+    type="required"
+    versionRange="[9.9.0,)"
+    ordering="AFTER"
+    side="BOTH"

@@ -1,0 +1,17 @@
+{
+    "required": true,
+    "package": "dev.shadowsoffire.fastbench.mixin",
+    "compatibilityLevel": "JAVA_21",
+    "refmap": "fastbench.refmap.json",
+    "maxShiftBy": 0,
+    "mixins": [
+        "AbstractContainerMenuInvoker",
+        "MixinBackpackMenu",
+        "MixinCraftingMenu",
+        "MixinInventoryMenu"
+    ],
+    "client": [
+        "client.MixinCraftingScreen"
+    ],
+    "minVersion": "0.8"
+}
