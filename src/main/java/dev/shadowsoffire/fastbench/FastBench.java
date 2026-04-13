@@ -5,15 +5,14 @@ import org.apache.logging.log4j.Logger;
 
 import dev.shadowsoffire.fastbench.net.RecipePayload;
 import dev.shadowsoffire.placebo.config.Configuration;
+import dev.shadowsoffire.placebo.events.ResourceReloadEvent;
 import dev.shadowsoffire.placebo.network.PayloadHelper;
-import dev.shadowsoffire.placebo.util.RunnableReloader;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.event.AddReloadListenerEvent;
 
 @Mod(FastBench.MODID)
 public class FastBench {
@@ -44,12 +43,12 @@ public class FastBench {
         PayloadHelper.registerPayload(new RecipePayload.Provider());
     }
 
-    public void reloads(AddReloadListenerEvent e) {
-        e.addListener(RunnableReloader.of(FastBench::loadConfig));
+    public void reloads(ResourceReloadEvent e) {
+        FastBench.loadConfig();
     }
 
-    public static ResourceLocation loc(String string) {
-        return ResourceLocation.fromNamespaceAndPath(MODID, string);
+    public static Identifier loc(String string) {
+        return Identifier.fromNamespaceAndPath(MODID, string);
     }
 
 }

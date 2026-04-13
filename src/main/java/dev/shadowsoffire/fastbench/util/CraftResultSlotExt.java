@@ -43,7 +43,7 @@ public class CraftResultSlotExt extends ResultSlot {
     @Override
     protected void checkTakeAchievements(ItemStack stack) {
         if (this.removeCount > 0) {
-            stack.onCraftedBy(this.player.level(), this.player, this.removeCount);
+            stack.onCraftedBy(this.player, this.removeCount);
             EventHooks.firePlayerCraftingEvent(this.player, stack, this.craftSlots);
         }
         this.removeCount = 0;
@@ -105,7 +105,7 @@ public class CraftResultSlotExt extends ResultSlot {
     @Override
     @SuppressWarnings("unchecked")
     public ItemStack getItem() {
-        if (player.level().isClientSide) return super.getItem();
+        if (player.level().isClientSide()) return super.getItem();
         // Crafting Tweaks fakes 64x right click operations to right-click craft a stack to the "held" item, so we need to verify the recipe here.
         RecipeHolder<CraftingRecipe> recipe = (RecipeHolder<CraftingRecipe>) this.inv.getRecipeUsed();
         if (recipe != null && recipe.value().matches(this.craftSlots.asCraftInput(), player.level())) {

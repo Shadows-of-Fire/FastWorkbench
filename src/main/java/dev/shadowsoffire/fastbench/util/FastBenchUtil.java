@@ -5,9 +5,10 @@ import org.jetbrains.annotations.Nullable;
 import dev.shadowsoffire.fastbench.api.ICraftingContainer;
 import dev.shadowsoffire.fastbench.mixin.AbstractContainerMenuInvoker;
 import dev.shadowsoffire.fastbench.net.RecipePayload;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.player.StackedContents;
+import net.minecraft.world.entity.player.StackedItemContents;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ResultContainer;
 import net.minecraft.world.inventory.ResultSlot;
@@ -38,38 +39,36 @@ public class FastBenchUtil {
      * On the server, checks if a recipe is cached, and checks if it still matches. If it doesn't match, a new match is attempted to be found.
      * If any match is found, it gathers the result of that match and presents it in the output slot.
      * It also notifies the client iff the recipe has changed, or the recipe is not null and the recipe is dynamic (special).
-     * 
-     * @param world  The world
-     * @param player The crafting player
-     * @param inv    The crafting grid
-     * @param result The result inventory
+     *
      * @apiNote Use {@link #queueSlotUpdate(Level, Player, CraftingInventoryExt, ResultContainer)} unless you need immediate results for some reason.
      */
-    public static void slotChangedCraftingGrid(Level world, Player player, CraftingInventoryExt inv, ResultContainer result) {
-        if (!world.isClientSide && inv.checkChanges) {
-            ItemStack itemstack = ItemStack.EMPTY;
-            CraftingInput input = inv.asCraftInput();
+    public static void slotChangedCraftingGrid(ServerLevel level, Player player, CraftingInventoryExt inv, ResultContainer result) {
+        if (!inv.checkChanges) {
+            return;
+        }
 
-            RecipeHolder<CraftingRecipe> oldRecipe = (RecipeHolder<CraftingRecipe>) result.getRecipeUsed();
-            RecipeHolder<CraftingRecipe> recipe = oldRecipe;
-            if (recipe == null || !recipe.value().matches(input, world)) recipe = findRecipe(input, world);
+        ItemStack itemstack = ItemStack.EMPTY;
+        CraftingInput input = inv.asCraftInput();
 
-            if (recipe != null) itemstack = recipe.value().assemble(input, world.registryAccess());
+        RecipeHolder<CraftingRecipe> oldRecipe = (RecipeHolder<CraftingRecipe>) result.getRecipeUsed();
+        RecipeHolder<CraftingRecipe> recipe = oldRecipe;
+        if (recipe == null || !recipe.value().matches(input, level)) recipe = findRecipe(input, level);
 
-            // Need to check if the output is empty, because if the recipe book is being used, the recipe will already be set.
-            if (oldRecipe != recipe || result.getItem(0).isEmpty()) {
-                PacketDistributor.sendToPlayer((ServerPlayer) player, new RecipePayload(recipe, itemstack));
+        if (recipe != null) itemstack = recipe.value().assemble(input);
+
+        // Need to check if the output is empty, because if the recipe book is being used, the recipe will already be set.
+        if (oldRecipe != recipe || result.getItem(0).isEmpty()) {
+            PacketDistributor.sendToPlayer((ServerPlayer) player, new RecipePayload(itemstack));
+            result.setItem(0, itemstack);
+            result.setRecipeUsed(recipe);
+        }
+        else if (recipe != null) {
+            // https://github.com/Shadows-of-Fire/FastWorkbench/issues/72 - Some modded recipes may update the output and not mark themselves as special, moderately
+            // annoying but... bleh
+            if (recipe.value().isSpecial() || !recipe.value().getClass().getName().startsWith("net.minecraft") && !ItemStack.matches(itemstack, result.getItem(0))) {
+                PacketDistributor.sendToPlayer((ServerPlayer) player, new RecipePayload(itemstack));
                 result.setItem(0, itemstack);
                 result.setRecipeUsed(recipe);
-            }
-            else if (recipe != null) {
-                // https://github.com/Shadows-of-Fire/FastWorkbench/issues/72 - Some modded recipes may update the output and not mark themselves as special, moderately
-                // annoying but... bleh
-                if (recipe.value().isSpecial() || !recipe.value().getClass().getName().startsWith("net.minecraft") && !ItemStack.matches(itemstack, result.getItem(0))) {
-                    PacketDistributor.sendToPlayer((ServerPlayer) player, new RecipePayload(recipe, itemstack));
-                    result.setItem(0, itemstack);
-                    result.setRecipeUsed(recipe);
-                }
             }
         }
     }
@@ -106,17 +105,17 @@ public class FastBenchUtil {
             craftMatrix.checkChanges = false;
             RecipeHolder<CraftingRecipe> recipe = (RecipeHolder<CraftingRecipe>) craftResult.getRecipeUsed();
             while (recipe != null && recipe.value().matches(input, player.level())) {
-                ItemStack recipeOutput = recipe.value().assemble(input, player.level().registryAccess());
+                ItemStack recipeOutput = recipe.value().assemble(input);
                 if (recipeOutput.isEmpty()) {
                     throw new RuntimeException("A recipe matched but produced an empty output - Offending Recipe : " + recipe.id() + " - This is NOT a bug in FastWorkbench!");
                 }
 
                 outputCopy = recipeOutput.copy();
 
-                recipeOutput.onCraftedBy(player.level(), player, 1);
+                recipeOutput.onCraftedBy(player, 1);
                 EventHooks.firePlayerCraftingEvent(player, recipeOutput, craftMatrix);
 
-                if (!player.level().isClientSide && mover.merge(container, recipeOutput)) {
+                if (!player.level().isClientSide() && mover.merge(container, recipeOutput)) {
                     craftMatrix.checkChanges = true;
                     return ItemStack.EMPTY;
                 }
@@ -127,23 +126,25 @@ public class FastBenchUtil {
                 resetStackedContents(input);
             }
             craftMatrix.checkChanges = true;
-            slotChangedCraftingGrid(player.level(), player, craftMatrix, craftResult);
+            if (player.level() instanceof ServerLevel sl) {
+                slotChangedCraftingGrid(sl, player, craftMatrix, craftResult);
+            }
         }
         return outputCopy;
     }
 
     @Nullable
-    public static RecipeHolder<CraftingRecipe> findRecipe(CraftingInput input, Level world) {
-        return world.getRecipeManager().getRecipeFor(RecipeType.CRAFTING, input, world).orElse(null);
+    public static RecipeHolder<CraftingRecipe> findRecipe(CraftingInput input, ServerLevel level) {
+        return level.recipeAccess().getRecipeFor(RecipeType.CRAFTING, input, level).orElse(null);
     }
 
     /**
-     * Resets the {@link StackedContents} held by a {@link CraftingInput} so that it reflects the current state of the input.
+     * Resets the {@link StackedItemContents} held by a {@link CraftingInput} so that it reflects the current state of the input.
      * <p>
      * Without this, the contents will always reflect the initial state of the input, as the contents is only filled once at construction time.
      */
     public static void resetStackedContents(CraftingInput input) {
-        StackedContents contents = input.stackedContents();
+        StackedItemContents contents = input.stackedContents();
         contents.clear();
         for (ItemStack i : input.items()) {
             if (!i.isEmpty()) {

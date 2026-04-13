@@ -4,6 +4,7 @@ import java.util.IdentityHashMap;
 import java.util.Map;
 
 import dev.shadowsoffire.fastbench.FastBench;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ResultContainer;
 import net.minecraft.world.level.Level;
@@ -25,9 +26,10 @@ public class SlotUpdateManager {
      * Multiple queue-ups will not stack, and only the latest one will be processed.
      */
     public static void queueSlotUpdate(Level level, Player player, CraftingInventoryExt inv, ResultContainer result) {
-        if (level.isClientSide) return;
-        Runnable task = () -> FastBenchUtil.slotChangedCraftingGrid(level, player, inv, result);
-        UPDATES.putIfAbsent(inv, task);
+        if (level instanceof ServerLevel sl) {
+            Runnable task = () -> FastBenchUtil.slotChangedCraftingGrid(sl, player, inv, result);
+            UPDATES.putIfAbsent(inv, task);
+        }
     }
 
     private static long serverTicks = 0;

@@ -1,11 +1,12 @@
 {
     "required": true,
     "package": "dev.shadowsoffire.fastbench.mixin",
-    "compatibilityLevel": "JAVA_21",
+    "compatibilityLevel": "JAVA_25",
     "refmap": "fastbench.refmap.json",
     "maxShiftBy": 0,
     "mixins": [
         "AbstractContainerMenuInvoker",
+        "MixinAbstractCraftingMenu",
         "MixinBackpackMenu",
         "MixinCraftingMenu",
         "MixinInventoryMenu"
