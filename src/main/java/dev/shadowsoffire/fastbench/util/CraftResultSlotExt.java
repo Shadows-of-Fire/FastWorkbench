@@ -113,4 +113,19 @@ public class CraftResultSlotExt extends ResultSlot {
         }
         return ItemStack.EMPTY;
     }
+
+    /**
+     * This method is only meaningfully used by the "throw all" click action (CTRL+Q), in which
+     * it attempts to remove a stack, call onTake if it removed it, and returns the result (or empty).
+     * <p>
+     * However, it does this in a loop that runs until the stack is empty, which will deadlock the client.
+     * Fortunately, we can just lie and say the client has nothing in this slot.
+     */
+    @Override
+    public ItemStack safeTake(int amount, int maxAmount, Player player) {
+        if (player.level().isClientSide()) {
+            return ItemStack.EMPTY;
+        }
+        return super.safeTake(amount, maxAmount, player);
+    }
 }
