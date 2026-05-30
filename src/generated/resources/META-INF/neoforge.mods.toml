@@ -8,7 +8,7 @@ license="MIT License"
 
 modId="fastbench"
 
-version="10.0.0-beta1"
+version="10.0.0"
 
 displayName="Fast Workbench"
 
@@ -29,13 +29,13 @@ config="fastbench.mixins.json"
 [[dependencies.fastbench]]
     modId="neoforge"
     type="required"
-    versionRange="[26.1.2.22-beta,)"
+    versionRange="[26.1.2.64-beta,)"
     ordering="NONE"
     side="BOTH"
 
 [[dependencies.fastbench]]
     modId="placebo"
     type="required"
-    versionRange="[10.0.0-beta5,)"
+    versionRange="[10.0.0,)"
     ordering="AFTER"
     side="BOTH"
