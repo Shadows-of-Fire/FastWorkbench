@@ -37,8 +37,12 @@ public class CraftResultSlotExt extends ResultSlot {
         this.inv.setItem(0, this.getItem().copy()); // https://github.com/Shadows-of-Fire/FastWorkbench/issues/62 - Vanilla's SWAP action will leak this stack here.
     }
 
-    @Override
-    public void set(ItemStack stack) {}
+@Override
+public void set(ItemStack stack) {
+    if (this.player.level().isClientSide) {
+        super.set(stack);
+    }
+}
 
     @Override
     protected void checkTakeAchievements(ItemStack stack) {
